@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Prism.Logging;
 
 namespace BookKeeping.Client
 {
@@ -7,9 +8,11 @@ namespace BookKeeping.Client
     /// </summary>
     public partial class ShellView : Window
     {
-        public ShellView()
+        public ShellView(ILoggerFacade logger)
         {
             InitializeComponent();
+
+            logger.Log("Starting shell view...", Category.Debug, Priority.Low);
         }
     }
 }

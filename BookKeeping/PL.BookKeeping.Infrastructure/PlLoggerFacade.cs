@@ -11,30 +11,28 @@ namespace PL.BookKeeping.Infrastructure
 {
     public class PlLoggerFacade : ILoggerFacade
     {
-        private IUnityContainer mContainer;
+        private ILogFile mLogFile;
 
-        public PlLoggerFacade(IUnityContainer container)
+        public PlLoggerFacade(ILogFile logFile)
         {
-            mContainer = container;
+            mLogFile = logFile;
         }
 
         public void Log(string message, Category category, Priority priority)
         {
-            ILogFile logFile = mContainer.Resolve<ILogFile>();
-
             switch (category)
             {
                 case Category.Debug:
-                    logFile.Debug(message);
+                    mLogFile.Debug(message);
                     break;
                 case Category.Warn:
-                    logFile.Warning(message);
+                    mLogFile.Warning(message);
                     break;
                 case Category.Exception:
-                    logFile.Error(message);
+                    mLogFile.Error(message);
                     break;
                 case Category.Info:
-                    logFile.Info(message);
+                    mLogFile.Info(message);
                     break;
             }
         }

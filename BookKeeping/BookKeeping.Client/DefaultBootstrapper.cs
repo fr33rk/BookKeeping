@@ -28,7 +28,8 @@ namespace BookKeeping.Client
         {
             base.ConfigureContainer();
 
-            Container.RegisterType<ILogFile, LogFile>(new ContainerControlledLifetimeManager(), new InjectionConstructor(""));
+            //Container.RegisterType<ILogFile, LogFile>(new ContainerControlledLifetimeManager(), new InjectionConstructor(""));
+            Container.RegisterInstance<ILogFile>(mLogFile);
         }
 
         protected override void ConfigureModuleCatalog()
@@ -52,9 +53,13 @@ namespace BookKeeping.Client
             catalog.AddModule(NewModuleInfo);
         }
 
+        private ILogFile mLogFile;
+
         protected override ILoggerFacade CreateLogger()
         {
-            return new PlLoggerFacade(Container);
+            mLogFile = new LogFile("Main");
+
+            return new PlLoggerFacade(mLogFile);
         }
     }
 }
