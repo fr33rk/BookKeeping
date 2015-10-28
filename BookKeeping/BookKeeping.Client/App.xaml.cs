@@ -13,5 +13,17 @@ namespace BookKeeping.Client
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            // Set the current user interface culture to the specific culture Russian
+            System.Threading.Thread.CurrentThread.CurrentUICulture =
+                new System.Globalization.CultureInfo("en");
+
+            // Configure Bootstrapper
+            var bootstrapper = new DefaultBootstrapper();
+            bootstrapper.Run();
+        }
     }
 }
