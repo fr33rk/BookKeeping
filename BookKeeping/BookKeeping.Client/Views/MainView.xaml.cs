@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookKeeping.Client.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,10 @@ namespace BookKeeping.Client.Views
     /// </summary>
     public partial class MainView : UserControl
     {
-        public MainView()
+        public MainView(MainVM viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }

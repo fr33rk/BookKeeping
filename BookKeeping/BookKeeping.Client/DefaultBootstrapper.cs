@@ -27,8 +27,6 @@ namespace BookKeeping.Client
         protected override void ConfigureContainer()
         {
             base.ConfigureContainer();
-
-            //Container.RegisterType<ILogFile, LogFile>(new ContainerControlledLifetimeManager(), new InjectionConstructor(""));
             Container.RegisterInstance<ILogFile>(mLogFile);
         }
 
@@ -38,6 +36,7 @@ namespace BookKeeping.Client
 
             // Load business unit first, because the services are used in other modules.
             //AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), this.ModuleCatalog);
+            AddModuleToCatalog(typeof(BookKeeping.Client.ModuleInit), this.ModuleCatalog);
         }
 
         /// <summary>Adds the module to catalog with an unique name (AssemblyQualifiedName).</summary>
@@ -57,7 +56,9 @@ namespace BookKeeping.Client
 
         protected override ILoggerFacade CreateLogger()
         {
+            LogFile.DefaultLogLevel = LogFile.LogLevel.Debug;
             mLogFile = new LogFile("Main");
+            mLogFile.WriteLogStart();
 
             return new PlLoggerFacade(mLogFile);
         }

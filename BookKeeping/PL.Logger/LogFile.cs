@@ -60,7 +60,7 @@ namespace PL.Logger
 		/// </summary>
 		/// <param name="sName">The second part of the name of the log file. The first part is the domain name.</param>
 		/// <param name="logLevel">The log level.</param>
-		/// <param name="maxFileSize">Maximum size of the file.</param>
+		/// <param name="maxFileSize">Maximum size of the file in bytes.</param>
 		public LogFile(String sName, LogLevel logLevel, int maxFileSize)
 		{
 			if (sName.Length > 0)
