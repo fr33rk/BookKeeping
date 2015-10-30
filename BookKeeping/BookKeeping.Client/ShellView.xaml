@@ -9,7 +9,7 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <ContentControl x:Name="MainRegion"
-						Grid.Row="0"
-                        reg:RegionManager.RegionName="MainRegion" />
+						Grid.Row="0"/>
+                        <!--reg:RegionManager.RegionName="MainRegion" />-->
     </Grid>
 </Window>

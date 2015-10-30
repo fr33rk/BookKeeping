@@ -89,6 +89,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\MainVM.cs" />
+    <Compile Include="ViewModels\ExampleVM.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -144,6 +145,10 @@
     <ProjectReference Include="..\PL.BookKeeping.Infrastructure\PL.BookKeeping.Infrastructure.csproj">
       <Project>{C25B5304-0FDE-4CE3-AEA8-6A3AD78EBDED}</Project>
       <Name>PL.BookKeeping.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PL.Common.Prism\PL.Common.Prism.csproj">
+      <Project>{87F76E27-EF8D-454E-B87A-257741EB2BD2}</Project>
+      <Name>PL.Common.Prism</Name>
     </ProjectReference>
     <ProjectReference Include="..\PL.Logger\PL.Logger.csproj">
       <Project>{EC4D9E5B-B1A1-49EB-A7DB-49FE70E12906}</Project>

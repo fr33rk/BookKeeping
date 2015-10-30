@@ -1,5 +1,6 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
 using System.Data.Entity;
+using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Data
 {
@@ -10,6 +11,6 @@ namespace PL.BookKeeping.Data
         {
         }
 
-        public DbSet<Transaction> Posts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
     }
 }

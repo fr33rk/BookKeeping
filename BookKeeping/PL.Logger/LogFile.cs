@@ -35,7 +35,7 @@ namespace PL.Logger
 	///    LogFile is Thread safe!
 	/// </summary>
 	public class LogFile : IDisposable, ILogFile
-    {
+	{
 		#region Fields
 
 		private const int cMaxFileSize = 1048576; // 1 MB

@@ -26,10 +26,6 @@ namespace BookKeeping.Client
             mContainer.RegisterType<object, MainView>(typeof(MainView).FullName);
 
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
-        }
-
-        
-
-
+        }      
     }
 }
