@@ -9,7 +9,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
-    class BaseTraceableObjectDataServiceOfT<TEntity> : IBaseTraceableObjectDataService<TEntity>
+    public class BaseTraceableObjectDataServiceOfT<TEntity> : IBaseTraceableObjectDataService<TEntity>
         where TEntity : BaseTraceableObject, new()
     {
         #region Definitions

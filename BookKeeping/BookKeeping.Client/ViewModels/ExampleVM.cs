@@ -57,6 +57,5 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion Command StartMeasurement
-
     }
 }

@@ -111,8 +111,7 @@ namespace PL.Logger
 			{
 				// free managed resources
 			}
-
-			mFile.Dispose();
+            mFile.Dispose();
 		}
 
 		#endregion

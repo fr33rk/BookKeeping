@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PL.BookKeeping.Business
+namespace PL.BookKeeping.Infrastructure.Services.DataServices
 {
-    public class Class1
+    public interface ITransactionDataService
     {
     }
 }

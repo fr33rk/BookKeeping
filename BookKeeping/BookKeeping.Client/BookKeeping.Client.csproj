@@ -69,6 +69,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -88,8 +90,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ExampleVM.cs" />
+    <Compile Include="Views\ImportDataView.xaml.cs">
+      <DependentUpon>ImportDataView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -107,6 +113,10 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ImportDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,12 +152,16 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\PL.BookKeeping.Business\PL.BookKeeping.Business.csproj">
+      <Project>{9905A1EA-A6B2-4FEA-B03D-B7DB011D4A95}</Project>
+      <Name>PL.BookKeeping.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Infrastructure\PL.BookKeeping.Infrastructure.csproj">
       <Project>{C25B5304-0FDE-4CE3-AEA8-6A3AD78EBDED}</Project>
       <Name>PL.BookKeeping.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\PL.Common.Prism\PL.Common.Prism.csproj">
-      <Project>{87F76E27-EF8D-454E-B87A-257741EB2BD2}</Project>
+      <Project>{87f76e27-ef8d-454e-b87a-257741eb2bd2}</Project>
       <Name>PL.Common.Prism</Name>
     </ProjectReference>
     <ProjectReference Include="..\PL.Logger\PL.Logger.csproj">

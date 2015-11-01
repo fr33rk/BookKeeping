@@ -3,11 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PL.BookKeeping.Entities
 {
-    public class Transaction
+    public class Transaction : BaseTraceableObject
     {
-        [Key]
-        public int Id { get; set; }
-
         public DateTime Date { get; set; }
         public string Name { get; set; }
         public string Account { get; set; }
@@ -17,7 +14,5 @@ namespace PL.BookKeeping.Entities
         public decimal Amount { get; set; }
         public string MutationKind { get; set; }
         public string Remarks { get; set; }
-
-
     }
 }

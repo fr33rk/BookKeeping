@@ -24,6 +24,7 @@ namespace BookKeeping.Client
         public void Initialize()
         {
             mContainer.RegisterType<object, MainView>(typeof(MainView).FullName);
+            mContainer.RegisterType<object, ImportDataView> (typeof(ImportDataView).FullName);
 
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
         }      

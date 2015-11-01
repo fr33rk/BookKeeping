@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Practices.Unity;
 using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Business;
 using PL.Logger;
 using Prism.Logging;
 using Prism.Modularity;
@@ -36,6 +37,8 @@ namespace BookKeeping.Client
 
             // Load business unit first, because the services are used in other modules.
             //AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), this.ModuleCatalog);
+
+            AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), this.ModuleCatalog);
             AddModuleToCatalog(typeof(BookKeeping.Client.ModuleInit), this.ModuleCatalog);
         }
 

@@ -5,7 +5,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
-	class ProcessingRuleDataService : BaseTraceableObjectDataServiceOfT<ProcessingRule>, IProcessingRuleDataService
+	public class ProcessingRuleDataService : BaseTraceableObjectDataServiceOfT<ProcessingRule>, IProcessingRuleDataService
 
 	{
 		public ProcessingRuleDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService)
