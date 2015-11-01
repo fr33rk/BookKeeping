@@ -1,6 +1,8 @@
 ﻿using Microsoft.Practices.Unity;
+using PL.BookKeeping.Business.Data;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
+using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using Prism.Modularity;
@@ -28,6 +30,8 @@ namespace PL.BookKeeping.Business
 
         public void Initialize()
         {
+            mContainer.RegisterType<IUnitOfWorkFactory, UnitOfWorkFactory>();
+            mContainer.RegisterType<IAuthorizationService, AuthorizationService>();
             mContainer.RegisterType<ITransactionDataService, TransactionDataService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
         }
