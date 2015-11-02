@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Business.Services
 {
@@ -19,7 +20,8 @@ namespace PL.BookKeeping.Business.Services
 
         public void ImportFiles(IEnumerable<string>files)
         {
-
+            var t = new Transaction();
+            mTransactionDataService.Add(t);
         }
     }
 }

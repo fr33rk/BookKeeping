@@ -1,5 +1,4 @@
 ﻿using Microsoft.Practices.Unity;
-using PL.BookKeeping.Business.Data;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Infrastructure.Data;
@@ -11,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PL.BookKeeping.Data.Repositories;
+using PL.BookKeeping.Data;
 
 namespace PL.BookKeeping.Business
 {
@@ -30,8 +31,8 @@ namespace PL.BookKeeping.Business
 
         public void Initialize()
         {
-            mContainer.RegisterType<IUnitOfWorkFactory, UnitOfWorkFactory>();
-            mContainer.RegisterType<IAuthorizationService, AuthorizationService>();
+            mContainer.RegisterType<IUnitOfWorkFactory, UnitOfWorkFactoryOfT<DataContext>>(new ContainerControlledLifetimeManager());
+            mContainer.RegisterType<IAuthorizationService, AuthorizationService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<ITransactionDataService, TransactionDataService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
         }

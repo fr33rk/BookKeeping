@@ -79,7 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorizationService.cs" />
-    <Compile Include="Data\UnitOfWorkFactory.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Services\DataImporterService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +87,10 @@
     <Compile Include="Services\DataServices\TransactionDataService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PL.BookKeeping.Data\PL.BookKeeping.Data.csproj">
+      <Project>{3FBE891B-065F-4DEA-989A-F85BD1EC9D9A}</Project>
+      <Name>PL.BookKeeping.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Entities\PL.BookKeeping.Entities.csproj">
       <Project>{E3EB20CA-C2F3-4113-999E-679ECCE660F1}</Project>
       <Name>PL.BookKeeping.Entities</Name>

@@ -158,7 +158,12 @@ namespace BookKeeping.Client.ViewModels
                 .Permit(VMTrigger.StartImport, VMState.Imporing);
 
             mVMStateMachine.Configure(VMState.Imporing)
-                .OnEntry(() => mLogFile.Info("Started importing selected files"))
+                .OnEntry(() =>
+                {
+                    SelectFilesCommand.RaiseCanExecuteChanged();
+                    ImportFilesCommand.RaiseCanExecuteChanged();                    
+                    mLogFile.Info("Started importing selected files");
+                })
                 .Permit(VMTrigger.ImportDone, VMState.Done);
         }
 
