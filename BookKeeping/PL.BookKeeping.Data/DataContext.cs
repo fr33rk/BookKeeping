@@ -10,11 +10,14 @@ namespace PL.BookKeeping.Data
         /// <value>The current user.</value>
         public User CurrentUser { get; set; }
 
-        public DataContext()
-            : base(new FbConnection(@"database=localhost:D:\Projects\TSF\ReceiptProcessor\Trunk\Database\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
+        public DataContext()                             
+            : base(new FbConnection(@"database=localhost:D:\Ontwikkeling\Eigen\BookKeeping\BookKeeping\BookKeeping.Client\bin\Debug\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
+            //: base(new FbConnection(@"database=localhost:D:\Projects\TSF\ReceiptProcessor\Trunk\Database\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
         {
         }
 
         public DbSet<Transaction> Transactions { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }
