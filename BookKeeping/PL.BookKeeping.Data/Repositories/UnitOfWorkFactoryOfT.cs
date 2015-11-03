@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
+using PL.Logger;
 
 namespace PL.BookKeeping.Data.Repositories
 {
@@ -15,6 +16,14 @@ namespace PL.BookKeeping.Data.Repositories
     public class UnitOfWorkFactoryOfT<TContext> : IUnitOfWorkFactory
         where TContext : DbContext
     {
+        private ILogFile mLogFile;
+
+
+        public UnitOfWorkFactoryOfT(ILogFile logFile)
+        {
+            mLogFile = logFile;
+        }
+
         /// <summary>
         /// Initializes this unit-of-work factory.
         /// </summary>
@@ -29,7 +38,7 @@ namespace PL.BookKeeping.Data.Repositories
         public virtual IUnitOfWork Create()
         {
             TContext context = Activator.CreateInstance<TContext>();
-            var uow = new UnitOfWork(context);
+            var uow = new UnitOfWork(context, mLogFile);
 
             //Set the current user.
             var repository = uow.GetRepository<User>();

@@ -4,6 +4,8 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
+using PL.Logger;
+using System.Data.Entity.Infrastructure;
 
 namespace PL.BookKeeping.Data.Repositories
 {
@@ -15,19 +17,21 @@ namespace PL.BookKeeping.Data.Repositories
         private DbContext _dbContext;
         private Dictionary<Type, object> _repositories;
         private bool _disposed;
+        private ILogFile mLogFile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork" /> class.
         /// </summary>
         /// <param name="dbContext">The db context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dbContext" /> is <c>null</c>.</exception>
-        public UnitOfWork(DbContext dbContext)
+        public UnitOfWork(DbContext dbContext, ILogFile logFile)
         {
             if (dbContext == null)
                 throw new ArgumentNullException("dbContext");
 
             this._dbContext = dbContext;
             this._repositories = new Dictionary<Type, object>();
+            mLogFile = logFile;
         }
 
         /// <summary>Sets the current user int the DbContext.</summary>
@@ -49,19 +53,42 @@ namespace PL.BookKeeping.Data.Repositories
             }
             catch (DbEntityValidationException e)
             {
-                //TODO-ML: Log these?
+                string message, validationError;
+
                 foreach (var eve in e.EntityValidationErrors)
                 {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                    message = String.Format("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
                         eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    mLogFile.Error(message);
+                    Console.WriteLine(message);
+
                     foreach (var ve in eve.ValidationErrors)
                     {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                        validationError = String.Format("- Property: \"{0}\", Error: \"{1}\"",
                             ve.PropertyName, ve.ErrorMessage);
+                        mLogFile.Error(validationError);
+                        Console.WriteLine(validationError);
                     }
                 }
                 throw;
             }
+            catch (DbUpdateException e)
+            {
+                string message;
+
+                foreach (var entry in e.Entries)
+                {
+                    message = String.Format("Entity of type \"{0}\" could not be saved due to the following error: {1} \r\nInner exception: {2}",
+                        entry.Entity.GetType().Name, e.Message, e.InnerException.ToString());
+                    mLogFile.Error(message);
+                    Console.WriteLine(message);
+
+                }
+
+                
+                
+            }
+
         }
 
         /// <summary>

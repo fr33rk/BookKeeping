@@ -14,7 +14,7 @@ namespace PL.BookKeeping.Business
         {
             get
             {
-                throw new NotImplementedException();
+                return null;
             }
 
             set

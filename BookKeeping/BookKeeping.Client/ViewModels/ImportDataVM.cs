@@ -1,25 +1,17 @@
-﻿using Microsoft.Practices.Unity;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using PL.BookKeeping.Infrastructure.Services;
-using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using PL.Logger;
 using Prism.Commands;
 using Prism.Regions;
-using Prism.Unity;
 using Stateless;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BookKeeping.Client.ViewModels
 {
     public class ImportDataVM : ViewModelBase
     {
-
         private IDataImporterService mDataImportService;
         private ILogFile mLogFile;
 
@@ -33,12 +25,11 @@ namespace BookKeeping.Client.ViewModels
             mLogFile = logFile;
         }
 
-
         #region property SelectedFiles
 
         public ObservableCollection<string> SelectedFiles { get; private set; }
 
-        #endregion
+        #endregion property SelectedFiles
 
         #region Command SelectFilesCommand
 
@@ -80,6 +71,7 @@ namespace BookKeeping.Client.ViewModels
                     SelectedFiles.Add(fileName);
                     mLogFile.Info(string.Format("Selected file for import: {0}", fileName));
                 }
+                mVMStateMachine.Fire(VMTrigger.FilesSelected);
             }
         }
 
@@ -87,10 +79,11 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private bool CanSelectFiles()
         {
-            return mVMStateMachine.IsInState(VMState.SelectingFiles);
+            return mVMStateMachine.IsInState(VMState.SelectingFiles) ||
+    mVMStateMachine.IsInState(VMState.WaitingOnImport);
         }
 
-        #endregion
+        #endregion Command SelectFilesCommand
 
         #region Command ImportFilesCommand
 
@@ -118,34 +111,37 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void ImportFiles()
         {
-            mVMStateMachine.Fire(VMTrigger.StartImport);            
-            mDataImportService.ImportFiles(SelectedFiles);
-
+            mVMStateMachine.Fire(VMTrigger.StartImport);
+            Task.Factory.StartNew(() =>
+            {
+                mDataImportService.ImportFiles(SelectedFiles);
+            });
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
         /// </summary>
         private bool CanImportFiles()
         {
-            return mVMStateMachine.IsInState(VMState.SelectingFiles);
+            return mVMStateMachine.IsInState(VMState.WaitingOnImport);
         }
 
-        #endregion
+        #endregion Command ImportFilesCommand
 
         #region State machine
 
         private enum VMState
         {
             SelectingFiles,
+            WaitingOnImport,
             Imporing,
             Done,
         };
 
         private enum VMTrigger
         {
+            FilesSelected,
             StartImport,
             ImportDone,
-            
         }
 
         private StateMachine<VMState, VMTrigger> mVMStateMachine;
@@ -154,19 +150,26 @@ namespace BookKeeping.Client.ViewModels
         {
             mVMStateMachine = new StateMachine<VMState, VMTrigger>(VMState.SelectingFiles);
 
+            mVMStateMachine.OnTransitioned((t) =>
+            {
+                SelectFilesCommand.RaiseCanExecuteChanged();
+                ImportFilesCommand.RaiseCanExecuteChanged();
+            });
+
             mVMStateMachine.Configure(VMState.SelectingFiles)
+                .Permit(VMTrigger.FilesSelected, VMState.WaitingOnImport);
+
+            mVMStateMachine.Configure(VMState.WaitingOnImport)
                 .Permit(VMTrigger.StartImport, VMState.Imporing);
 
             mVMStateMachine.Configure(VMState.Imporing)
                 .OnEntry(() =>
                 {
-                    SelectFilesCommand.RaiseCanExecuteChanged();
-                    ImportFilesCommand.RaiseCanExecuteChanged();                    
                     mLogFile.Info("Started importing selected files");
                 })
                 .Permit(VMTrigger.ImportDone, VMState.Done);
         }
 
-        #endregion
+        #endregion State machine
     }
 }

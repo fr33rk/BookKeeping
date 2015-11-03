@@ -42,7 +42,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <param name="entity">The entity, that needs to be added.</param>
         public virtual void Add(TEntity entity)
         {
-            //entity = Mark(entity);
+            entity = Mark(entity);
 
             using (var unitOfWork = this.mUOWFactory.Create())
             {
