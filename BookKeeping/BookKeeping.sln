@@ -17,6 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.BookKeeping.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.Common.Prism", "PL.Common.Prism\PL.Common.Prism.csproj", "{87F76E27-EF8D-454E-B87A-257741EB2BD2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{55CF0E04-2CE6-4C76-A590-3854B7659108}"
+	ProjectSection(SolutionItems) = preProject
+		Database\BookKeeping.FDB = Database\BookKeeping.FDB
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

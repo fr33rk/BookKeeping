@@ -80,7 +80,7 @@ namespace BookKeeping.Client.ViewModels
         private bool CanSelectFiles()
         {
             return mVMStateMachine.IsInState(VMState.SelectingFiles) ||
-    mVMStateMachine.IsInState(VMState.WaitingOnImport);
+                mVMStateMachine.IsInState(VMState.WaitingOnImport);
         }
 
         #endregion Command SelectFilesCommand
@@ -134,7 +134,6 @@ namespace BookKeeping.Client.ViewModels
             SelectingFiles,
             WaitingOnImport,
             Imporing,
-            Done,
         };
 
         private enum VMTrigger
@@ -167,7 +166,11 @@ namespace BookKeeping.Client.ViewModels
                 {
                     mLogFile.Info("Started importing selected files");
                 })
-                .Permit(VMTrigger.ImportDone, VMState.Done);
+                .Permit(VMTrigger.ImportDone, VMState.SelectingFiles)
+                .OnExit(() =>
+                {
+                    SelectedFiles.Clear();
+                });
         }
 
         #endregion State machine
