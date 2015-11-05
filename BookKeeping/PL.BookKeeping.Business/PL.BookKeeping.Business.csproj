@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorizationService.cs" />
+    <Compile Include="Models\Entry.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Services\DataImporterService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

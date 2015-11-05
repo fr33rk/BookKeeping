@@ -5,7 +5,6 @@ using System.IO.Compression;
 
 namespace PL.Logger
 {
-
 	/// <summary>Log event arguments used in the OnLog event of the log file.
 	/// </summary>
 	public class LogEventArgs : EventArgs
@@ -24,7 +23,7 @@ namespace PL.Logger
 	}
 
 	/// <summary>
-	/// General log file for .net applications. 
+	/// General log file for .net applications.
 	/// General usage:
 	///    Create with constructor
 	///    Set LogLevel. Log lines of this level and higher are actually written in the log file.
@@ -41,7 +40,7 @@ namespace PL.Logger
 		private const int cMaxFileSize = 1048576; // 1 MB
 
 		// Object used for locking (Thread safety)
-		private object mLockObject; 
+		private object mLockObject;
 
 		#endregion Fields
 
@@ -111,10 +110,18 @@ namespace PL.Logger
 			{
 				// free managed resources
 			}
-            mFile.Dispose();
+
+			try
+			{
+				mFile.Dispose();
+			}
+			catch (ObjectDisposedException)
+			{
+				// mFile is already closed/disposed apparently. Have not found a method that can test if a filestream is open or not.
+			}
 		}
 
-		#endregion
+		#endregion Constructor
 
 		#region Filename
 
@@ -126,12 +133,12 @@ namespace PL.Logger
 			private set;
 		}
 
-		#endregion
+		#endregion Filename
 
 		#region LogLevel
 
 		/// <summary>The log-level is an indication of the severity of the log message. Each log-line should be set in one of these
-		/// levels. 
+		/// levels.
 		/// </summary>
 		public enum LogLevel
 		{
@@ -143,7 +150,7 @@ namespace PL.Logger
 			/// </summary>
 			Error,
 
-			/// <summary>Use of deprecated APIs, poor use of API, 'almost' errors, other runtime situations that are undesirable or unexpected, but not necessarily "wrong". 
+			/// <summary>Use of deprecated APIs, poor use of API, 'almost' errors, other runtime situations that are undesirable or unexpected, but not necessarily "wrong".
 			/// </summary>
 			Warning,
 
@@ -177,7 +184,7 @@ namespace PL.Logger
 		/// </summary>
 		private LogLevel mLoglevel;
 
-		#endregion
+		#endregion LogLevel
 
 		#region Log line writing
 
@@ -187,7 +194,7 @@ namespace PL.Logger
 		private StreamWriter mFile;
 
 		/// <summary>
-		/// Write the log start line. 
+		/// Write the log start line.
 		/// </summary>
 		public void WriteLogStart()
 		{
@@ -252,13 +259,13 @@ namespace PL.Logger
 				signalLog(logLine);
 
 				if (checkSize)
-				{ 
+				{
 					CheckSize();
 				}
 			}
 		}
 
-		#endregion
+		#endregion Log line writing
 
 		#region HelperFunctions
 
@@ -289,7 +296,7 @@ namespace PL.Logger
 			}
 		}
 
-		#endregion
+		#endregion HelperFunctions
 
 		#region OnLog event
 

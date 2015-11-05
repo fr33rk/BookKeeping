@@ -5,15 +5,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookKeeping.Client.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <Button Grid.Column="1" Height="25" Content="Just do it" Command="{Binding JustDoItCommand}"/>
+        <Menu x:Name="menu" VerticalAlignment="Top" >
+            <MenuItem Header="Actions">
+                <MenuItem Header="ImportData" HorizontalAlignment="Left" Command="{Binding JustDoItCommand}"/>
+            </MenuItem>
+        </Menu>
 
+        <TabControl Grid.Row="1" TabStripPlacement="Bottom">
+            <TabItem Header="2015" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="55">
+                <!--<Grid Background="#FFE5E5E5"/>-->
+                <DataGrid>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Entry" Width="200" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Jan" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Feb" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Apr" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Mrt" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Mei" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Jun" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Jul" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Aug" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Sep" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Okt" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Nov" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Dec" Width="50" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

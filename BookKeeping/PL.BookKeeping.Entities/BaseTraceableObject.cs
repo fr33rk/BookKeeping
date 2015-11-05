@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PL.BookKeeping.Entities
 {
@@ -24,10 +25,14 @@ namespace PL.BookKeeping.Entities
 
         /// <summary>Gets or sets the creation date and time. Should never be manually set.
         /// </summary>
+        [Required]
         public DateTime CreationDT { get; set; }
 
+        [ForeignKey("Creator")]
+        public int CreatorKey { get; set; }
+
         /// <summary>Gets or sets the creator. Should never be manually set.
-        /// </summary>
+        /// </summary>        
         public virtual User Creator { get; set; }
     }
 }

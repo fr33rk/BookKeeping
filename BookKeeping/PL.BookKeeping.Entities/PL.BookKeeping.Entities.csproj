@@ -45,12 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntryPeriod.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="MutationType.cs" />
+    <Compile Include="Period.cs" />
     <Compile Include="ProcessingRule.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="BaseTraceableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_Entities.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
