@@ -2,6 +2,7 @@
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
+using PL.Logger;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,12 +10,15 @@ namespace PL.BookKeeping.Business.Services.DataServices
 {
     public class TransactionDataService : BaseTraceableObjectDataServiceOfT<Transaction>, ITransactionDataService
     {
-        public TransactionDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService)
+        private ILogFile mLogFile;
+
+        public TransactionDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService, ILogFile logFile)
             : base(uowFactory, authorizationService)
         {
+            mLogFile = logFile;
         }
 
-        public override void Add(Transaction entity)
+        new public bool Add(Transaction entity)
         {
             bool add = true;
 
@@ -34,6 +38,12 @@ namespace PL.BookKeeping.Business.Services.DataServices
             {
                 base.Add(entity);
             }
+            else
+            {
+                mLogFile.Info(string.Format("Found duplicate transaction: {0}", entity.ToString()));
+            }
+
+            return add;
         }
 
         public IList<Transaction> GetByFingerpint(int fingerPrint)

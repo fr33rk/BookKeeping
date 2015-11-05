@@ -9,9 +9,12 @@ namespace PL.BookKeeping.Entities
         [StringLength(40)]
         public string Description { get; set; }
 
+        [ForeignKey("ParentEntry")]
+        public int? ParentEntryKey { get; set; }
+
+        public Entry ParentEntry { get; set; }
+
         [InverseProperty("Entry")]
         public ICollection<Entry> ChildEntries { get; set; }
-
-
     }
 }

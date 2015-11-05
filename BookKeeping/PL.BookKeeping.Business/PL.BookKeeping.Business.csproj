@@ -100,6 +100,10 @@
       <Project>{C25B5304-0FDE-4CE3-AEA8-6A3AD78EBDED}</Project>
       <Name>PL.BookKeeping.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PL.Logger\PL.Logger.csproj">
+      <Project>{EC4D9E5B-B1A1-49EB-A7DB-49FE70E12906}</Project>
+      <Name>PL.Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

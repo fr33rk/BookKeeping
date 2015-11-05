@@ -29,7 +29,7 @@ namespace PL.BookKeeping.Entities
         public DateTime CreationDT { get; set; }
 
         [ForeignKey("Creator")]
-        public int CreatorKey { get; set; }
+        public int? CreatorKey { get; set; }
 
         /// <summary>Gets or sets the creator. Should never be manually set.
         /// </summary>        

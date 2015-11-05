@@ -18,8 +18,8 @@ namespace PL.BookKeeping.Entities
         [Required]
         public Period Period { get; set; }
 
-        [InverseProperty("EntryPeriod")]
-        public ICollection<Transaction> Transactions { get; set; }
+        //[InverseProperty("EntryPeriod")]
+        //public ICollection<Transaction> Transactions { get; set; }
 
         public decimal TotalAmount { get; set; }
     }

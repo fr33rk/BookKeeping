@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PL.BookKeeping.Entities;
 using System.IO;
 using System.Globalization;
+using PL.BookKeeping.Infrastructure;
 
 namespace PL.BookKeeping.Business.Services
 {
@@ -23,15 +24,47 @@ namespace PL.BookKeeping.Business.Services
             mTransactionDataService = transactionDataService;
         }
 
+        public event EventHandler<DataImportedEventArgs> OnDataProcessed;
+
+        private void signalDataProcessed()
+        {
+            var handler = OnDataProcessed;
+            if (handler != null)
+            {
+                handler(this, new DataImportedEventArgs(mImported, mDuplicate));
+            }
+        }
+
+        public event EventHandler OnDataProcessedDone;
+
+        private void signalDataProcessedDone()
+        {
+            var handler = OnDataProcessedDone;
+
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+
+        private int mImported;
+        private int mDuplicate;
+
         /// <summary>Import the transaction data from a list of files.
         /// </summary>
         /// <param name="files">The files.</param>
         public void ImportFiles(IEnumerable<string>files)
         {
+            mImported = 0;
+            mDuplicate = 0;
+
             foreach (var file in files)
             {
                 Import(file);
             }
+
+            signalDataProcessedDone();
         }
 
         private bool Import(string fileName)
@@ -48,7 +81,15 @@ namespace PL.BookKeeping.Business.Services
             {
                 var values = reader.ReadLine().Split(sepparators, 9, StringSplitOptions.None);
                 transaction = ProcessLine(values);
-                mTransactionDataService.Add(transaction);
+                if (mTransactionDataService.Add(transaction))
+                {
+                    mImported++;
+                }
+                else
+                {
+                    mDuplicate++;
+                }
+                signalDataProcessed();
             }
             return false;
         }

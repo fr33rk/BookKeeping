@@ -7,6 +7,7 @@ using Prism.Regions;
 using Stateless;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -22,8 +23,60 @@ namespace BookKeeping.Client.ViewModels
             SelectedFiles = new ObservableCollection<string>();
 
             mDataImportService = dataImportService;
+            mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;
+            mDataImportService.OnDataProcessedDone += DataImportService_OnDataProcessedDone;
             mLogFile = logFile;
         }
+
+        private void DataImportService_OnDataProcessedDone(object sender, System.EventArgs e)
+        {
+            mVMStateMachine.Fire(VMTrigger.ImportDone); 
+        }
+
+        private void DataImportService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataImportedEventArgs e)
+        {
+            TransactionsImported = e.Imported;
+            DuplicateTransactions = e.Duplicate;
+        }
+
+        #region Property TransactionsImported
+
+        private int mTransactionsImported;
+
+        public int TransactionsImported
+        {
+            get
+            {
+                return mTransactionsImported;
+            }
+            set
+            {
+                mTransactionsImported = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Property DuplicateTransactions
+
+        private int mDuplicateTransactions;
+
+        public int DuplicateTransactions
+        {
+            get
+            {
+                return mDuplicateTransactions;
+            }
+            set
+            {
+                mDuplicateTransactions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        #endregion
+
 
         #region property SelectedFiles
 

@@ -31,23 +31,20 @@
   <Class Name="PL.BookKeeping.Entities.BaseTraceableObject">
     <Position X="7.5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <HashCode>CAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAEAAAAAAQAAA=</HashCode>
       <FileName>BaseTraceableObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PL.BookKeeping.Entities.EntryPeriod">
     <Position X="5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACQAAAAAAAQAAAAAEAAAAACAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAQAAAAAAAQAAAAAEAAAAACAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>EntryPeriod.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Entry" />
       <Property Name="Period" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Transactions" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="PL.BookKeeping.Entities.Period">
     <Position X="5" Y="8.75" Width="1.5" />

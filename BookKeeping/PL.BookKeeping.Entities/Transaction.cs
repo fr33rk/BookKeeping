@@ -9,7 +9,7 @@ namespace PL.BookKeeping.Entities
         [Required]
         public DateTime Date { get; set; }
 
-        [Required, StringLength(40)]
+        [Required, StringLength(100)]
         public string Name { get; set; }
 
         [Required, StringLength(18)]
@@ -27,16 +27,16 @@ namespace PL.BookKeeping.Entities
         [Required]
         public decimal Amount { get; set; }
 
-        [StringLength(10)]
+        [StringLength(20)]
         public string MutationKind { get; set; }
 
         [StringLength(500)]
         public string Remarks { get; set; }
 
-        [ForeignKey("EntryPeriod")]
-        public int EntryPeriodKey { get; set; }
+        //[ForeignKey("EntryPeriod")]
+        //public int EntryPeriodKey { get; set; }
 
-        public EntryPeriod EntryPeriod { get; set; }
+        //public EntryPeriod EntryPeriod { get; set; }
 
         #region Property Fingerprint
 
@@ -67,7 +67,13 @@ namespace PL.BookKeeping.Entities
             return (Date.Equals(theOther.Date) &&
                 Name.Equals(theOther.Name) &&
                 Account.Equals(theOther.Account) &&
-                Amount.Equals(theOther.Amount));
+                Amount.Equals(theOther.Amount) &&
+                Remarks.Equals(theOther.Remarks));
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, {1}, {2}", Date, Name, Amount);
         }
     }
 }
