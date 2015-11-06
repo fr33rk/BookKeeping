@@ -10,8 +10,6 @@ namespace PL.BookKeeping.Infrastructure.Services
     {
         event EventHandler<DataImportedEventArgs> OnDataProcessed;
 
-        event EventHandler OnDataProcessedDone;
-
-        void ImportFiles(IEnumerable<string> files);
+        bool ImportFiles(IEnumerable<string> files);
     }
 }

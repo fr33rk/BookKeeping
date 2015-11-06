@@ -8,6 +8,7 @@ using Stateless;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -15,6 +16,7 @@ namespace BookKeeping.Client.ViewModels
     {
         private IDataImporterService mDataImportService;
         private ILogFile mLogFile;
+        private BackgroundWorker mImportWorker;
 
         public ImportDataVM(IRegionManager regionManager, IDataImporterService dataImportService, ILogFile logFile)
         {
@@ -23,14 +25,22 @@ namespace BookKeeping.Client.ViewModels
             SelectedFiles = new ObservableCollection<string>();
 
             mDataImportService = dataImportService;
-            mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;
-            mDataImportService.OnDataProcessedDone += DataImportService_OnDataProcessedDone;
+            mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;            
             mLogFile = logFile;
+
+            mImportWorker = new BackgroundWorker();
+            mImportWorker.DoWork += ImportWorker_DoWork;
+            mImportWorker.RunWorkerCompleted += ImportWorker_RunWorkerCompleted;
         }
 
-        private void DataImportService_OnDataProcessedDone(object sender, System.EventArgs e)
+        private void ImportWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            mVMStateMachine.Fire(VMTrigger.ImportDone); 
+            mVMStateMachine.Fire(VMTrigger.ImportDone);
+        }
+
+        private void ImportWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            mDataImportService.ImportFiles(SelectedFiles);
         }
 
         private void DataImportService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataImportedEventArgs e)
@@ -159,16 +169,18 @@ namespace BookKeeping.Client.ViewModels
                     ? null : new DelegateCommand(this.ImportFiles, this.CanImportFiles));
             }
         }
+      
 
         /// <summary>Starts the measurement of a sample.
         /// </summary>
         private void ImportFiles()
         {
             mVMStateMachine.Fire(VMTrigger.StartImport);
-            Task.Factory.StartNew(() =>
-            {
-                mDataImportService.ImportFiles(SelectedFiles);
-            });
+            //Task.Factory.StartNew(() =>
+            //{
+            //    mDataImportService.ImportFiles(SelectedFiles);
+            //});
+            mImportWorker.RunWorkerAsync();
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.

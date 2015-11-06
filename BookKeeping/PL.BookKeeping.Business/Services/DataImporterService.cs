@@ -1,29 +1,34 @@
-﻿using PL.BookKeeping.Infrastructure.Services;
-using PL.BookKeeping.Infrastructure.Services.DataServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PL.BookKeeping.Entities;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.Services;
+using PL.BookKeeping.Infrastructure.Services.DataServices;
+using PL.Logger;
 
 namespace PL.BookKeeping.Business.Services
 {
-    public class DataImporterService: IDataImporterService
+    /// <summary>
+    /// Why isn't  this on one line
+    /// </summary>
+    public class DataImporterService : IDataImporterService
     {
         private ITransactionDataService mTransactionDataService;
+        private ILogFile mLogFile;
 
         /// <summary>Initializes a new instance of the <see cref="DataImporterService"/> class.
         /// </summary>
         /// <param name="transactionDataService">The transaction data service.</param>
-        public DataImporterService(ITransactionDataService transactionDataService)
+        public DataImporterService(ITransactionDataService transactionDataService, ILogFile logFile)
         {
             mTransactionDataService = transactionDataService;
+            mLogFile = logFile;
         }
 
+        /// <summary>Occurs when a line in a imported file has been processed.</summary>
         public event EventHandler<DataImportedEventArgs> OnDataProcessed;
 
         private void signalDataProcessed()
@@ -35,36 +40,25 @@ namespace PL.BookKeeping.Business.Services
             }
         }
 
-        public event EventHandler OnDataProcessedDone;
-
-        private void signalDataProcessedDone()
-        {
-            var handler = OnDataProcessedDone;
-
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
-
         private int mImported;
         private int mDuplicate;
 
         /// <summary>Import the transaction data from a list of files.
         /// </summary>
         /// <param name="files">The files.</param>
-        public void ImportFiles(IEnumerable<string>files)
+        public bool ImportFiles(IEnumerable<string> files)
         {
+            bool retValue = true;
+
             mImported = 0;
             mDuplicate = 0;
 
             foreach (var file in files)
             {
-                Import(file);
+                retValue &= Import(file);
             }
 
-            signalDataProcessedDone();
+            return retValue;
         }
 
         private bool Import(string fileName)
@@ -77,20 +71,29 @@ namespace PL.BookKeeping.Business.Services
 
             Transaction transaction;
 
-            while (!reader.EndOfStream)
+            try
             {
-                var values = reader.ReadLine().Split(sepparators, 9, StringSplitOptions.None);
-                transaction = ProcessLine(values);
-                if (mTransactionDataService.Add(transaction))
+                while (!reader.EndOfStream)
                 {
-                    mImported++;
+                    var values = reader.ReadLine().Split(sepparators, 9, StringSplitOptions.None);
+                    transaction = ProcessLine(values);
+                    if (mTransactionDataService.Add(transaction))
+                    {
+                        mImported++;
+                    }
+                    else
+                    {
+                        mDuplicate++;
+                    }
+                    signalDataProcessed();
                 }
-                else
-                {
-                    mDuplicate++;
-                }
-                signalDataProcessed();
+                return true;
             }
+            catch (Exception e)
+            {
+                mLogFile.Error(string.Format("Unable to import {0}. The following exception occurred: {1}", fileName, e.Message));
+            }
+
             return false;
         }
 
@@ -115,5 +118,6 @@ namespace PL.BookKeeping.Business.Services
 
             return retValue;
         }
+
     }
 }
