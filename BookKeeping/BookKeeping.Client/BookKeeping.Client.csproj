@@ -111,9 +111,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\DefineEntriesVM.cs" />
     <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ExampleVM.cs" />
+    <Compile Include="Views\DefineEntitiesView.xaml.cs">
+      <DependentUpon>DefineEntitiesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImportDataView.xaml.cs">
       <DependentUpon>ImportDataView.xaml</DependentUpon>
     </Compile>
@@ -134,6 +138,10 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DefineEntitiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ImportDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

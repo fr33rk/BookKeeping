@@ -11,9 +11,9 @@ namespace PL.BookKeeping.Business.Services
     {
         private ILogFile mLogFile;
         private ITransactionDataService mTransactionDataService;
-        //private IEntryDataService mEntryDataService;
+        private IEntryDataService mEntryDataService;
         private IPeriodDataService mPeriodDataService;
-        //private IEntryPeriodDataService mEntryPeriodDataService;
+        private IEntryPeriodDataService mEntryPeriodDataService;
         private IList<ProcessingRule> mProcessingRules;
         private IList<EntryPeriod> mEntryPeriods;
 
@@ -21,9 +21,9 @@ namespace PL.BookKeeping.Business.Services
         public DataProcessorService(ILogFile logFile, ITransactionDataService transactionService, IPeriodDataService periodDataService)
         {
             mLogFile = logFile;
-            mTransactionDataService = transactionService;
+            //mTransactionDataService = transactionService;
             //mEntryDataService = entryDataService;
-            mPeriodDataService = periodDataService;
+            //mPeriodDataService = periodDataService;
         }
 
         public void Process(IList<Transaction> transactions)

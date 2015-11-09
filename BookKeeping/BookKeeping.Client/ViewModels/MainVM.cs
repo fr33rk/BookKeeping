@@ -52,5 +52,43 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion Command JustDoItCommand
+
+        #region Command DefineEntriesCommand
+
+        /// <summary>Field for the StartMeasurement command.
+        /// </summary>
+        private DelegateCommand mDefineEntriesCommand;
+
+        /// <summary>Gets StartMeasurement command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand DefineEntriesCommand
+        {
+            get
+            {
+                return this.mDefineEntriesCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mDefineEntriesCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.DefineEntries, this.CanDefineEntries));
+            }
+        }
+
+        /// <summary>Starts the measurement of a sample.
+        /// </summary>
+        private void DefineEntries()
+        {
+            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineEntitiesView).FullName);
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanDefineEntries()
+        {
+            return true;
+        }
+
+        #endregion Command SelectFilesCommand
     }
 }

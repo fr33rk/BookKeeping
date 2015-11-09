@@ -85,6 +85,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Services\DataServices\IBaseTraceableObjectDataService.cs" />
+    <Compile Include="Services\DataServices\IEntryDataService.cs" />
+    <Compile Include="Services\DataServices\IEntryPeriodDataService.cs" />
     <Compile Include="Services\DataServices\IPeriodDataService.cs" />
     <Compile Include="Services\DataServices\IProcessingRuleDataService.cs" />
     <Compile Include="Services\DataServices\ITransactionDataService.cs" />
