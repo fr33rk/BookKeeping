@@ -17,5 +17,10 @@ namespace PL.BookKeeping.Entities
 
         [Required]
         public DateTime PeriodEnd { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1}", Name, PeriodStart.Year);
+        }
     }
 }
