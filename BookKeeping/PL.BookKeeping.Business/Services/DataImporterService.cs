@@ -46,23 +46,24 @@ namespace PL.BookKeeping.Business.Services
         /// <summary>Import the transaction data from a list of files.
         /// </summary>
         /// <param name="files">The files.</param>
-        public bool ImportFiles(IEnumerable<string> files)
+        public IList<Transaction> ImportFiles(IEnumerable<string> files)
         {
-            bool retValue = true;
+            var retValue = new List<Transaction>();
 
             mImported = 0;
             mDuplicate = 0;
 
             foreach (var file in files)
             {
-                retValue &= Import(file);
+                retValue = retValue.Concat(Import(file)).ToList();
             }
 
             return retValue;
         }
 
-        private bool Import(string fileName)
+        private IList<Transaction> Import(string fileName)
         {
+            var retValue = new List<Transaction>();
             var reader = new StreamReader(fileName);
 
             // First line is a header...
@@ -80,6 +81,7 @@ namespace PL.BookKeeping.Business.Services
                     if (mTransactionDataService.Add(transaction))
                     {
                         mImported++;
+                        retValue.Add(transaction);
                     }
                     else
                     {
@@ -87,14 +89,14 @@ namespace PL.BookKeeping.Business.Services
                     }
                     signalDataProcessed();
                 }
-                return true;
+                
             }
             catch (Exception e)
             {
                 mLogFile.Error(string.Format("Unable to import {0}. The following exception occurred: {1}", fileName, e.Message));
             }
 
-            return false;
+            return retValue;
         }
 
         private Transaction ProcessLine(string[] values)

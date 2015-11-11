@@ -1,37 +1,61 @@
-﻿using Microsoft.Win32;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Microsoft.Win32;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.Common.Prism;
 using PL.Logger;
 using Prism.Commands;
 using Prism.Regions;
 using Stateless;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using System.ComponentModel;
 
 namespace BookKeeping.Client.ViewModels
 {
     public class ImportDataVM : ViewModelBase
     {
         private IDataImporterService mDataImportService;
+        private IDataProcessorService mDataProcessorService;
         private ILogFile mLogFile;
         private BackgroundWorker mImportWorker;
+        private BackgroundWorker mProcessorWorker;
+        private IList<Transaction> mImportedTransactions;
 
-        public ImportDataVM(IRegionManager regionManager, IDataImporterService dataImportService, ILogFile logFile)
+        public ImportDataVM(IRegionManager regionManager, IDataImporterService dataImportService, IDataProcessorService dataProcessorService, ILogFile logFile)
         {
             InitializeStateMachine();
 
             SelectedFiles = new ObservableCollection<string>();
 
             mDataImportService = dataImportService;
-            mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;            
+            mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;
             mLogFile = logFile;
+            mDataProcessorService = dataProcessorService;
 
             mImportWorker = new BackgroundWorker();
             mImportWorker.DoWork += ImportWorker_DoWork;
             mImportWorker.RunWorkerCompleted += ImportWorker_RunWorkerCompleted;
+
+            mProcessorWorker = new BackgroundWorker();
+            mProcessorWorker.DoWork += ProcessorWorker_DoWork;
+            mProcessorWorker.RunWorkerCompleted += ProcessorWorker_RunWorkerCompleted;
         }
+
+        #region ProcessorWorker
+
+        private void ProcessorWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            mVMStateMachine.Fire(VMTrigger.ProcessingDone);
+        }
+
+        private void ProcessorWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            mDataProcessorService.Process(mImportedTransactions);
+        }
+
+        #endregion ProcessorWorker
+
+        #region ImportWorker
 
         private void ImportWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -48,6 +72,8 @@ namespace BookKeeping.Client.ViewModels
             TransactionsImported = e.Imported;
             DuplicateTransactions = e.Duplicate;
         }
+
+        #endregion ImportWorker
 
         #region Property TransactionsImported
 
@@ -66,7 +92,7 @@ namespace BookKeeping.Client.ViewModels
             }
         }
 
-        #endregion
+        #endregion Property TransactionsImported
 
         #region Property DuplicateTransactions
 
@@ -85,8 +111,7 @@ namespace BookKeeping.Client.ViewModels
             }
         }
 
-        #endregion
-
+        #endregion Property DuplicateTransactions
 
         #region property SelectedFiles
 
@@ -169,17 +194,13 @@ namespace BookKeeping.Client.ViewModels
                     ? null : new DelegateCommand(this.ImportFiles, this.CanImportFiles));
             }
         }
-      
 
         /// <summary>Starts the measurement of a sample.
         /// </summary>
         private void ImportFiles()
         {
             mVMStateMachine.Fire(VMTrigger.StartImport);
-            //Task.Factory.StartNew(() =>
-            //{
-            //    mDataImportService.ImportFiles(SelectedFiles);
-            //});
+
             mImportWorker.RunWorkerAsync();
         }
 
@@ -199,6 +220,7 @@ namespace BookKeeping.Client.ViewModels
             SelectingFiles,
             WaitingOnImport,
             Imporing,
+            Processing,
         };
 
         private enum VMTrigger
@@ -206,6 +228,7 @@ namespace BookKeeping.Client.ViewModels
             FilesSelected,
             StartImport,
             ImportDone,
+            ProcessingDone,
         }
 
         private StateMachine<VMState, VMTrigger> mVMStateMachine;
@@ -231,7 +254,14 @@ namespace BookKeeping.Client.ViewModels
                 {
                     mLogFile.Info("Started importing selected files");
                 })
-                .Permit(VMTrigger.ImportDone, VMState.SelectingFiles)
+                .Permit(VMTrigger.ImportDone, VMState.Processing);
+
+            mVMStateMachine.Configure(VMState.Processing)
+                .OnEntry(() =>
+                {
+                    mLogFile.Info("Started processing imported transactions.");
+                })
+                .Permit(VMTrigger.ProcessingDone, VMState.SelectingFiles)
                 .OnExit(() =>
                 {
                     SelectedFiles.Clear();

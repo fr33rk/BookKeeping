@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using PL.BookKeeping.Entities;
+using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
 
 namespace PL.BookKeeping.Business.Services
 {
-    class DataProcessorService
+    class DataProcessorService : IDataProcessorService
     {
         private ILogFile mLogFile;
         private ITransactionDataService mTransactionDataService;

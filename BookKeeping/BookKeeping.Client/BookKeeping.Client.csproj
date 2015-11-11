@@ -185,6 +185,10 @@
       <Project>{9905A1EA-A6B2-4FEA-B03D-B7DB011D4A95}</Project>
       <Name>PL.BookKeeping.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PL.BookKeeping.Entities\PL.BookKeeping.Entities.csproj">
+      <Project>{e3eb20ca-c2f3-4113-999e-679ecce660f1}</Project>
+      <Name>PL.BookKeeping.Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Infrastructure\PL.BookKeeping.Infrastructure.csproj">
       <Project>{C25B5304-0FDE-4CE3-AEA8-6A3AD78EBDED}</Project>
       <Name>PL.BookKeeping.Infrastructure</Name>

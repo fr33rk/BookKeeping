@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PL.BookKeeping.Entities
 {
-    public class EntryPeriod
+    public class EntryPeriod : BaseTraceableObject
     {
         [Key, Column(Order=0), ForeignKey("Entry")]
         public int EntryKey { get; set; }
