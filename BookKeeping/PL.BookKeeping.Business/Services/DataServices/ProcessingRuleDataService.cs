@@ -2,6 +2,8 @@
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -13,5 +15,16 @@ namespace PL.BookKeeping.Business.Services.DataServices
 		{
 			
 		}
+
+        public IList<ProcessingRule> GetAllSorted()
+        {
+            using (var unitOfWork = this.mUOWFactory.Create())
+            {
+                var repository = unitOfWork.GetRepository<ProcessingRule>();
+                return repository.GetAll()
+                    .OrderBy(pr => pr.Priority)
+                    .ToList();
+            }
+        }
 	}
 }

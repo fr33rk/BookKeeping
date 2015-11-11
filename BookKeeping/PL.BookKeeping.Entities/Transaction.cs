@@ -33,10 +33,10 @@ namespace PL.BookKeeping.Entities
         [StringLength(500)]
         public string Remarks { get; set; }
 
-        //[ForeignKey("EntryPeriod")]
-        //public int EntryPeriodKey { get; set; }
+        [ForeignKey("EntryPeriod")]
+        public int EntryPeriodKey { get; set; }
 
-        //public EntryPeriod EntryPeriod { get; set; }
+        public EntryPeriod EntryPeriod { get; set; }
 
         #region Property Fingerprint
 

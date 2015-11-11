@@ -6,10 +6,10 @@ namespace PL.BookKeeping.Entities
 {
     public class EntryPeriod : BaseTraceableObject
     {
-        [Key, Column(Order=0), ForeignKey("Entry")]
+        [ForeignKey("Entry")]
         public int EntryKey { get; set; }
 
-        [Key, Column(Order = 1), ForeignKey("Period")]
+        [ForeignKey("Period")]
         public int PeriodKey { get; set; }
 
         [Required]

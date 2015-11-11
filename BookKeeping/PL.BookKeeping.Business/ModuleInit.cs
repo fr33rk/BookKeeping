@@ -28,9 +28,13 @@ namespace PL.BookKeeping.Business
         {
             mContainer.RegisterType<IUnitOfWorkFactory, UnitOfWorkFactoryOfT<DataContext>>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IAuthorizationService, AuthorizationService>(new ContainerControlledLifetimeManager());
+
             mContainer.RegisterType<ITransactionDataService, TransactionDataService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IEntryDataService, EntryDataService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IEntryPeriodDataService, EntryPeriodDataService>(new ContainerControlledLifetimeManager());
+            mContainer.RegisterType<IPeriodDataService, PeriodDataService>(new ContainerControlledLifetimeManager());
+            mContainer.RegisterType<IProcessingRuleDataService, ProcessingRuleDataService>(new ContainerControlledLifetimeManager());
+
             mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
         }

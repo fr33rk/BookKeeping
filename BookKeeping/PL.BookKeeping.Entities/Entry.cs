@@ -14,7 +14,7 @@ namespace PL.BookKeeping.Entities
 
         public Entry ParentEntry { get; set; }
 
-        [InverseProperty("Entry")]
+        [InverseProperty("ParentEntry")]
         public ICollection<Entry> ChildEntries { get; set; }
     }
 }

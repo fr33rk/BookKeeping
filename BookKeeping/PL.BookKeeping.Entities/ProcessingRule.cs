@@ -7,7 +7,7 @@ namespace PL.BookKeeping.Entities
 {
     public class ProcessingRule : BaseTraceableObject
     {
-        [Key, ForeignKey("Entry")]
+        [ForeignKey("Entry")]
         public int EntryKey { get; set; }
 
         public Entry Entry { get; set; }
@@ -30,6 +30,7 @@ namespace PL.BookKeeping.Entities
 
         public string RemarksRule { get; set; }
         
+        public int Priotiry { get; set; }
 
         /// <summary>Check if this rule applies to the given transaction.</summary>
         /// <param name="transaction">The transaction that needs to be checked.</param>

@@ -72,7 +72,7 @@ namespace PL.BookKeeping.Business.Services
 
         private void initializeForProcessing()
         {
-            mProcessingRules = mProcessingRulesDataService.GetAll();
+            mProcessingRules = mProcessingRulesDataService.GetAllSorted();
             getEntryPeriodList();
         }
 
@@ -88,6 +88,6 @@ namespace PL.BookKeeping.Business.Services
                                             (p.Period.PeriodStart >= transaction.Date) &&
                                             (p.Period.PeriodEnd < transaction.Date))
                                 .FirstOrDefault();
-        }
+        }       
     }
 }
