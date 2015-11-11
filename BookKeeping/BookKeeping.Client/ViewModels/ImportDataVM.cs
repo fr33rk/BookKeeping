@@ -239,6 +239,7 @@ namespace BookKeeping.Client.ViewModels
 
             mVMStateMachine.OnTransitioned((t) =>
             {
+                mLogFile.Debug(string.Format("ImportDataVM - VMStateMachine, changed state to {0}", t.Destination));
                 SelectFilesCommand.RaiseCanExecuteChanged();
                 ImportFilesCommand.RaiseCanExecuteChanged();
             });
@@ -259,6 +260,7 @@ namespace BookKeeping.Client.ViewModels
             mVMStateMachine.Configure(VMState.Processing)
                 .OnEntry(() =>
                 {
+                    mProcessorWorker.RunWorkerAsync();
                     mLogFile.Info("Started processing imported transactions.");
                 })
                 .Permit(VMTrigger.ProcessingDone, VMState.SelectingFiles)

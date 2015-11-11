@@ -30,8 +30,9 @@ namespace PL.BookKeeping.Business
             mContainer.RegisterType<IAuthorizationService, AuthorizationService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<ITransactionDataService, TransactionDataService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IEntryDataService, EntryDataService>(new ContainerControlledLifetimeManager());
+            mContainer.RegisterType<IEntryPeriodDataService, EntryPeriodDataService>(new ContainerControlledLifetimeManager());
             mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
-            mContainer.RegisterType<IDataProcessorService, IDataProcessorService>(new ContainerControlledLifetimeManager());
+            mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
         }
     }
 }

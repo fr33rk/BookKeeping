@@ -85,6 +85,7 @@
     <Compile Include="Services\DataProcessorService.cs" />
     <Compile Include="Services\DataServices\BaseTraceableObjectDataServiceOfT.cs" />
     <Compile Include="Services\DataServices\EntryDataService.cs" />
+    <Compile Include="Services\DataServices\EntryPeriodDataService.cs" />
     <Compile Include="Services\DataServices\ProcessingRuleDataService.cs" />
     <Compile Include="Services\DataServices\TransactionDataService.cs" />
   </ItemGroup>
