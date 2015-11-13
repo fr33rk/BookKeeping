@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PL.BookKeeping.Entities
 {
+    [Table("Entry")]
     public partial class Entry : BaseTraceableObject
     {
         [StringLength(40)]

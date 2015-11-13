@@ -53,7 +53,7 @@ namespace PL.BookKeeping.Business.Services
                                 period = getEntryPeriodForTransaction(transaction, rule);
                             }
 
-                            period.Transactions.Add(transaction);
+                            //period.Transactions.Add(transaction);
 
                             // We're done.
                             mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), period.Entry.Description, period.Period.ToString()));

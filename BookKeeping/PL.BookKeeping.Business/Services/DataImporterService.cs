@@ -82,6 +82,9 @@ namespace PL.BookKeeping.Business.Services
                     {
                         mImported++;
                         retValue.Add(transaction);
+
+                        // For testing purposes:
+                        return retValue;
                     }
                     else
                     {

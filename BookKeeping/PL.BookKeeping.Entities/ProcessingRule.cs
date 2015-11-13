@@ -29,8 +29,6 @@ namespace PL.BookKeeping.Entities
         public string MutationKindRule { get; set; }
 
         public string RemarksRule { get; set; }
-        
-        public int Priotiry { get; set; }
 
         /// <summary>Check if this rule applies to the given transaction.</summary>
         /// <param name="transaction">The transaction that needs to be checked.</param>

@@ -41,8 +41,8 @@ namespace PL.BookKeeping.Data.Repositories
             var uow = new UnitOfWork(context, mLogFile);
 
             //Set the current user.
-            var repository = uow.GetRepository<User>();
-            uow.SetCurrentUser(repository.FirstOrDefault());
+            //var repository = uow.GetRepository<User>();
+            //uow.SetCurrentUser(repository.FirstOrDefault());
             return uow;
         }
     }

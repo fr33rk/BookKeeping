@@ -64,7 +64,7 @@ namespace BookKeeping.Client.ViewModels
 
         private void ImportWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            mDataImportService.ImportFiles(SelectedFiles);
+            mImportedTransactions = mDataImportService.ImportFiles(SelectedFiles);
         }
 
         private void DataImportService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataImportedEventArgs e)
