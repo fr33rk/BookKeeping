@@ -4,6 +4,8 @@ using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
+using System;
+using PL.BookKeeping.Infrastructure;
 
 namespace PL.BookKeeping.Business.Services
 {
@@ -13,16 +15,21 @@ namespace PL.BookKeeping.Business.Services
         private IEntryPeriodDataService mEntryPeriodDataService;
         private IProcessingRuleDataService mProcessingRulesDataService;
         private IPeriodDataService mPeriodDataService;
+        private ITransactionDataService mTransactionDataService;
         private IList<ProcessingRule> mProcessingRules;
         private IList<EntryPeriod> mEntryPeriods;
 
+        private int mTransactionProcessedCount;
+
         public DataProcessorService(ILogFile logFile, IEntryPeriodDataService entryPeriodDataService,
-            IProcessingRuleDataService processingRuleDataService, IPeriodDataService periodDataService)
+            IProcessingRuleDataService processingRuleDataService, IPeriodDataService periodDataService,
+            ITransactionDataService transactionDataService)
         {
             mLogFile = logFile;
             mProcessingRulesDataService = processingRuleDataService;
             mEntryPeriodDataService = entryPeriodDataService;
             mPeriodDataService = periodDataService;
+            mTransactionDataService = transactionDataService;
         }
 
         public void Process(IList<Transaction> transactions)
@@ -53,11 +60,19 @@ namespace PL.BookKeeping.Business.Services
                                 period = getEntryPeriodForTransaction(transaction, rule);
                             }
 
-                            //period.Transactions.Add(transaction);
+                            transaction.EntryPeriodKey = period.Key;
+                            transaction.EntryPeriod = period;
+
+                            mTransactionDataService.Update(transaction);
 
                             // We're done.
-                            mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), period.Entry.Description, period.Period.ToString()));
+                            mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), period.Entry.Description, period.Period.ToString(), rule.Priority.ToString()));
                             added = true;
+
+                            mTransactionProcessedCount++;
+
+                            signalDataProcessed();
+
                             break;
                         }
                     }
@@ -72,6 +87,7 @@ namespace PL.BookKeeping.Business.Services
 
         private void initializeForProcessing()
         {
+            mTransactionProcessedCount = 0;
             mProcessingRules = mProcessingRulesDataService.GetAllSorted();
             getEntryPeriodList();
         }
@@ -79,15 +95,36 @@ namespace PL.BookKeeping.Business.Services
         /// <summary>(Re-)load all entry/period combinations from the database.</summary>
         private void getEntryPeriodList()
         {
-            mEntryPeriods = mEntryPeriodDataService.GetAll();
+            mEntryPeriods = mEntryPeriodDataService.GetAll(true);
         }
 
         private EntryPeriod getEntryPeriodForTransaction(Transaction transaction, ProcessingRule rule)
         {
             return mEntryPeriods.Where(p => (p.Entry.Key == rule.Entry.Key) &&
-                                            (p.Period.PeriodStart >= transaction.Date) &&
-                                            (p.Period.PeriodEnd < transaction.Date))
+                                            (p.Period.PeriodStart <= transaction.Date) &&
+                                            (p.Period.PeriodEnd > transaction.Date))
                                 .FirstOrDefault();
-        }       
+        }
+
+
+
+        #region Event DataProcessed
+
+        /// <summary>Occurs when a transaction had been processed. </summary>
+        public event EventHandler<DataProcessedEventArgs> OnDataProcessed;
+
+        /// <summary>Signals to raise the OnDataProcessed event.</summary>
+        private void signalDataProcessed()
+        {
+            var handler = OnDataProcessed;
+
+            if (handler != null)
+            {
+                handler(this, new DataProcessedEventArgs(mTransactionProcessedCount));
+            }
+        }
+
+        #endregion Event DataProcessed
+
     }
 }

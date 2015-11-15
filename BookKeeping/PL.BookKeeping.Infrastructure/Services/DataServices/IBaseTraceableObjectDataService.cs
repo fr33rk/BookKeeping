@@ -33,7 +33,7 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
 
         /// <summary>Gets all.</summary>
         /// <returns></returns>
-        IList<TEntity> GetAll();
+        IList<TEntity> GetAll(bool complete = false);
 
         /// <summary>When the entity, which is added to the database, contains references to other objects then
         /// these objects need to be reloaded within the lifetime of the unitOfWork so that Entity Framework knows

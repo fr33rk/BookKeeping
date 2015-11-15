@@ -31,6 +31,7 @@ namespace BookKeeping.Client.ViewModels
             mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;
             mLogFile = logFile;
             mDataProcessorService = dataProcessorService;
+            mDataProcessorService.OnDataProcessed += DataProcessorService_OnDataProcessed; 
 
             mImportWorker = new BackgroundWorker();
             mImportWorker.DoWork += ImportWorker_DoWork;
@@ -51,6 +52,11 @@ namespace BookKeeping.Client.ViewModels
         private void ProcessorWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             mDataProcessorService.Process(mImportedTransactions);
+        }
+
+        private void DataProcessorService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataProcessedEventArgs e)
+        {
+            ProcessedTransactions = e.Processed;
         }
 
         #endregion ProcessorWorker
@@ -112,6 +118,26 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion Property DuplicateTransactions
+
+        #region Property ProcessedTransactions
+
+        private int mProccesedTransactions;
+
+        public int ProcessedTransactions
+        {
+            get
+            {
+                return mProccesedTransactions;
+            }
+            set
+            {
+                mProccesedTransactions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        #endregion Property ProcessedTransactions
+
 
         #region property SelectedFiles
 
@@ -232,6 +258,7 @@ namespace BookKeeping.Client.ViewModels
         }
 
         private StateMachine<VMState, VMTrigger> mVMStateMachine;
+        
 
         private void InitializeStateMachine()
         {
@@ -248,6 +275,7 @@ namespace BookKeeping.Client.ViewModels
                 .Permit(VMTrigger.FilesSelected, VMState.WaitingOnImport);
 
             mVMStateMachine.Configure(VMState.WaitingOnImport)
+                .PermitReentry(VMTrigger.FilesSelected)
                 .Permit(VMTrigger.StartImport, VMState.Imporing);
 
             mVMStateMachine.Configure(VMState.Imporing)

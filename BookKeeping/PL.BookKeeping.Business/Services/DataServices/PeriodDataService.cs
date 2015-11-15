@@ -44,7 +44,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         {
             var retValue = new Period();
 
-            retValue.PeriodStart = new DateTime(transactionDate.Year, transactionDate.Month, 2).AddTicks(-1);
+            retValue.PeriodStart = new DateTime(transactionDate.Year, transactionDate.Month, 1);
             retValue.PeriodEnd = new DateTime(transactionDate.Year, transactionDate.Month, 1)
                 .AddMonths(1).AddTicks(-1);
             retValue.Name = mMonthNames[retValue.PeriodStart.Month];

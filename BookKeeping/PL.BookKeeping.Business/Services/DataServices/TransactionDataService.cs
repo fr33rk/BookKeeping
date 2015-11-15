@@ -46,6 +46,16 @@ namespace PL.BookKeeping.Business.Services.DataServices
             return add;
         }
 
+        public override Transaction AttachEntities(IUnitOfWork unitOfWork, Transaction entity)
+        {
+            if (entity.EntryPeriod != null)
+            {
+                var periods = unitOfWork.GetRepository<EntryPeriod>();
+                entity.EntryPeriod = periods.FirstOrDefault(e => e.Key == entity.EntryPeriod.Key);
+            }
+            return base.AttachEntities(unitOfWork, entity);
+        }
+
         public IList<Transaction> GetByFingerpint(int fingerPrint)
         {
             using (var unitOfWork = this.mUOWFactory.Create())

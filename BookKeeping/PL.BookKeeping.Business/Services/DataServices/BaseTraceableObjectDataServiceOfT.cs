@@ -64,6 +64,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
 
+                entity = AttachEntities(unitOfWork, entity);
+
                 repository.Update(entity, e => e.Key);
                 unitOfWork.SaveChanges();
             }
@@ -98,12 +100,20 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         /// <summary>Gets all.</summary>
         /// <returns></returns>
-        public IList<TEntity> GetAll()
+        public IList<TEntity> GetAll(bool complete = false)
         {
             using (var unitOfWork = this.mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
-                return repository.GetAll().ToList();
+                if (!complete)
+                {
+                    return repository.GetAll().ToList();
+                }
+                else
+                {
+                    var qry = CompleteQry(repository.GetQuery());
+                    return qry.ToList();
+                }
             }
         }
 

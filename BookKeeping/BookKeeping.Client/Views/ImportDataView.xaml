@@ -30,10 +30,12 @@
         <StackPanel Grid.Column="1" Grid.Row="4" Margin="4">
             <TextBlock Text="Imported:" />
             <TextBlock Text="Duplicate:" />
+            <TextBlock Text="Processed:" />
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="4" Margin="4">
-            <TextBlock Text="{Binding TransactionsImported, Mode=OneWay, FallbackValue=0}" />
+            <TextBlock Text="{Binding TransactionsImported, Mode=OneWay, FallbackValue=0}" />            
             <TextBlock Text="{Binding DuplicateTransactions, Mode=OneWay, FallbackValue=0}" />
+            <TextBlock Text="{Binding ProcessedTransactions, Mode=OneWay, FallbackValue=0}" />
         </StackPanel>
     </Grid>
 </UserControl>

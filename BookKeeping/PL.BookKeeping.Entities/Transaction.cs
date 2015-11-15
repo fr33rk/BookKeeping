@@ -73,7 +73,7 @@ namespace PL.BookKeeping.Entities
 
         public override string ToString()
         {
-            return string.Format("{0}, {1}, {2}", Date, Name, Amount);
+            return string.Format("{0}, {1}, {2}", Date.ToString(), Name, Amount);
         }
     }
 }

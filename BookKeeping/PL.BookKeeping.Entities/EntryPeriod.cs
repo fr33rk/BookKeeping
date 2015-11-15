@@ -22,5 +22,7 @@ namespace PL.BookKeeping.Entities
         public ICollection<Transaction> Transactions { get; set; }
 
         public decimal TotalAmount { get; set; }
+
+
     }
 }
