@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.Win32;
@@ -12,7 +13,7 @@ using Stateless;
 
 namespace BookKeeping.Client.ViewModels
 {
-    public class ImportDataVM : ViewModelBase
+    public class ImportDataVM : ViewModelBase, INavigationAware
     {
         private IDataImporterService mDataImportService;
         private IDataProcessorService mDataProcessorService;
@@ -299,5 +300,72 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion State machine
+
+
+        #region Command NavigateBackCommand
+
+        /// <summary>Field for the NavigateBack command.
+        /// </summary>
+        private DelegateCommand mNavigateBackCommand;
+
+        /// <summary>Gets NavigateBack command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand NavigateBackCommand
+        {
+            get
+            {
+                return this.mNavigateBackCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.NavigateBack, this.CanNavigateBack));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void NavigateBack()
+        {
+            if (mNavigationService.Journal.CanGoBack)
+            {
+                mNavigationService.Journal.GoBack();
+            }
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanNavigateBack()
+        {
+            return true;
+        }
+
+        #endregion Command NavigateBackCommand				
+
+        #region INavigationAware
+
+        private IRegionNavigationService mNavigationService;
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            mNavigationService = navigationContext.NavigationService;
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion INavigationAware
+
+
+
     }
 }

@@ -18,11 +18,13 @@ namespace BookKeeping.Client.Views
 {
     /// <summary>Interaction logic for DefineEntitiesView.xaml
     /// </summary>
-    public partial class DefineEntitiesView : UserControl
+    public partial class DefineEntriesView : UserControl
     {
-        public DefineEntitiesView(DefineEntriesVM vm)
+        public DefineEntriesView(DefineEntriesVM vm)
         {
             InitializeComponent();
+
+            DataContext = vm;
         }
     }
 }

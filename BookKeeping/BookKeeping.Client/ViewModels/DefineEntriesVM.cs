@@ -70,12 +70,13 @@ namespace BookKeeping.Client.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            return false;
+            //throw new NotImplementedException();
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         #endregion Command NavigateBackCommand				

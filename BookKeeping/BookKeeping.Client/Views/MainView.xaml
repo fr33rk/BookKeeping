@@ -26,19 +26,19 @@
                 <!--<Grid Background="#FFE5E5E5"/>-->
                 <DataGrid>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Entry" Width="200" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Jan" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Feb" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Apr" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Mrt" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Mei" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Jun" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Jul" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Aug" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Sep" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Okt" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Nov" Width="50" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Dec" Width="50" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Entry" Width="4*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Jan" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Feb" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Apr" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Mrt" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Mei" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Jun" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Jul" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Aug" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Sep" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Okt" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Nov" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Dec" Width="*" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 

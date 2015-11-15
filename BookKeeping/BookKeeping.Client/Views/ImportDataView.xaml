@@ -37,5 +37,8 @@
             <TextBlock Text="{Binding DuplicateTransactions, Mode=OneWay, FallbackValue=0}" />
             <TextBlock Text="{Binding ProcessedTransactions, Mode=OneWay, FallbackValue=0}" />
         </StackPanel>
+        <StackPanel Grid.Row="5" Grid.Column="4" Orientation="Horizontal">
+            <Button Content="Klaar" Width="Auto" Command="{Binding NavigateBackCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

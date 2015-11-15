@@ -1,4 +1,5 @@
-﻿using BookKeeping.Client.Views;
+﻿using System;
+using BookKeeping.Client.Views;
 using PL.BookKeeping.Infrastructure;
 using PL.Common.Prism;
 using Prism.Commands;
@@ -6,7 +7,7 @@ using Prism.Regions;
 
 namespace BookKeeping.Client.ViewModels
 {
-    public class MainVM : ViewModelBase
+    public class MainVM : ViewModelBase, INavigationAware, IRegionMemberLifetime
     {
         IRegionManager mRegionManager;
 
@@ -79,7 +80,7 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void DefineEntries()
         {
-            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineEntitiesView).FullName);
+            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineEntriesView).FullName);
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
@@ -90,5 +91,39 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion Command SelectFilesCommand
+
+        #region INavigationAware
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
+
+        #endregion INavigationAware
+
+        #region IRegionMemberLifetime
+
+        public bool KeepAlive
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        #endregion IRegionMemberLifetime
+
+
+
     }
 }
