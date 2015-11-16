@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Infrastructure.Services.DataServices
@@ -9,5 +10,7 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         /// <param name="transactionDate">The transaction date that must fit in the period.</param>
         /// <returns>The period added to the database.</returns>
         Period AddUsingTransactionDate(DateTime transactionDate);
+
+        IList<int> GetAvailableYears();
     }
 }

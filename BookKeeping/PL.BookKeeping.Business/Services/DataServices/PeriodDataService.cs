@@ -1,12 +1,10 @@
-﻿using PL.BookKeeping.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -34,8 +32,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         public PeriodDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService, IEntryDataService entryDataService,
             IEntryPeriodDataService entryPeriodDataService)
-			: base(uowFactory, authorizationService)
-		{
+            : base(uowFactory, authorizationService)
+        {
             mEntryDataService = entryDataService;
             mEntryPeriodDataService = entryPeriodDataService;
         }
@@ -47,7 +45,9 @@ namespace PL.BookKeeping.Business.Services.DataServices
             retValue.PeriodStart = new DateTime(transactionDate.Year, transactionDate.Month, 1);
             retValue.PeriodEnd = new DateTime(transactionDate.Year, transactionDate.Month, 1)
                 .AddMonths(1).AddTicks(-1);
+            retValue.Year = transactionDate.Year;
             retValue.Name = mMonthNames[retValue.PeriodStart.Month];
+
 
             base.Add(retValue);
 
@@ -68,5 +68,21 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
             return retValue;
         }
+
+        public IList<int> GetAvailableYears()
+        {
+            using (var unitOfWork = this.mUOWFactory.Create())
+            {
+                var repository = unitOfWork.GetRepository<Period>();
+                var retValue = repository.GetQuery()
+                    .Select(e => e.Year)
+                    .Distinct()
+                    .OrderBy(e => e);
+
+                return retValue.ToList();                    
+            }
+        }
+
+
     }
 }

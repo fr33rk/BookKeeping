@@ -1,6 +1,7 @@
 ﻿using System;
 using BookKeeping.Client.Views;
 using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
@@ -10,10 +11,12 @@ namespace BookKeeping.Client.ViewModels
     public class MainVM : ViewModelBase, INavigationAware, IRegionMemberLifetime
     {
         IRegionManager mRegionManager;
+        IPeriodDataService mPeriodDataService;
 
-        public MainVM(IRegionManager regionManager)
+        public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService)
         {
             mRegionManager = regionManager;
+            mPeriodDataService = periodDataService;
         }
 
         #region Command JustDoItCommand
@@ -96,7 +99,7 @@ namespace BookKeeping.Client.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+            var test = mPeriodDataService.GetAvailableYears();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -122,8 +125,5 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion IRegionMemberLifetime
-
-
-
     }
 }

@@ -26,6 +26,14 @@ namespace PL.BookKeeping.Entities
 
         #endregion Property PeriodEnd
 
+        #region Property Year
+
+        [Required]
+        public int Year { get; set; }
+
+        #endregion Property Year
+
+
         #region Helper methods
 
         public override string ToString()
