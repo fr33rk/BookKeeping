@@ -14,6 +14,7 @@ namespace PL.BookKeeping.Data
             //: base(new FbConnection(@"database=localhost:D:\Ontwikkeling\Eigen\BookKeeping\BookKeeping\Database\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
             : base(new FbConnection(@"database=localhost:D:\Projects\TSF\BookKeeping\BookKeeping\Database\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public DbSet<User> Users { get; set; }

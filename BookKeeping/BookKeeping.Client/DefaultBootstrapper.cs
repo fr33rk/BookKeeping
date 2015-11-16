@@ -7,6 +7,8 @@ using PL.Logger;
 using Prism.Logging;
 using Prism.Modularity;
 using Prism.Unity;
+using Prism.Events;
+using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 
 namespace BookKeeping.Client
 {
@@ -64,6 +66,14 @@ namespace BookKeeping.Client
             mLogFile.WriteLogStart();
 
             return new PlLoggerFacade(mLogFile);
+        }
+
+        protected override void InitializeModules()
+        {
+            base.InitializeModules();
+
+            var eventAggregator = Container.TryResolve<IEventAggregator>();            
+            eventAggregator.GetEvent<ModuleInitializationDoneEvent>().Publish(true);
         }
     }
 }

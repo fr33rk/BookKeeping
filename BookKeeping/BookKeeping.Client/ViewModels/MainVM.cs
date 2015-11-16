@@ -5,6 +5,11 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
+using Prism.Events;
+using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
+using System.Collections.Generic;
+using Microsoft.Practices.Unity;
+using Prism.Unity;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -12,11 +17,44 @@ namespace BookKeeping.Client.ViewModels
     {
         IRegionManager mRegionManager;
         IPeriodDataService mPeriodDataService;
+        IEventAggregator mEventAggregator;
+        IUnityContainer mContainer;
 
-        public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService)
+        public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
+            IUnityContainer unityContainer)
         {
             mRegionManager = regionManager;
             mPeriodDataService = periodDataService;
+            mEventAggregator = eventAggregator;
+            mContainer = unityContainer;
+
+            mEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
+        }
+
+        private void InitializationDoneAction(bool value)
+        {
+            mAvailableYears = new List<YearOverviewVM>();
+
+            var availableYears = mPeriodDataService.GetAvailableYears();
+            foreach (var year in availableYears)
+            {
+                mAvailableYears.Add(mContainer.Resolve<YearOverviewVM>(new ResolverOverride[]
+                                                                       {
+                                                                           new ParameterOverride("year", year),
+                                                                       })
+                                   );
+                
+            }
+        }
+
+        private IList<YearOverviewVM> mAvailableYears;
+
+        public IEnumerable<YearOverviewVM> AvailableYears
+        {
+            get
+            {
+                return mAvailableYears;
+            }
         }
 
         #region Command JustDoItCommand
@@ -62,7 +100,7 @@ namespace BookKeeping.Client.ViewModels
         /// <summary>Field for the StartMeasurement command.
         /// </summary>
         private DelegateCommand mDefineEntriesCommand;
-
+        
         /// <summary>Gets StartMeasurement command.
         /// </summary>
         [System.ComponentModel.Browsable(false)]
@@ -99,7 +137,7 @@ namespace BookKeeping.Client.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var test = mPeriodDataService.GetAvailableYears();
+            
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -126,4 +164,6 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion IRegionMemberLifetime
     }
+
+    
 }

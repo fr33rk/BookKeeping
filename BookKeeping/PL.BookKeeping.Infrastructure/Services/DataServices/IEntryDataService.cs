@@ -9,5 +9,6 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
 {
     public interface IEntryDataService : IBaseTraceableObjectDataService<Entry>
     {
+        IList<Entry> GetAllSorted();
     }
 }

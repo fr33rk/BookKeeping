@@ -118,6 +118,7 @@
     <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ExampleVM.cs" />
+    <Compile Include="ViewModels\YearOverviewVM.cs" />
     <Compile Include="Views\DefineEntriesView.xaml.cs">
       <DependentUpon>DefineEntriesView.xaml</DependentUpon>
     </Compile>

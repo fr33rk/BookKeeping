@@ -21,9 +21,26 @@
             </MenuItem>
         </Menu>
 
-        <TabControl Grid.Row="1" TabStripPlacement="Bottom">
-            <TabItem Header="2015" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="55">
-                <!--<Grid Background="#FFE5E5E5"/>-->
+        <TabControl Grid.Row="1" TabStripPlacement="Bottom" ItemsSource="{Binding AvailableYears}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Year}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid Background="#FFE5E5E5">
+                        <DataGrid ItemsSource="">
+                            
+                        </DataGrid>
+                    </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+        <!--<TabItem Header="2015" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="55">
+                -->
+        <!--<Grid Background="#FFE5E5E5"/>-->
+        <!--
                 <DataGrid>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Entry" Width="4*" IsReadOnly="True"/>
@@ -42,7 +59,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 
-            </TabItem>
-        </TabControl>
+            </TabItem>-->
+
     </Grid>
 </UserControl>
