@@ -28,7 +28,7 @@ namespace BookKeeping.Client.ViewModels
 
         private void loadData()
         {
-            mEntries = mEntryDataService.GetAllSorted();
+            mEntryPeriods = mEntryPeriodDataService.GetAll(true);
         }
 
         public string Year
@@ -36,14 +36,14 @@ namespace BookKeeping.Client.ViewModels
             get { return mYear.ToString(); }
         }
 
-        private IEnumerable<Entry> mEntries;
+        private IEnumerable<EntryPeriod> mEntryPeriods;
         
 
-        public IEnumerable<Entry> Entries
+        public IEnumerable<EntryPeriod> EntryPeriods
         {
             get
             {
-                return mEntries;
+                return mEntryPeriods;
             }
         }
     }
