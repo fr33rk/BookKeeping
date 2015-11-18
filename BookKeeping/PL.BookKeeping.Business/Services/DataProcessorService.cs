@@ -20,6 +20,7 @@ namespace PL.BookKeeping.Business.Services
         private IList<EntryPeriod> mEntryPeriods;
 
         private int mTransactionProcessedCount;
+        private int mTransactionsIgnoredCount;
 
         public DataProcessorService(ILogFile logFile, IEntryPeriodDataService entryPeriodDataService,
             IProcessingRuleDataService processingRuleDataService, IPeriodDataService periodDataService,
@@ -34,7 +35,7 @@ namespace PL.BookKeeping.Business.Services
 
         public void Process(IList<Transaction> transactions)
         {
-            bool added;
+            bool processed;
 
             // Prepare for processing by loading the entries and current periods.
             initializeForProcessing();
@@ -43,41 +44,52 @@ namespace PL.BookKeeping.Business.Services
             {
                 foreach (var transaction in transactions)
                 {
-                    added = false;
+                    processed = false;
                     foreach (var rule in mProcessingRules)
                     {
                         if (rule.AppliesTo(transaction))
                         {
-                            var period = getEntryPeriodForTransaction(transaction, rule);
-
-                            if (period == null)
+                            // When the entry is null then the transaction should be ignored.
+                            if (rule.Entry != null)
                             {
-                                // A new period and entry-period combination need to be created first.
-                                mPeriodDataService.AddUsingTransactionDate(transaction.Date);
-                                // Reload the list of entry-date combinations.
-                                getEntryPeriodList();
-                                // Now get the brand new EntryPeriod combination.
-                                period = getEntryPeriodForTransaction(transaction, rule);
+                                var entryPeriod = getEntryPeriodForTransaction(transaction, rule);
+
+                                if (entryPeriod == null)
+                                {
+                                    // A new period and entry-period combination need to be created first.
+                                    mPeriodDataService.AddUsingTransactionDate(transaction.Date);
+                                    // Reload the list of entry-date combinations.
+                                    getEntryPeriodList();
+                                    // Now get the brand new EntryPeriod combination.
+                                    entryPeriod = getEntryPeriodForTransaction(transaction, rule);
+                                }
+
+                                transaction.EntryPeriodKey = entryPeriod.Key;
+                                transaction.EntryPeriod = entryPeriod;
+
+                                entryPeriod.TotalAmount += transaction.Amount;
+
+                                mTransactionDataService.Update(transaction);
+                                mEntryPeriodDataService.Update(entryPeriod);
+
+                                // We're done.
+                                mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), entryPeriod.Entry.Description, entryPeriod.Period.ToString(), rule.Priority.ToString()));
+
+                                mTransactionProcessedCount++;                                
+                            }
+                            else
+                            {
+                                mTransactionsIgnoredCount++;
                             }
 
-                            transaction.EntryPeriodKey = period.Key;
-                            transaction.EntryPeriod = period;
-
-                            mTransactionDataService.Update(transaction);
-
-                            // We're done.
-                            mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), period.Entry.Description, period.Period.ToString(), rule.Priority.ToString()));
-                            added = true;
-
-                            mTransactionProcessedCount++;
-
+                            processed = true;
                             signalDataProcessed();
 
                             break;
                         }
                     }
 
-                    if (!added)
+                    if (!processed)
                     {
                         mLogFile.Warning(string.Format("There is no rule to process transaction: {0}", transaction.ToString()));
                     }
@@ -88,6 +100,7 @@ namespace PL.BookKeeping.Business.Services
         private void initializeForProcessing()
         {
             mTransactionProcessedCount = 0;
+            mTransactionsIgnoredCount = 0;
             mProcessingRules = mProcessingRulesDataService.GetAllSorted();
             getEntryPeriodList();
         }
@@ -120,7 +133,7 @@ namespace PL.BookKeeping.Business.Services
 
             if (handler != null)
             {
-                handler(this, new DataProcessedEventArgs(mTransactionProcessedCount));
+                handler(this, new DataProcessedEventArgs(mTransactionProcessedCount, mTransactionsIgnoredCount));
             }
         }
 

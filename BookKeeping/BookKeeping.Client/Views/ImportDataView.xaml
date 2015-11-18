@@ -31,11 +31,13 @@
             <TextBlock Text="Imported:" />
             <TextBlock Text="Duplicate:" />
             <TextBlock Text="Processed:" />
+            <TextBlock Text="Ignored:" />
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="4" Margin="4">
             <TextBlock Text="{Binding TransactionsImported, Mode=OneWay, FallbackValue=0}" />            
             <TextBlock Text="{Binding DuplicateTransactions, Mode=OneWay, FallbackValue=0}" />
             <TextBlock Text="{Binding ProcessedTransactions, Mode=OneWay, FallbackValue=0}" />
+            <TextBlock Text="{Binding IgnoredTransactions, Mode=OneWay, FallbackValue=0}" />
         </StackPanel>
         <StackPanel Grid.Row="5" Grid.Column="4" Orientation="Horizontal">
             <Button Content="Klaar" Width="Auto" Command="{Binding NavigateBackCommand}"/>

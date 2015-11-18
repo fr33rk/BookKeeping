@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.Common.Prism;
@@ -10,6 +6,9 @@ using PL.Logger;
 using Prism.Commands;
 using Prism.Regions;
 using Stateless;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -32,7 +31,7 @@ namespace BookKeeping.Client.ViewModels
             mDataImportService.OnDataProcessed += DataImportService_OnDataProcessed;
             mLogFile = logFile;
             mDataProcessorService = dataProcessorService;
-            mDataProcessorService.OnDataProcessed += DataProcessorService_OnDataProcessed; 
+            mDataProcessorService.OnDataProcessed += DataProcessorService_OnDataProcessed;
 
             mImportWorker = new BackgroundWorker();
             mImportWorker.DoWork += ImportWorker_DoWork;
@@ -58,6 +57,7 @@ namespace BookKeeping.Client.ViewModels
         private void DataProcessorService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataProcessedEventArgs e)
         {
             ProcessedTransactions = e.Processed;
+            IgnoredTransactions = e.Ignored;
         }
 
         #endregion ProcessorWorker
@@ -139,6 +139,24 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Property ProcessedTransactions
 
+        #region Property IgnoredTransactions
+
+        private int mIgnoredTransactions;
+
+        public int IgnoredTransactions
+        {
+            get
+            {
+                return mIgnoredTransactions;
+            }
+            set
+            {
+                mIgnoredTransactions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        #endregion Property IgnoredTransactions
 
         #region property SelectedFiles
 
@@ -259,7 +277,6 @@ namespace BookKeeping.Client.ViewModels
         }
 
         private StateMachine<VMState, VMTrigger> mVMStateMachine;
-        
 
         private void InitializeStateMachine()
         {
@@ -301,7 +318,6 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion State machine
 
-
         #region Command NavigateBackCommand
 
         /// <summary>Field for the NavigateBack command.
@@ -341,7 +357,7 @@ namespace BookKeeping.Client.ViewModels
             return true;
         }
 
-        #endregion Command NavigateBackCommand				
+        #endregion Command NavigateBackCommand
 
         #region INavigationAware
 
@@ -355,7 +371,6 @@ namespace BookKeeping.Client.ViewModels
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
-
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
@@ -364,8 +379,5 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion INavigationAware
-
-
-
     }
 }

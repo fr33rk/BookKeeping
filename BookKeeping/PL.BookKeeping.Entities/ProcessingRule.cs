@@ -8,7 +8,7 @@ namespace PL.BookKeeping.Entities
     public class ProcessingRule : BaseTraceableObject
     {
         [ForeignKey("Entry")]
-        public int EntryKey { get; set; }
+        public int? EntryKey { get; set; }
 
         public Entry Entry { get; set; }
 

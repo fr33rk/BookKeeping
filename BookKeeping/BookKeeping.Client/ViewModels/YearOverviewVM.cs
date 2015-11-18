@@ -31,20 +31,6 @@ namespace BookKeeping.Client.ViewModels
             mEntryPeriods = mEntryPeriodDataService.GetAll(true);
         }
 
-        public string Year
-        {
-            get { return mYear.ToString(); }
-        }
 
-        private IEnumerable<EntryPeriod> mEntryPeriods;
-        
-
-        public IEnumerable<EntryPeriod> EntryPeriods
-        {
-            get
-            {
-                return mEntryPeriods;
-            }
-        }
     }
 }

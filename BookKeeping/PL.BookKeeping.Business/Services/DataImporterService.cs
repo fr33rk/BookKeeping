@@ -118,6 +118,11 @@ namespace PL.BookKeeping.Business.Services
             retValue.MutationKind = values[7];
             retValue.Remarks = values[8];
 
+            if (retValue.MutationType == MutationType.Debit)
+            {
+                retValue.Amount *= -1;
+            }
+
             return retValue;
         }
 
