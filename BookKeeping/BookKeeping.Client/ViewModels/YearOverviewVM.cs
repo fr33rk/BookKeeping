@@ -1,11 +1,7 @@
-﻿using PL.BookKeeping.Entities;
+﻿using System.Collections.Generic;
+using BookKeeping.Client.Models;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -15,6 +11,8 @@ namespace BookKeeping.Client.ViewModels
         private IEntryPeriodDataService mEntryPeriodDataService;
         private IEntryDataService mEntryDataService;
         private int mYear;
+
+        private IList<EntryOfYearVM> mEntriesOfYear;
         
 
         public YearOverviewVM(int year, IEntryPeriodDataService entryPeriodDataService, IEntryDataService entryDataService)
@@ -28,7 +26,7 @@ namespace BookKeeping.Client.ViewModels
 
         private void loadData()
         {
-            mEntryPeriods = mEntryPeriodDataService.GetAll(true);
+            mEntryPeriodDataService.GetAll(true);
         }
 
 
