@@ -30,16 +30,15 @@
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <Grid Background="#FFE5E5E5">
-                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding EntryPeriods}">
+                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding EntriesOfYear}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Entry" Binding="{Binding Entry.Description}"/>
+                                <DataGridTextColumn Header="Entry" Width="4*" Binding="{Binding Entry.Description}"/>
+                                <DataGridTextColumn Header="Jan" Width="*" Binding="{Binding Jan}"/>
+                                <DataGridTextColumn Header="Feb" Width="*" Binding="{Binding Feb}"/>
+                                <DataGridTextColumn Header="Mar" Width="*" Binding="{Binding Mar}"/>
+                                <DataGridTextColumn Header="Apr" Width="*" Binding="{Binding Apr}"/>
+                                <DataGridTextColumn Header="Total" Width="*" Binding="{Binding Total}"/>
                             </DataGrid.Columns>
-                            <!--<DataGridTemplateColumn>
-                                <DataGridTemplateColumn.Header>
-                                    <TextBlock Text="{Binding 'DataContext.Entry.Period.Name', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                                    <TextBlock Text="WTF"/>
-                                </DataGridTemplateColumn.Header>
-                            </DataGridTemplateColumn>-->
                         </DataGrid>
                     </Grid>
                 </DataTemplate>

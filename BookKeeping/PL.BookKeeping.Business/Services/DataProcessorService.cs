@@ -6,6 +6,8 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
 using System;
 using PL.BookKeeping.Infrastructure;
+using Prism.Events;
+using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 
 namespace PL.BookKeeping.Business.Services
 {
@@ -18,30 +20,37 @@ namespace PL.BookKeeping.Business.Services
         private ITransactionDataService mTransactionDataService;
         private IList<ProcessingRule> mProcessingRules;
         private IList<EntryPeriod> mEntryPeriods;
+        private IEventAggregator mEventAggregator;
 
         private int mTransactionProcessedCount;
         private int mTransactionsIgnoredCount;
+        
 
         public DataProcessorService(ILogFile logFile, IEntryPeriodDataService entryPeriodDataService,
             IProcessingRuleDataService processingRuleDataService, IPeriodDataService periodDataService,
-            ITransactionDataService transactionDataService)
+            ITransactionDataService transactionDataService, IEventAggregator eventAggregator)
         {
             mLogFile = logFile;
             mProcessingRulesDataService = processingRuleDataService;
             mEntryPeriodDataService = entryPeriodDataService;
             mPeriodDataService = periodDataService;
             mTransactionDataService = transactionDataService;
+            mEventAggregator = eventAggregator;
         }
 
         public void Process(IList<Transaction> transactions)
         {
             bool processed;
+            
 
             // Prepare for processing by loading the entries and current periods.
             initializeForProcessing();
 
-            if (mProcessingRules != null)
+            if ((mProcessingRules != null) && (transactions != null))
             {
+                var changedYears = new List<int>();
+                int year;
+
                 foreach (var transaction in transactions)
                 {
                     processed = false;
@@ -89,11 +98,19 @@ namespace PL.BookKeeping.Business.Services
                         }
                     }
 
-                    if (!processed)
+                    if (processed)
+                    {
+                        if (!changedYears.Contains(transaction.Date.Year))
+                        {
+                            changedYears.Add(transaction.Date.Year);
+                        }
+                    }
+                    else
                     {
                         mLogFile.Warning(string.Format("There is no rule to process transaction: {0}", transaction.ToString()));
                     }
                 }
+                mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs(false, changedYears));
             }
         }
 

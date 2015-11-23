@@ -48,5 +48,18 @@ namespace PL.BookKeeping.Business.Services.DataServices
                                          .Include(e => e.Entry));
         }
 
+        public IList<EntryPeriod> GetByEntryAndYear(Entry entry, int year)
+        {
+            using (var unitOfWork = this.mUOWFactory.Create())
+            {
+                var repository = unitOfWork.GetRepository<EntryPeriod>();
+                var qry = repository.GetQuery()
+                    .Where(ep => (ep.Entry.Key == entry.Key) && (ep.Period.PeriodStart.Year == year));
+
+                qry = CompleteQry(qry);
+                
+                return qry.ToList();
+            }
+        }
     }
 }

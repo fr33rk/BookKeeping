@@ -10,6 +10,7 @@ using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using System.Collections.Generic;
 using Microsoft.Practices.Unity;
 using Prism.Unity;
+using System.Collections.ObjectModel;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -29,11 +30,22 @@ namespace BookKeeping.Client.ViewModels
             mContainer = unityContainer;
 
             mEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
+            mEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
+        }
+
+        private void DataChangedAction(DataChangedEventArgs obj)
+        {
+            loadData();
         }
 
         private void InitializationDoneAction(bool value)
         {
-            mAvailableYears = new List<YearOverviewVM>();
+            loadData();
+        }
+
+        private void loadData()
+        {
+            AvailableYears = new ObservableCollection<YearOverviewVM>();
 
             var availableYears = mPeriodDataService.GetAvailableYears();
             foreach (var year in availableYears)
@@ -43,17 +55,22 @@ namespace BookKeeping.Client.ViewModels
                                                                            new ParameterOverride("year", year),
                                                                        })
                                    );
-                
+
             }
         }
 
-        private IList<YearOverviewVM> mAvailableYears;
+        private ObservableCollection<YearOverviewVM> mAvailableYears;
 
-        public IEnumerable<YearOverviewVM> AvailableYears
+        public ObservableCollection<YearOverviewVM> AvailableYears
         {
             get
             {
                 return mAvailableYears;
+            }
+            set
+            {
+                mAvailableYears = value;
+                NotifyPropertyChanged();
             }
         }
 
