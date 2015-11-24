@@ -15,6 +15,8 @@ namespace BookKeeping.Client.Models
 
         public Entry Entry { get; set; }
 
+        #region Columns
+
         public decimal? Jan
         {
             get
@@ -22,7 +24,6 @@ namespace BookKeeping.Client.Models
                 return mAmounts[(int)ShortMonthName.Jan];
             }
         }
-
         public decimal? Feb
         {
             get
@@ -30,7 +31,6 @@ namespace BookKeeping.Client.Models
                 return mAmounts[(int)ShortMonthName.Feb];
             }
         }
-
         public decimal? Mar
         {
             get
@@ -38,7 +38,6 @@ namespace BookKeeping.Client.Models
                 return mAmounts[(int)ShortMonthName.Mar];
             }
         }
-
         public decimal? Apr
         {
             get
@@ -46,6 +45,66 @@ namespace BookKeeping.Client.Models
                 return mAmounts[(int)ShortMonthName.Apr];
             }
         }
+        public decimal? May
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Mei];
+            }
+        }
+        public decimal? Jun
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Jun];
+            }
+        }
+        public decimal? Jul
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Jul];
+            }
+        }
+        public decimal? Aug
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Aug];
+            }
+        }
+        public decimal? Sep
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Sep];
+            }
+        }
+        public decimal? Okt
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Okt];
+            }
+        }
+        public decimal? Nov
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Nov];
+            }
+        }
+        public decimal? Dec
+        {
+            get
+            {
+                return mAmounts[(int)ShortMonthName.Dec];
+            }
+        }
+
+
+        #endregion Columns
+
 
         public decimal? Total
         {
@@ -56,6 +115,7 @@ namespace BookKeeping.Client.Models
         }
 
         private decimal?[] mAmounts = new decimal?[13];
+        private int?[] mPeriodKeys = new int?[13];
 
         public void SetPeriodData(IList<EntryPeriod> entryPeriods)
         {

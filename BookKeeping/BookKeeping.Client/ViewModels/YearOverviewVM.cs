@@ -11,15 +11,74 @@ namespace BookKeeping.Client.ViewModels
 
         private IEntryPeriodDataService mEntryPeriodDataService;
         private IEntryDataService mEntryDataService;
+        private ITransactionDataService mTransactionDataService;
         private int mYear;
 
-        public YearOverviewVM(int year, IEntryPeriodDataService entryPeriodDataService, IEntryDataService entryDataService)
+        public YearOverviewVM(int year, IEntryPeriodDataService entryPeriodDataService, IEntryDataService entryDataService,
+            ITransactionDataService transactionService)
         {
             mYear = year;
             mEntryPeriodDataService = entryPeriodDataService;
             mEntryDataService = entryDataService;
+            mTransactionDataService = transactionService;
 
             loadData();
+        }
+
+        private EntryOfYearVM mSelectedEntryOfYear;
+
+        public EntryOfYearVM SelectedEntryOfYear
+        {
+            get
+            {
+                return mSelectedEntryOfYear;
+            }
+            set
+            {
+                mSelectedEntryOfYear = value;
+                NotifyPropertyChanged();
+            }
+
+        }
+
+        private int mSelectedIndex;
+
+        public int SelectedIndex
+        {
+            get
+            {
+                return mSelectedIndex;
+            }
+            set
+            {
+                mSelectedIndex = value;
+            }
+        }
+
+        private void LoadSelectedTransactions()
+        {
+            if ((mSelectedEntryOfYear != null)
+                && ((SelectedIndex >= 1) || (SelectedIndex <= 12)))
+            {
+                mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.)
+            }
+        }
+
+
+
+        private IEnumerable<Transaction> mSelectedTransactions;
+
+        public IEnumerable<Transaction> SelectedTransactions
+        {
+            get
+            {
+                return mSelectedTransactions;
+            }
+            set
+            {
+                mSelectedTransactions = value;
+                NotifyPropertyChanged();
+            }
         }
 
         private void loadData()

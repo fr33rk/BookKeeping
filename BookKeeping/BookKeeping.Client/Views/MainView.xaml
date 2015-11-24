@@ -29,17 +29,38 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Grid Background="#FFE5E5E5">
-                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding EntriesOfYear}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Entry" Width="4*" Binding="{Binding Entry.Description}"/>
-                                <DataGridTextColumn Header="Jan" Width="*" Binding="{Binding Jan}"/>
-                                <DataGridTextColumn Header="Feb" Width="*" Binding="{Binding Feb}"/>
-                                <DataGridTextColumn Header="Mar" Width="*" Binding="{Binding Mar}"/>
-                                <DataGridTextColumn Header="Apr" Width="*" Binding="{Binding Apr}"/>
-                                <DataGridTextColumn Header="Total" Width="*" Binding="{Binding Total}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Background="#FFE5E5E5">
+                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding EntriesOfYear}"
+                                      SelectedItem="{Binding SelectedEntryOfYear}" IsReadOnly="True" CanUserDeleteRows="True" CanUserResizeRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" 
+                                      SelectedIndex="{Binding SelectedIndex}" CanUserResizeColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Entry" Width="4*" Binding="{Binding Entry.Description}"/>
+                                    <DataGridTextColumn Header="Jan" Width="*" Binding="{Binding Jan}"/>
+                                    <DataGridTextColumn Header="Feb" Width="*" Binding="{Binding Feb}"/>
+                                    <DataGridTextColumn Header="Mar" Width="*" Binding="{Binding Mar}"/>
+                                    <DataGridTextColumn Header="Apr" Width="*" Binding="{Binding Apr}"/>
+                                    <DataGridTextColumn Header="Mei" Width="*" Binding="{Binding May}"/>
+                                    <DataGridTextColumn Header="Jun" Width="*" Binding="{Binding Jun}"/>
+                                    <DataGridTextColumn Header="Jul" Width="*" Binding="{Binding Jul}"/>
+                                    <DataGridTextColumn Header="Aug" Width="*" Binding="{Binding Aug}"/>
+                                    <DataGridTextColumn Header="Sep" Width="*" Binding="{Binding Sep}"/>
+                                    <DataGridTextColumn Header="Okt" Width="*" Binding="{Binding Okt}"/>
+                                    <DataGridTextColumn Header="Nov" Width="*" Binding="{Binding Nov}"/>
+                                    <DataGridTextColumn Header="Dec" Width="*" Binding="{Binding Dec}"/>
+                                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding Total}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
+                        <Grid Grid.Row="2">
+                            <DataGrid ItemsSource="{Binding SelectedEntryPeriod}"/>
+                        </Grid>
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
