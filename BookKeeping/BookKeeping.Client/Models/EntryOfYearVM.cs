@@ -1,13 +1,26 @@
-﻿using PL.BookKeeping.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
 using PL.Common.Prism;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BookKeeping.Client.Models
 {
     public class EntryOfYearVM : ViewModelBase
     {
+        private class column
+        {
+            public column(EntryPeriod entryPeriod, decimal amount)
+            {
+                EntryPeriod = entryPeriod;
+                Amount = amount;
+            }
+
+            public EntryPeriod EntryPeriod;
+            public decimal Amount;
+        }
+
+
         public EntryOfYearVM(Entry entry)
         {
             Entry = entry;
@@ -21,106 +34,114 @@ namespace BookKeeping.Client.Models
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Jan];
+                return GetAmountByIndex((int)ShortMonthName.Jan);
             }
         }
         public decimal? Feb
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Feb];
+                return GetAmountByIndex((int)ShortMonthName.Feb);
             }
         }
         public decimal? Mar
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Mar];
+                return GetAmountByIndex((int)ShortMonthName.Mar);
             }
         }
         public decimal? Apr
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Apr];
+                return GetAmountByIndex((int)ShortMonthName.Apr);
             }
         }
         public decimal? May
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Mei];
+                return GetAmountByIndex((int)ShortMonthName.Mei);
             }
         }
         public decimal? Jun
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Jun];
+                return GetAmountByIndex((int)ShortMonthName.Jun);
             }
         }
         public decimal? Jul
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Jul];
+                return GetAmountByIndex((int)ShortMonthName.Jul);
             }
         }
         public decimal? Aug
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Aug];
+                return GetAmountByIndex((int)ShortMonthName.Aug);
             }
         }
         public decimal? Sep
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Sep];
+                return GetAmountByIndex((int)ShortMonthName.Sep);
             }
         }
         public decimal? Okt
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Okt];
+                return GetAmountByIndex((int)ShortMonthName.Okt);
             }
         }
         public decimal? Nov
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Nov];
+                return GetAmountByIndex((int)ShortMonthName.Nov);
             }
         }
         public decimal? Dec
         {
             get
             {
-                return mAmounts[(int)ShortMonthName.Dec];
+                return GetAmountByIndex((int)ShortMonthName.Dec);
             }
+        }
+
+        private decimal? GetAmountByIndex(int index)
+        {
+            if (mColumns[index] != null)
+            {
+                return mColumns[index].Amount;
+            }
+            return null;
         }
 
 
         #endregion Columns
 
 
-        public decimal? Total
+        public decimal Total
         {
             get
             {
-                return mAmounts[mAmounts.Count() - 1];
+                return mColumns[mColumns.Count() - 1].Amount;
             }
         }
 
-        private decimal?[] mAmounts = new decimal?[13];
-        private int?[] mPeriodKeys = new int?[13];
+        private column[] mColumns = new column[13];
 
         public void SetPeriodData(IList<EntryPeriod> entryPeriods)
         {
             EntryPeriod entryPeriod;
-            mAmounts[12] = 0;
+            mColumns[12] = new column(null, 0);
 
             for (int i = 0; i < 12; i++)
             {
@@ -128,31 +149,61 @@ namespace BookKeeping.Client.Models
 
                 if (entryPeriod != null)
                 {
-                    mAmounts[i] = entryPeriod.TotalAmount;
-                    mAmounts[12] += entryPeriod.TotalAmount;
+                    mColumns[i] = new column(entryPeriod, entryPeriod.TotalAmount);
+                    mColumns[12].Amount += entryPeriod.TotalAmount;
                 }
                 else
                 {
-                    mAmounts[i] = null;
+                    mColumns[i] = null;
                 }
             }
         }
 
         public void AddToTotals(EntryOfYearVM entryOfYear)
         {
-            for (int i = 0; i < mAmounts.Count(); i++)
+            for (int i = 0; i < mColumns.Count(); i++)
             {
-                if (mAmounts[i].HasValue)
+                if (mColumns[i] != null)
                 {
-                    if (entryOfYear.mAmounts[i].HasValue)
+                    if (entryOfYear.mColumns[i] != null)
                     {
-                        mAmounts[i] += entryOfYear.mAmounts[i];
+                        mColumns[i].Amount += entryOfYear.mColumns[i].Amount;
                     }
                     else
                     {
-                        mAmounts[i] = entryOfYear.mAmounts[i];
+                        if (entryOfYear.mColumns[i] != null)
+                        {
+                            mColumns[i].Amount = entryOfYear.mColumns[i].Amount;
+                        }
                     }
                 }
+            }
+        }
+
+        public int Level
+        {
+            get
+            {
+                if (Entry == null)
+                {
+                    return 0;
+                }
+
+                if (Entry.ParentEntry == null)
+                {
+                    return 1;
+                }
+                else if ((Entry.ParentEntry != null) && (Entry.ChildEntries != null))
+                {
+                    return 2;
+                }
+                else if ((Entry.ParentEntry != null) && (Entry.ChildEntries == null))
+                {
+                    return 3;
+                }
+
+                // Should not get here...
+                return -1;
             }
         }
     }

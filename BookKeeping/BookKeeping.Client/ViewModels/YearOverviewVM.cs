@@ -57,11 +57,11 @@ namespace BookKeeping.Client.ViewModels
 
         private void LoadSelectedTransactions()
         {
-            if ((mSelectedEntryOfYear != null)
-                && ((SelectedIndex >= 1) || (SelectedIndex <= 12)))
-            {
-                mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.)
-            }
+            //if ((mSelectedEntryOfYear != null)
+            //    && ((SelectedIndex >= 1) || (SelectedIndex <= 12)))
+            //{
+            //    mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.)
+            //}
         }
 
 
