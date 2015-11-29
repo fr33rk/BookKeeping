@@ -5,6 +5,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -54,6 +55,23 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 entity.EntryPeriod = periods.FirstOrDefault(e => e.Key == entity.EntryPeriod.Key);
             }
             return base.AttachEntities(unitOfWork, entity);
+        }
+
+        public IEnumerable<Transaction> GetByEntryPeriod(EntryPeriod entryPeriod)
+        {
+            if (entryPeriod != null)
+            {
+                using (var unitOfWork = this.mUOWFactory.Create())
+                {
+                    var repository = unitOfWork.GetRepository<Transaction>();
+                    var retValue = repository.GetQuery()
+                        .Where(e => e.EntryPeriodKey == entryPeriod.Key);
+
+                    return retValue.ToList();
+                }
+            }
+
+            return null;
         }
 
         public IList<Transaction> GetByFingerpint(int fingerPrint)

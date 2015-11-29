@@ -124,15 +124,19 @@ namespace BookKeeping.Client.Models
             return null;
         }
 
-
         #endregion Columns
-
 
         public decimal Total
         {
             get
             {
-                return mColumns[mColumns.Count() - 1].Amount;
+                if (mColumns[mColumns.Count() - 1] != null)
+                {
+                    return mColumns[mColumns.Count() - 1].Amount;
+                }
+
+                return 0;
+
             }
         }
 
@@ -163,7 +167,11 @@ namespace BookKeeping.Client.Models
         {
             for (int i = 0; i < mColumns.Count(); i++)
             {
-                if (mColumns[i] != null)
+                if (mColumns[i] == null)
+                {
+                    mColumns[i] = new column(null, 0);
+                }
+                else
                 {
                     if (entryOfYear.mColumns[i] != null)
                     {
@@ -205,6 +213,19 @@ namespace BookKeeping.Client.Models
                 // Should not get here...
                 return -1;
             }
+        }
+
+        public EntryPeriod GetEntryPeriodByColumn(uint index)
+        {
+            if (index < mColumns.Count())
+            {
+                if (mColumns[index] != null)
+                {
+                    return mColumns[index].EntryPeriod;
+                }
+            }
+
+            return null;
         }
     }
 }

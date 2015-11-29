@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using PL.Logger;
 using Prism.Unity;
+using System.Windows.Markup;
+using System.Globalization;
 
 namespace BookKeeping.Client
 {
@@ -19,6 +21,15 @@ namespace BookKeeping.Client
 
         protected override void OnStartup(StartupEventArgs e)
         {
+
+            // Set the correct culture...
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                typeof(FrameworkElement),
+                new FrameworkPropertyMetadata(
+                    XmlLanguage.GetLanguage(
+                        CultureInfo.CurrentCulture.IetfLanguageTag)));
+
+
             base.OnStartup(e);
 
             // Set the current user interface culture to the specific culture Russian

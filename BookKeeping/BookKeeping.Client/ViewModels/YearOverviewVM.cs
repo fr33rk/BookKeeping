@@ -36,35 +36,33 @@ namespace BookKeeping.Client.ViewModels
             set
             {
                 mSelectedEntryOfYear = value;
-                NotifyPropertyChanged();
+                LoadSelectedTransactions();
             }
 
         }
 
-        private int mSelectedIndex;
+        private uint mSelectedColumn;
 
-        public int SelectedIndex
+        public uint SelectedColumn
         {
             get
             {
-                return mSelectedIndex;
+                return mSelectedColumn;
             }
             set
             {
-                mSelectedIndex = value;
+                mSelectedColumn = value;
+                LoadSelectedTransactions();
             }
         }
 
         private void LoadSelectedTransactions()
         {
-            //if ((mSelectedEntryOfYear != null)
-            //    && ((SelectedIndex >= 1) || (SelectedIndex <= 12)))
-            //{
-            //    mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.)
-            //}
+            if (mSelectedEntryOfYear != null)
+            {
+                SelectedTransactions = mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.GetEntryPeriodByColumn(mSelectedColumn-1));
+            }
         }
-
-
 
         private IEnumerable<Transaction> mSelectedTransactions;
 
