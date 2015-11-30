@@ -20,19 +20,10 @@ namespace BookKeeping.Client.Views
             InitializeComponent();
         }
 
-        private void DataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
-        {
-            //if (e.AddedCells.Count > 0)
-            //{
-            //    //e.AddedCells.First().Item;
-            //    SetValue(SelectedColumn, e.AddedCells.First().Column.DisplayIndex);
-            //}
-        }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Binding binding = new Binding("SelectedColumn");
-            binding.Mode = BindingMode.TwoWay;
+            binding.Mode = BindingMode.OneWayToSource;
             SetBinding(SelectedColumn, binding);
         }
 

@@ -16,7 +16,7 @@
             <DataGrid x:Name="EntryPeriodsGrid" AutoGenerateColumns="False" ItemsSource="{Binding EntriesOfYear}"
                       SelectedItem="{Binding SelectedEntryOfYear}" IsReadOnly="True"
                       CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False"
-                      SelectionMode="Single" SelectionUnit="FullRow" SelectedCellsChanged="DataGrid_SelectedCellsChanged" CurrentCellChanged="DataGrid_CurrentCellChanged">
+                      SelectionMode="Single" SelectionUnit="FullRow" CurrentCellChanged="DataGrid_CurrentCellChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Entry" Width="4*" Binding="{Binding Entry.Description}" />
                     <DataGridTextColumn Header="Jan" Width="*" Binding="{Binding Jan, StringFormat={}{0:C}}" />
@@ -33,14 +33,6 @@
                     <DataGridTextColumn Header="Dec" Width="*" Binding="{Binding Dec, StringFormat={}{0:C}}" />
                     <DataGridTextColumn Header="Total" Width="*" Binding="{Binding Total, StringFormat={}{0:C}}" />
                 </DataGrid.Columns>
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Foreground" Value="Black" />
-                        <!--<Style.Triggers>
-                                            <DataTrigger
-                                        </Style.Triggers>-->
-                    </Style>
-                </DataGrid.CellStyle>
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="FontWeight" Value="Normal" />

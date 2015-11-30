@@ -9,35 +9,76 @@
     <UserControl.Resources>
         <Style x:Key="DefaultButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="23"/>
+            <Setter Property="MinWidth" Value="23"/>
             <Setter Property="Margin" Value="4"/>
             <Setter Property="Padding" Value="5,2"/>
         </Style>
+        <Style x:Key="MediumSquareButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Margin" Value="4"/>            
+            <Setter Property="Background" Value="White" />
+        </Style>
+        <Style x:Key="SmallSquareButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Background" Value="White" />
+        </Style>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="10" Loaded="Grid_Loaded">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Column="0" Grid.Row="0">
+        <WrapPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Style="{StaticResource SmallSquareButtonStyle}" 
+                    Command="{Binding AddEntryCommand}">
+                <Image Source="{StaticResource imgAdd}"/>
+            </Button>
+            <Button Style="{StaticResource SmallSquareButtonStyle}" 
+                    Command="{Binding DeleteEntryCommand}">
+                <Image Source="{StaticResource imgMinus}"/>
+            </Button>
+        </WrapPanel>
+        
+        <Grid Grid.Row="1" Margin="4">
+            <TreeView Grid.Row="1" ItemsSource="{Binding Entries}" SelectedItemChanged="TreeView_SelectedItemChanged">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding ChildEntries}">
+                        <TextBlock Text="{Binding Description}" />
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </Grid>
+        
+        <Grid Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>                
             </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0">
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Nieuw"/>
-                <Button Style="{StaticResource DefaultButtonStyle}" Content="Verwijderen"/>
-            </WrapPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>                
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Omschrijving:" Margin="4" Padding="5,2" HorizontalAlignment="Right"/>
+            <TextBox Grid.Column="1" Text="{Binding SelectedEntry.Description}" Margin="4"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="Related rules:" HorizontalAlignment="Right" Margin="4"/>
+            <DataGrid Grid.Row="1"  Grid.Column="1" Grid.RowSpan="2" Margin="4"/>            
+        </Grid>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" 
+                    Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button Style="{StaticResource MediumSquareButtonStyle}"
+                    Command="{Binding NavigateBackCommand}">
+                <Image Source="{StaticResource imgReturn}"/>
+            </Button>
+        </StackPanel>
 
-        </Grid>
-        <Grid Grid.Column="1" Grid.Row="1">
-            
-        </Grid>
-        <WrapPanel Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DefaultButtonStyle}" Content="Terug" Command="{Binding NavigateBackCommand}"/>            
-        </WrapPanel>
     </Grid>
 </UserControl>
