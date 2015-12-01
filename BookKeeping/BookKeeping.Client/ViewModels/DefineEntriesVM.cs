@@ -136,7 +136,13 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void AddEntry()
         {
-            SelectedEntry.ChildEntries.Add(new Entry() { Description="New"});
+            var newEntry = new Entry();
+            newEntry.Description = "Nieuw";
+            newEntry.ParentEntry = SelectedEntry;
+
+            mEntryDataSeervice.Add(newEntry);
+
+
         }
 
         /// <summary>Determines whether the AddEntry command can be executed.

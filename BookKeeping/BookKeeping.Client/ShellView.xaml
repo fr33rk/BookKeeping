@@ -6,7 +6,7 @@
         xmlns:prism="http://www.codeplex.com/prism"
         xmlns:local="clr-namespace:BookKeeping.Client"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800" WindowStartupLocation="CenterScreen" Icon="money.ico">
+        Title="MainWindow" Height="800" Width="1280" WindowStartupLocation="CenterScreen" Icon="money.ico">
     <Grid>
         <ContentControl x:Name="MainRegion"
 						Grid.Row="0"

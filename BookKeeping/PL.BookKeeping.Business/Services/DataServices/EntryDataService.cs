@@ -15,6 +15,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
         public EntryDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService)
             : base(uowFactory, authorizationService)
         {
+            //mPeriodDataService = periodDataService;
+            //mEntryPeriodDataService = entryPeriodDataService;
         }
 
         #endregion Constructor(s)
@@ -37,6 +39,38 @@ namespace PL.BookKeeping.Business.Services.DataServices
             {
                 //parent.ChildEntries.
             }
+        }
+
+        public override Entry AttachEntities(IUnitOfWork unitOfWork, Entry entity)
+        {
+            if (entity.ParentEntry != null)
+            {
+                var entries = unitOfWork.GetRepository<Entry>();
+                entity.ParentEntry = entries.FirstOrDefault(e => e.Key == entity.ParentEntry.Key);
+            }
+
+            return base.AttachEntities(unitOfWork, entity);
+
+        }
+
+        public override void Add(Entry entity)
+        {
+            // First add the entry to the database.
+            base.Add(entity);
+
+            //// Then create a EntryPeriod for each period in the database.
+            //var periods = mPeriodDataService.GetAll();
+
+            //EntryPeriod newEntryPeriod;
+
+            //foreach (var period in periods)
+            //{
+            //    newEntryPeriod = new EntryPeriod();
+            //    newEntryPeriod.Entry = entity;
+            //    newEntryPeriod.Period = period;
+            //    mEntryPeriodDataService.Add(newEntryPeriod);
+            //}
+
         }
 
     }

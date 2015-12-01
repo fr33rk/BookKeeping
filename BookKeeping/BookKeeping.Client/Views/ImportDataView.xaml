@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:BookKeeping.Client.Views"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="800" d:DesignWidth="1024">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="130" />
-            <ColumnDefinition Width="130" />
+            <ColumnDefinition Width="260" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -18,8 +18,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Button Grid.Column="1" Grid.Row="1" Content="Select files" Height="23" Margin="4" 
                 Command="{Binding SelectFilesCommand}"/>
@@ -39,8 +39,11 @@
             <TextBlock Text="{Binding ProcessedTransactions, Mode=OneWay, FallbackValue=0}" />
             <TextBlock Text="{Binding IgnoredTransactions, Mode=OneWay, FallbackValue=0}" />
         </StackPanel>
-        <StackPanel Grid.Row="5" Grid.Column="4" Orientation="Horizontal">
-            <Button Content="Klaar" Width="Auto" Command="{Binding NavigateBackCommand}"/>
+        <StackPanel Grid.Row="5" Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource MediumSquareButtonStyle}" 
+                    Command="{Binding NavigateBackCommand}">
+                <Image Source="{StaticResource imgReturn}"/>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>
