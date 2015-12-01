@@ -48,7 +48,7 @@
                 <ColumnDefinition Width="3*"/>                
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="Omschrijving:" Margin="4" Padding="5,2" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column="1" Text="{Binding SelectedEntry.Description}" Margin="4"/>
+            <TextBox Grid.Column="1" Text="{Binding SelectedEntryDescription}" Margin="4"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Related rules:" HorizontalAlignment="Right" Margin="4"/>
             <DataGrid Grid.Row="1"  Grid.Column="1" Grid.RowSpan="2" Margin="4"/>            
         </Grid>

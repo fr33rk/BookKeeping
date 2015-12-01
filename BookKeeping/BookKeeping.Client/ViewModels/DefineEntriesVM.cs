@@ -1,9 +1,11 @@
 ﻿using PL.BookKeeping.Entities;
+using PL.BookKeeping.Infrastructure.EntityExtensions;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -79,15 +81,12 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Command NavigateBackCommand
 
-
-
         public ObservableCollection<Entry> Entries { get; set; }
 
         private void loadData()
         {
             Entries = new ObservableCollection<Entry>(mEntryDataSeervice.GetAllSorted());
         }
-
 
         #region Property SelectedEntry
 
@@ -101,14 +100,54 @@ namespace BookKeeping.Client.ViewModels
             }
             set
             {
-                mSelectedEntry = value;               
+                mSelectedEntry = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged("SelectedEntryDescription");
                 AddEntryCommand.RaiseCanExecuteChanged();
             }
         }
 
         #endregion Property SelectedEntry
 
+        #region Property SelectedEntryDescription
+
+        public string SelectedEntryDescription
+        {
+            get
+            {
+                if (SelectedEntry != null)
+                {
+                    return SelectedEntry.Description;
+                }
+                return "";
+            }
+            set
+            {
+                SelectedEntry.Description = value;
+                
+                // Get the root before the update. This will clear the root node.
+                var root = SelectedEntry.RootEntry();
+
+                var rootInList = Entries.FirstOrDefault(e => e.Key == root.Key);
+                
+                mEntryDataSeervice.Update(SelectedEntry);
+
+                if (rootInList != null)
+                {
+                    var index = Entries.IndexOf(rootInList);
+                    rootInList.UpdateChild(SelectedEntry);
+
+
+                    Entries.Remove(rootInList);
+                    Entries.Insert(index, rootInList);
+
+                }
+
+            }
+
+        }
+
+        #endregion Property SelectedEntryDescription
 
         #region Command AddEntryCommand
 
@@ -142,14 +181,14 @@ namespace BookKeeping.Client.ViewModels
 
             mEntryDataSeervice.Add(newEntry);
 
-
+            
         }
 
         /// <summary>Determines whether the AddEntry command can be executed.
         /// </summary>
         private bool CanAddEntry()
         {
-            if (SelectedEntry != null)
+            if ((SelectedEntry != null) && (SelectedEntry.Level() == 3))
             {
                 return true;
             }
@@ -157,8 +196,7 @@ namespace BookKeeping.Client.ViewModels
             return false;
         }
 
-        #endregion Command AddEntryCommand				
-
+        #endregion Command AddEntryCommand
 
         #region Command DeleteEntryCommand
 
@@ -186,7 +224,6 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void DeleteEntry()
         {
-
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
@@ -196,8 +233,6 @@ namespace BookKeeping.Client.ViewModels
             return true;
         }
 
-        #endregion Command DeleteEntryCommand				
-
-
+        #endregion Command DeleteEntryCommand
     }
 }

@@ -81,6 +81,7 @@
     <Compile Include="Data\IEntityRepositoryOfT.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\IUnitOfWorkFactory.cs" />
+    <Compile Include="EntityExtensions\EntityExtension.cs" />
     <Compile Include="EventAggregatorEvents\DataChangedEvent.cs" />
     <Compile Include="EventAggregatorEvents\ModuleInitializationDoneEvent.cs" />
     <Compile Include="EventArgs\DataImportEventArgs.cs" />
