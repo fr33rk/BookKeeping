@@ -10,13 +10,18 @@ namespace PL.BookKeeping.Business.Services.DataServices
 {
     public class EntryDataService : BaseTraceableObjectDataServiceOfT<Entry>, IEntryDataService
     {
+        private Lazy<IPeriodDataService> mPeriodDataService;
+        private IEntryPeriodDataService mEntryPeriodDataService;
+
+
         #region Constructor(s)
 
-        public EntryDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService)
+        public EntryDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService,
+            Lazy<IPeriodDataService> periodDataService, IEntryPeriodDataService entryPeriodDataService)
             : base(uowFactory, authorizationService)
         {
-            //mPeriodDataService = periodDataService;
-            //mEntryPeriodDataService = entryPeriodDataService;
+            mPeriodDataService = periodDataService;
+            mEntryPeriodDataService = entryPeriodDataService;
         }
 
         #endregion Constructor(s)
@@ -58,18 +63,18 @@ namespace PL.BookKeeping.Business.Services.DataServices
             // First add the entry to the database.
             base.Add(entity);
 
-            //// Then create a EntryPeriod for each period in the database.
-            //var periods = mPeriodDataService.GetAll();
+            // Then create a EntryPeriod for each period in the database.
+            var periods = mPeriodDataService.Value.GetAll();
 
-            //EntryPeriod newEntryPeriod;
+            EntryPeriod newEntryPeriod;
 
-            //foreach (var period in periods)
-            //{
-            //    newEntryPeriod = new EntryPeriod();
-            //    newEntryPeriod.Entry = entity;
-            //    newEntryPeriod.Period = period;
-            //    mEntryPeriodDataService.Add(newEntryPeriod);
-            //}
+            foreach (var period in periods)
+            {
+                newEntryPeriod = new EntryPeriod();
+                newEntryPeriod.Entry = entity;
+                newEntryPeriod.Period = period;
+                mEntryPeriodDataService.Add(newEntryPeriod);
+            }
 
         }
 

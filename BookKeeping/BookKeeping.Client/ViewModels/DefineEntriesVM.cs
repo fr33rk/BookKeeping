@@ -6,17 +6,18 @@ using Prism.Commands;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {
     public class DefineEntriesVM : ViewModelBase, INavigationAware
     {
-        private IEntryDataService mEntryDataSeervice;
+        private IEntryDataService mEntryDataService;
         private IRegionManager mRegionManager;
 
         public DefineEntriesVM(IEntryDataService entryDataService, IRegionManager regionManager)
         {
-            mEntryDataSeervice = entryDataService;
+            mEntryDataService = entryDataService;
             mRegionManager = regionManager;
         }
 
@@ -85,7 +86,7 @@ namespace BookKeeping.Client.ViewModels
 
         private void loadData()
         {
-            Entries = new ObservableCollection<Entry>(mEntryDataSeervice.GetAllSorted());
+            Entries = new ObservableCollection<Entry>(mEntryDataService.GetAllSorted());
         }
 
         #region Property SelectedEntry
@@ -104,6 +105,7 @@ namespace BookKeeping.Client.ViewModels
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("SelectedEntryDescription");
                 AddEntryCommand.RaiseCanExecuteChanged();
+                DeleteEntryCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -124,27 +126,23 @@ namespace BookKeeping.Client.ViewModels
             set
             {
                 SelectedEntry.Description = value;
-                
+
                 // Get the root before the update. This will clear the root node.
                 var root = SelectedEntry.RootEntry();
 
                 var rootInList = Entries.FirstOrDefault(e => e.Key == root.Key);
-                
-                mEntryDataSeervice.Update(SelectedEntry);
+
+                mEntryDataService.Update(SelectedEntry);
 
                 if (rootInList != null)
                 {
                     var index = Entries.IndexOf(rootInList);
                     rootInList.UpdateChild(SelectedEntry);
 
-
                     Entries.Remove(rootInList);
                     Entries.Insert(index, rootInList);
-
                 }
-
             }
-
         }
 
         #endregion Property SelectedEntryDescription
@@ -179,16 +177,14 @@ namespace BookKeeping.Client.ViewModels
             newEntry.Description = "Nieuw";
             newEntry.ParentEntry = SelectedEntry;
 
-            mEntryDataSeervice.Add(newEntry);
-
-            
+            mEntryDataService.Add(newEntry);
         }
 
         /// <summary>Determines whether the AddEntry command can be executed.
         /// </summary>
         private bool CanAddEntry()
         {
-            if ((SelectedEntry != null) && (SelectedEntry.Level() == 3))
+            if ((SelectedEntry != null) && (SelectedEntry.Level() < 3))
             {
                 return true;
             }
@@ -224,13 +220,26 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void DeleteEntry()
         {
+            // Ask for confirmation.
+            var result = MessageBox.Show("Weet je zeker dat je deze post wilt verwijderen?", "Bookkeeping", MessageBoxButton.YesNoCancel);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Delete entry
+                mEntryDataService.Delete(SelectedEntry);
+            }
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
         /// </summary>
         private bool CanDeleteEntry()
         {
-            return true;
+            if ((SelectedEntry != null) && (SelectedEntry.ChildEntries == null))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #endregion Command DeleteEntryCommand

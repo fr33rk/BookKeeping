@@ -24,6 +24,12 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         /// <param name="entity">The entity.</param>
         void Update(TEntity entity);
 
+
+        /// <summary>Deletes the specified entity from the database.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        void Delete(TEntity entity);
+
         /// <summary>Tries to find an entity by its key. Will return 'null' when the entity was not found.
         /// </summary>
         /// <param name="key">The key to search for.</param>

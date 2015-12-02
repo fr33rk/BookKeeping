@@ -71,6 +71,22 @@ namespace PL.BookKeeping.Business.Services.DataServices
             }
         }
 
+        /// <summary>Deletes the specified entity from the database.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Delete(TEntity entity)
+        {
+            using (var unitOfWork = this.mUOWFactory.Create())
+            {
+                var repository = unitOfWork.GetRepository<TEntity>();
+
+                repository.Delete(e => e.Key == entity.Key);
+
+                unitOfWork.SaveChanges();
+            }
+        }
+
         /// <summary>Tries to find an entity by its key. Will return 'null' when the entity was not found.
         /// </summary>
         /// <param name="key">The key to search for.</param>
