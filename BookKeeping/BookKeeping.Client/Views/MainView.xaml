@@ -15,6 +15,7 @@
         <Menu x:Name="menu" VerticalAlignment="Top">
             <MenuItem Header="Definities">
                 <MenuItem Header="Post definities" HorizontalAlignment="Left" Command="{Binding DefineEntriesCommand}" />
+                <MenuItem Header="Regel definities" HorizontalAlignment="Left" Command="{Binding DefineRulesCommand}" />
             </MenuItem>
             <MenuItem Header="Actions">
                 <MenuItem Header="ImportData" HorizontalAlignment="Left" Command="{Binding JustDoItCommand}" />

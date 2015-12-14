@@ -1,4 +1,6 @@
-﻿using PL.BookKeeping.Entities;
+﻿using AutoMapper;
+using BookKeeping.Client.Models;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.EntityExtensions;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
@@ -82,18 +84,24 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Command NavigateBackCommand
 
-        public ObservableCollection<Entry> Entries { get; set; }
+        public ObservableCollection<EntryVM> Entries { get; set; }
 
         private void loadData()
         {
-            Entries = new ObservableCollection<Entry>(mEntryDataService.GetAllSorted());
+            //Entries = new ObservableCollection<Entry>(mEntryDataService.GetRootEntries());
+            Entries = new ObservableCollection<EntryVM>();
+
+            foreach (var rootEntry in mEntryDataService.GetRootEntries())
+            {
+                Entries.Add(Mapper.Map<EntryVM>(rootEntry));
+            }
         }
 
         #region Property SelectedEntry
 
-        private Entry mSelectedEntry;
+        private EntryVM mSelectedEntry;
 
-        public Entry SelectedEntry
+        public EntryVM SelectedEntry
         {
             get
             {
@@ -127,20 +135,18 @@ namespace BookKeeping.Client.ViewModels
             {
                 SelectedEntry.Description = value;
 
+                var entry = SelectedEntry.ToEntry();
+
                 // Get the root before the update. This will clear the root node.
-                var root = SelectedEntry.RootEntry();
+                var root = entry.RootEntry();
 
                 var rootInList = Entries.FirstOrDefault(e => e.Key == root.Key);
 
-                mEntryDataService.Update(SelectedEntry);
+                mEntryDataService.Update(entry);
 
                 if (rootInList != null)
                 {
-                    var index = Entries.IndexOf(rootInList);
-                    rootInList.UpdateChild(SelectedEntry);
-
-                    Entries.Remove(rootInList);
-                    Entries.Insert(index, rootInList);
+                     rootInList.UpdateChild(EntryVM.FromEntry(entry));
                 }
             }
         }
@@ -175,7 +181,9 @@ namespace BookKeeping.Client.ViewModels
         {
             var newEntry = new Entry();
             newEntry.Description = "Nieuw";
-            newEntry.ParentEntry = SelectedEntry;
+            newEntry.ParentEntry = Mapper.Map<Entry>(SelectedEntry);
+
+            SelectedEntry.ChildEntryVms.Add(Mapper.Map<EntryVM>(newEntry));
 
             mEntryDataService.Add(newEntry);
         }
@@ -184,7 +192,7 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private bool CanAddEntry()
         {
-            if ((SelectedEntry != null) && (SelectedEntry.Level() < 3))
+            if ((SelectedEntry != null) && ((Mapper.Map<Entry>(SelectedEntry)).Level() < 3))
             {
                 return true;
             }
@@ -226,7 +234,7 @@ namespace BookKeeping.Client.ViewModels
             if (result == MessageBoxResult.Yes)
             {
                 // Delete entry
-                mEntryDataService.Delete(SelectedEntry);
+                mEntryDataService.Delete(Mapper.Map<Entry>(SelectedEntry));
             }
         }
 

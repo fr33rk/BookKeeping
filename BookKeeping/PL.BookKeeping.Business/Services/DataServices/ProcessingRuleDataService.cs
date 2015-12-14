@@ -30,7 +30,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         public override IQueryable<ProcessingRule> CompleteQry(IQueryable<ProcessingRule> query)
         {
-            return base.CompleteQry(query.Include(e=> e.Entry));
+            return base.CompleteQry(query.Include(e => e.Entry));
         }
     }
 }

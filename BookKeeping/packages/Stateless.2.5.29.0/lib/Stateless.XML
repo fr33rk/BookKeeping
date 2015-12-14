@@ -559,6 +559,12 @@
             </summary>
             <param name="underlyingTrigger">Trigger represented by this trigger configuration.</param>
         </member>
+        <member name="M:Stateless.StateMachine`2.ToDotGraph">
+            <summary>
+            A string representation of the state machine in the DOT graph language.
+            </summary>
+            <returns>A description of all simple source states, triggers and destination states.</returns>
+        </member>
         <member name="T:Stateless.ParameterConversionResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

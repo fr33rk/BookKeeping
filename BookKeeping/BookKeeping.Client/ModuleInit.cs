@@ -1,5 +1,8 @@
-﻿using BookKeeping.Client.Views;
+﻿using AutoMapper;
+using BookKeeping.Client.Models;
+using BookKeeping.Client.Views;
 using Microsoft.Practices.Unity;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
 using Prism.Modularity;
 using Prism.Regions;
@@ -26,8 +29,13 @@ namespace BookKeeping.Client
             mContainer.RegisterType<object, MainView>(typeof(MainView).FullName);
             mContainer.RegisterType<object, ImportDataView> (typeof(ImportDataView).FullName);
             mContainer.RegisterType<object, DefineEntriesView>(typeof(DefineEntriesView).FullName);
+            mContainer.RegisterType<object, DefineRulesView>(typeof(DefineRulesView).FullName);
 
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
+
+            Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
+            Mapper.CreateMap<Entry, EntryVM>();
+            Mapper.CreateMap<EntryVM, Entry>();
         }      
     }
 }

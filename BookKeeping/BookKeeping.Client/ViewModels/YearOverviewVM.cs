@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using BookKeeping.Client.Models;
+﻿using BookKeeping.Client.Models;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
-using PL.BookKeeping.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BookKeeping.Client.ViewModels
 {
     public class YearOverviewVM : ViewModelBase
     {
-
         private IEntryPeriodDataService mEntryPeriodDataService;
         private IEntryDataService mEntryDataService;
         private ITransactionDataService mTransactionDataService;
@@ -38,7 +38,6 @@ namespace BookKeeping.Client.ViewModels
                 mSelectedEntryOfYear = value;
                 LoadSelectedTransactions();
             }
-
         }
 
         private uint mSelectedColumn;
@@ -60,7 +59,7 @@ namespace BookKeeping.Client.ViewModels
         {
             if (mSelectedEntryOfYear != null)
             {
-                SelectedTransactions = mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.GetEntryPeriodByColumn(mSelectedColumn-1));
+                SelectedTransactions = mTransactionDataService.GetByEntryPeriod(mSelectedEntryOfYear.GetEntryPeriodByColumn(mSelectedColumn - 1));
             }
         }
 
@@ -84,14 +83,14 @@ namespace BookKeeping.Client.ViewModels
             mEntriesOfYear = new List<EntryOfYearVM>();
 
             // First flatten the list of entries
-            var rootList = mEntryDataService.GetAllSorted();
+            var rootList = mEntryDataService.GetRootEntries();
             foreach (var rootEntry in rootList)
             {
                 flatten(rootEntry);
             }
 
             // Then fill the entry periods.
-            foreach(var entryOfYear in mEntriesOfYear)
+            foreach (var entryOfYear in mEntriesOfYear)
             {
                 var entryPeriods = mEntryPeriodDataService.GetByEntryAndYear(entryOfYear.Entry, mYear);
 
@@ -107,7 +106,6 @@ namespace BookKeeping.Client.ViewModels
             }
 
             mEntriesOfYear.Add(totalOut);
-
         }
 
         private void flatten(Entry entry)
@@ -116,7 +114,7 @@ namespace BookKeeping.Client.ViewModels
 
             if (entry.ChildEntries != null)
             {
-                foreach (var childEntry in entry.ChildEntries)
+                foreach (var childEntry in entry.ChildEntries.OrderBy(e => e.Description))
                 {
                     flatten(childEntry);
                 }
@@ -125,7 +123,7 @@ namespace BookKeeping.Client.ViewModels
 
         private IList<EntryOfYearVM> mEntriesOfYear;
 
-        public IList<EntryOfYearVM>EntriesOfYear
+        public IList<EntryOfYearVM> EntriesOfYear
         {
             get
             {

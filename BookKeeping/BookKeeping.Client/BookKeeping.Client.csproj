@@ -42,6 +42,10 @@
     <ApplicationIcon>money.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -86,8 +90,8 @@
       <HintPath>..\packages\Prism.Wpf.6.1.0\lib\net45\Prism.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stateless, Version=2.5.23.0, Culture=neutral, PublicKeyToken=93038f0927583c9a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stateless.2.5.23.0\lib\portable-net40+sl50+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Stateless.dll</HintPath>
+    <Reference Include="Stateless, Version=2.5.29.0, Culture=neutral, PublicKeyToken=93038f0927583c9a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stateless.2.5.29.0\lib\portable-net40+sl50+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Stateless.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -114,14 +118,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\BaseTracableObjectVM.cs" />
     <Compile Include="Models\EntryOfYearVM.cs" />
+    <Compile Include="Models\EntryVM.cs" />
+    <Compile Include="Models\ProcessingRuleVM.cs" />
     <Compile Include="ViewModels\DefineEntriesVM.cs" />
+    <Compile Include="ViewModels\DefineRulesVM.cs" />
     <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ExampleVM.cs" />
     <Compile Include="ViewModels\YearOverviewVM.cs" />
     <Compile Include="Views\DefineEntriesView.xaml.cs">
       <DependentUpon>DefineEntriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DefineRulesView.xaml.cs">
+      <DependentUpon>DefineRulesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImportDataView.xaml.cs">
       <DependentUpon>ImportDataView.xaml</DependentUpon>
@@ -155,6 +166,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\DefineEntriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DefineRulesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -150,6 +150,46 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Command SelectFilesCommand
 
+
+        #region Command DefineRulesCommand
+
+        /// <summary>Field for the DefineRules command.
+        /// </summary>
+        private DelegateCommand mDefineRulesCommand;
+
+        /// <summary>Gets DefineRules command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand DefineRulesCommand
+        {
+            get
+            {
+                return this.mDefineRulesCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mDefineRulesCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.DefineRules, this.CanDefineRules));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DefineRules()
+        {
+            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineRulesView).FullName);
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanDefineRules()
+        {
+            return true;
+        }
+
+        #endregion Command DefineRulesCommand				
+
+
         #region INavigationAware
 
         public void OnNavigatedTo(NavigationContext navigationContext)

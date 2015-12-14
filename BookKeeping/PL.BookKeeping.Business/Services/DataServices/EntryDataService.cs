@@ -26,13 +26,11 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         #endregion Constructor(s)
 
-        public IList<Entry> GetAllSorted()
+        public IList<Entry> GetRootEntries()
         {
             using (var unitOfWork = this.mUOWFactory.Create())
             {
                 var root = GetAll().Where(e => e.ParentEntry == null);
-                //var repository = unitOfWork.GetRepository<Entry>();
-                //repository.
 
                 return root.ToList();
             }
@@ -78,5 +76,17 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         }
 
+        public IList<Entry> Get3rdLevelEntries()
+        {
+            using (var unitOfWork = this.mUOWFactory.Create())
+            {
+                var root = GetAll()
+                    .Join(GetAll(), e => e.ParentEntryKey, e2 => e2.Key, (e, e2) => new { Entry = e, Entry2 = e2 })
+                    .Join(GetAll(), e => e.Entry2.ParentEntryKey, e3 => e3.Key, (e, e3) => new { Entry = e.Entry })
+                    .Select(e => e.Entry);
+
+                return root.ToList();
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BookKeeping.Client.ViewModels;
+﻿using BookKeeping.Client.Models;
+using BookKeeping.Client.ViewModels;
 using PL.BookKeeping.Entities;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,8 @@ namespace BookKeeping.Client.Views
     public partial class DefineEntriesView : UserControl
     {
         public static readonly DependencyProperty SelectedEntry =
-            DependencyProperty.Register("SelectedEntry", typeof(Entry),
-            typeof(DefineEntriesView), new PropertyMetadata(default(Entry)));
+            DependencyProperty.Register("SelectedEntry", typeof(EntryVM),
+            typeof(DefineEntriesView), new PropertyMetadata(default(EntryVM)));
 
         public DefineEntriesView(DefineEntriesVM vm)
         {

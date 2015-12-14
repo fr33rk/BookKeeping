@@ -32,29 +32,5 @@ namespace PL.BookKeeping.Infrastructure.EntityExtensions
                 return entry.ParentEntry.RootEntry();
             }
         }
-
-        public static bool UpdateChild(this Entry entry, Entry newChild)
-        {
-            var childEntry = entry.ChildEntries.FirstOrDefault(e => e.Key == newChild.Key);
-            if (childEntry != null)
-            {
-                newChild.ParentEntry = childEntry.ParentEntry;
-                childEntry = newChild;
-                return true;
-            }
-            else
-            {
-                foreach (var child in entry.ChildEntries)
-                {
-                    if (child.UpdateChild(newChild))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
     }
 }
