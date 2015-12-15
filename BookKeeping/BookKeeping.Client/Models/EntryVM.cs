@@ -84,9 +84,6 @@ namespace BookKeeping.Client.Models
 
 
 
-
-
-
         public bool UpdateChild(EntryVM newChild)
         {
             var childEntry = ChildEntryVms.FirstOrDefault(e => e.Key == newChild.Key);
@@ -101,16 +98,16 @@ namespace BookKeeping.Client.Models
 
                 return true;
             }
-            //else
-            //{
-            //    foreach (var child in entry.ChildEntries)
-            //    {
-            //        if (child.UpdateChild(newChild))
-            //        {
-            //            return true;
-            //        }
-            //    }
-            //}
+            else
+            {
+                foreach (var child in ChildEntryVms)
+                {
+                    if (child.UpdateChild(newChild))
+                    {
+                        return true;
+                    }
+                }
+            }
 
             return false;
         }

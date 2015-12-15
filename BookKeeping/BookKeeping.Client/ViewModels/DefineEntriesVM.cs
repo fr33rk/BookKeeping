@@ -2,9 +2,11 @@
 using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.EntityExtensions;
+using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,11 +18,15 @@ namespace BookKeeping.Client.ViewModels
     {
         private IEntryDataService mEntryDataService;
         private IRegionManager mRegionManager;
+        private IEventAggregator mEventAggregator;
+        private bool mEntriesHaveChanged;
 
-        public DefineEntriesVM(IEntryDataService entryDataService, IRegionManager regionManager)
+        public DefineEntriesVM(IEntryDataService entryDataService, IRegionManager regionManager,
+            IEventAggregator eventAggregator)
         {
             mEntryDataService = entryDataService;
             mRegionManager = regionManager;
+            mEventAggregator = eventAggregator;
         }
 
         #region Command NavigateBackCommand
@@ -49,6 +55,12 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void NavigateBack()
         {
+            if (mEntriesHaveChanged)
+            {
+                // Update the entries in the main view
+                mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs());
+            }
+
             if (navigationService.Journal.CanGoBack)
             {
                 navigationService.Journal.GoBack();
@@ -62,11 +74,16 @@ namespace BookKeeping.Client.ViewModels
             return true;
         }
 
+        #endregion Command NavigateBackCommand
+
+        #region INavigationAware
+
         private IRegionNavigationService navigationService;
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             navigationService = navigationContext.NavigationService;
+            mEntriesHaveChanged = false;
 
             loadData();
         }
@@ -82,7 +99,7 @@ namespace BookKeeping.Client.ViewModels
             //throw new NotImplementedException();
         }
 
-        #endregion Command NavigateBackCommand
+        #endregion INavigationAware
 
         public ObservableCollection<EntryVM> Entries { get; set; }
 
@@ -148,6 +165,8 @@ namespace BookKeeping.Client.ViewModels
                 {
                      rootInList.UpdateChild(EntryVM.FromEntry(entry));
                 }
+
+                mEntriesHaveChanged = true;
             }
         }
 
@@ -183,9 +202,11 @@ namespace BookKeeping.Client.ViewModels
             newEntry.Description = "Nieuw";
             newEntry.ParentEntry = Mapper.Map<Entry>(SelectedEntry);
 
+            mEntryDataService.Add(newEntry);
+
             SelectedEntry.ChildEntryVms.Add(Mapper.Map<EntryVM>(newEntry));
 
-            mEntryDataService.Add(newEntry);
+            mEntriesHaveChanged = true;
         }
 
         /// <summary>Determines whether the AddEntry command can be executed.
@@ -236,6 +257,8 @@ namespace BookKeeping.Client.ViewModels
                 // Delete entry
                 mEntryDataService.Delete(Mapper.Map<Entry>(SelectedEntry));
             }
+
+            mEntriesHaveChanged = true;
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.

@@ -9,14 +9,17 @@ namespace PL.BookKeeping.Infrastructure.EventAggregatorEvents
 {
     public class DataChangedEventArgs
     {
-        public DataChangedEventArgs(bool allChanged, IList<int> changedYears)
+        public DataChangedEventArgs()
         {
-            AllChanged = allChanged;
+            ChangedYears = null;
+        }
+
+        public DataChangedEventArgs(IList<int> changedYears)
+        {
             ChangedYears = changedYears;
         }
 
         public IList<int> ChangedYears { get; private set; }
-        public bool AllChanged { get; private set; }
     }
 
     public class DataChangedEvent : PubSubEvent<DataChangedEventArgs>

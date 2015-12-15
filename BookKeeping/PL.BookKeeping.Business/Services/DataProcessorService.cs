@@ -110,7 +110,7 @@ namespace PL.BookKeeping.Business.Services
                         mLogFile.Warning(string.Format("There is no rule to process transaction: {0}", transaction.ToString()));
                     }
                 }
-                mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs(false, changedYears));
+                mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs(changedYears));
             }
         }
 
