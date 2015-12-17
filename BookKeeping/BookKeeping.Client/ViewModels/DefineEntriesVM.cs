@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using AutoMapper;
 using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.EntityExtensions;
@@ -8,271 +11,301 @@ using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {
-    public class DefineEntriesVM : ViewModelBase, INavigationAware
-    {
-        private IEntryDataService mEntryDataService;
-        private IRegionManager mRegionManager;
-        private IEventAggregator mEventAggregator;
-        private bool mEntriesHaveChanged;
+	public class DefineEntriesVM : ViewModelBase, INavigationAware
+	{
+		#region Fields
 
-        public DefineEntriesVM(IEntryDataService entryDataService, IRegionManager regionManager,
-            IEventAggregator eventAggregator)
-        {
-            mEntryDataService = entryDataService;
-            mRegionManager = regionManager;
-            mEventAggregator = eventAggregator;
-        }
+		private IEntryDataService mEntryDataService;
+		private IRegionManager mRegionManager;
+		private IEventAggregator mEventAggregator;
+		private bool mEntriesHaveChanged;
 
-        #region Command NavigateBackCommand
+		#endregion Fields
 
-        /// <summary>Field for the NavigateBack command.
-        /// </summary>
-        private DelegateCommand mNavigateBackCommand;
+		#region Constructor(s)
 
-        /// <summary>Gets NavigateBack command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand NavigateBackCommand
-        {
-            get
-            {
-                return this.mNavigateBackCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.NavigateBack, this.CanNavigateBack));
-            }
-        }
+		public DefineEntriesVM(IEntryDataService entryDataService, IRegionManager regionManager,
+			IEventAggregator eventAggregator)
+		{
+			mEntryDataService = entryDataService;
+			mRegionManager = regionManager;
+			mEventAggregator = eventAggregator;
+		}
 
-        /// <summary>
-        /// </summary>
-        private void NavigateBack()
-        {
-            if (mEntriesHaveChanged)
-            {
-                // Update the entries in the main view
-                mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs());
-            }
+		#endregion Constructor(s)
 
-            if (navigationService.Journal.CanGoBack)
-            {
-                navigationService.Journal.GoBack();
-            }
-        }
+		#region INavigationAware
 
-        /// <summary>Determines whether the StartMeasurement command can be executed.
-        /// </summary>
-        private bool CanNavigateBack()
-        {
-            return true;
-        }
+		private IRegionNavigationService navigationService;
 
-        #endregion Command NavigateBackCommand
+		public void OnNavigatedTo(NavigationContext navigationContext)
+		{
+			navigationService = navigationContext.NavigationService;
+			mEntriesHaveChanged = false;
 
-        #region INavigationAware
+			loadData();
+		}
 
-        private IRegionNavigationService navigationService;
+		public bool IsNavigationTarget(NavigationContext navigationContext)
+		{
+			return false;
+		}
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            navigationService = navigationContext.NavigationService;
-            mEntriesHaveChanged = false;
+		public void OnNavigatedFrom(NavigationContext navigationContext)
+		{
 
-            loadData();
-        }
+		}
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return false;
-            //throw new NotImplementedException();
-        }
+		#endregion INavigationAware
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            //throw new NotImplementedException();
-        }
+		#region Command NavigateBackCommand
 
-        #endregion INavigationAware
+		/// <summary>Field for the NavigateBack command.
+		/// </summary>
+		private DelegateCommand mNavigateBackCommand;
 
-        public ObservableCollection<EntryVM> Entries { get; set; }
+		/// <summary>Gets NavigateBack command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand NavigateBackCommand
+		{
+			get
+			{
+				return this.mNavigateBackCommand
+					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+					// is not yet bound to the View, the command is instantiated in a different thread than the
+					// main thread. Prevent this by checking on the SynchronizationContext.
+					?? (this.mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+					? null : new DelegateCommand(this.NavigateBack, this.CanNavigateBack));
+			}
+		}
 
-        private void loadData()
-        {
-            //Entries = new ObservableCollection<Entry>(mEntryDataService.GetRootEntries());
-            Entries = new ObservableCollection<EntryVM>();
+		/// <summary>
+		/// </summary>
+		private void NavigateBack()
+		{
+			if (mEntriesHaveChanged)
+			{
+				// Update the entries in the main view
+				mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs());
+			}
 
-            foreach (var rootEntry in mEntryDataService.GetRootEntries())
-            {
-                Entries.Add(Mapper.Map<EntryVM>(rootEntry));
-            }
-        }
+			if (navigationService.Journal.CanGoBack)
+			{
+				navigationService.Journal.GoBack();
+			}
+		}
 
-        #region Property SelectedEntry
+		/// <summary>Determines whether the StartMeasurement command can be executed.
+		/// </summary>
+		private bool CanNavigateBack()
+		{
+			return true;
+		}
 
-        private EntryVM mSelectedEntry;
+		#endregion Command NavigateBackCommand
 
-        public EntryVM SelectedEntry
-        {
-            get
-            {
-                return mSelectedEntry;
-            }
-            set
-            {
-                mSelectedEntry = value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged("SelectedEntryDescription");
-                AddEntryCommand.RaiseCanExecuteChanged();
-                DeleteEntryCommand.RaiseCanExecuteChanged();
-            }
-        }
+		#region Command AddEntryCommand
 
-        #endregion Property SelectedEntry
+		/// <summary>Field for the AddEntry command.
+		/// </summary>
+		private DelegateCommand mAddEntryCommand;
 
-        #region Property SelectedEntryDescription
+		/// <summary>Gets AddEntry command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand AddEntryCommand
+		{
+			get
+			{
+				return this.mAddEntryCommand
+					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+					// is not yet bound to the View, the command is instantiated in a different thread than the
+					// main thread. Prevent this by checking on the SynchronizationContext.
+					?? (this.mAddEntryCommand = System.Threading.SynchronizationContext.Current == null
+					? null : new DelegateCommand(this.AddEntry, this.CanAddEntry));
+			}
+		}
 
-        public string SelectedEntryDescription
-        {
-            get
-            {
-                if (SelectedEntry != null)
-                {
-                    return SelectedEntry.Description;
-                }
-                return "";
-            }
-            set
-            {
-                SelectedEntry.Description = value;
+		/// <summary>
+		/// </summary>
+		private void AddEntry()
+		{
+			var newEntry = new Entry();
+			newEntry.Description = "Nieuw";
+			newEntry.ParentEntry = Mapper.Map<Entry>(SelectedEntry);
 
-                var entry = SelectedEntry.ToEntry();
+			mEntryDataService.Add(newEntry);
 
-                // Get the root before the update. This will clear the root node.
-                var root = entry.RootEntry();
+			SelectedEntry.ChildEntryVms.Add(Mapper.Map<EntryVM>(newEntry));
 
-                var rootInList = Entries.FirstOrDefault(e => e.Key == root.Key);
+			mEntriesHaveChanged = true;
+		}
 
-                mEntryDataService.Update(entry);
+		/// <summary>Determines whether the AddEntry command can be executed.
+		/// </summary>
+		private bool CanAddEntry()
+		{
+			if ((SelectedEntry != null) && ((Mapper.Map<Entry>(SelectedEntry)).Level() < 3))
+			{
+				return true;
+			}
 
-                if (rootInList != null)
-                {
-                     rootInList.UpdateChild(EntryVM.FromEntry(entry));
-                }
+			return false;
+		}
 
-                mEntriesHaveChanged = true;
-            }
-        }
+		#endregion Command AddEntryCommand
 
-        #endregion Property SelectedEntryDescription
+		#region Command DeleteEntryCommand
 
-        #region Command AddEntryCommand
+		/// <summary>Field for the DeleteEntry command.
+		/// </summary>
+		private DelegateCommand mDeleteEntryCommand;
 
-        /// <summary>Field for the AddEntry command.
-        /// </summary>
-        private DelegateCommand mAddEntryCommand;
+		/// <summary>Gets DeleteEntry command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand DeleteEntryCommand
+		{
+			get
+			{
+				return this.mDeleteEntryCommand
+					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+					// is not yet bound to the View, the command is instantiated in a different thread than the
+					// main thread. Prevent this by checking on the SynchronizationContext.
+					?? (this.mDeleteEntryCommand = System.Threading.SynchronizationContext.Current == null
+					? null : new DelegateCommand(this.DeleteEntry, this.CanDeleteEntry));
+			}
+		}
 
-        /// <summary>Gets AddEntry command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand AddEntryCommand
-        {
-            get
-            {
-                return this.mAddEntryCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mAddEntryCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.AddEntry, this.CanAddEntry));
-            }
-        }
+		/// <summary>
+		/// </summary>
+		private void DeleteEntry()
+		{
+			// Ask for confirmation.
+			var result = MessageBox.Show("Weet je zeker dat je deze post wilt verwijderen?", "Bookkeeping", MessageBoxButton.YesNoCancel);
 
-        /// <summary>
-        /// </summary>
-        private void AddEntry()
-        {
-            var newEntry = new Entry();
-            newEntry.Description = "Nieuw";
-            newEntry.ParentEntry = Mapper.Map<Entry>(SelectedEntry);
+			if (result == MessageBoxResult.Yes)
+			{
+				// Delete entry
+				mEntryDataService.Delete(Mapper.Map<Entry>(SelectedEntry));
+			}
 
-            mEntryDataService.Add(newEntry);
+			mEntriesHaveChanged = true;
+		}
 
-            SelectedEntry.ChildEntryVms.Add(Mapper.Map<EntryVM>(newEntry));
+		/// <summary>Determines whether the StartMeasurement command can be executed.
+		/// </summary>
+		private bool CanDeleteEntry()
+		{
+			if ((SelectedEntry != null) && (SelectedEntry.ChildEntryVms.Count == 0))
+			{
+				return true;
+			}
 
-            mEntriesHaveChanged = true;
-        }
+			return false;
+		}
 
-        /// <summary>Determines whether the AddEntry command can be executed.
-        /// </summary>
-        private bool CanAddEntry()
-        {
-            if ((SelectedEntry != null) && ((Mapper.Map<Entry>(SelectedEntry)).Level() < 3))
-            {
-                return true;
-            }
+		#endregion Command DeleteEntryCommand
 
-            return false;
-        }
+		#region Property Entries
 
-        #endregion Command AddEntryCommand
+		public ObservableCollection<EntryVM> Entries { get; set; }
 
-        #region Command DeleteEntryCommand
+		#endregion Property Entries
 
-        /// <summary>Field for the DeleteEntry command.
-        /// </summary>
-        private DelegateCommand mDeleteEntryCommand;
+		#region Property SelectedEntry
 
-        /// <summary>Gets DeleteEntry command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand DeleteEntryCommand
-        {
-            get
-            {
-                return this.mDeleteEntryCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mDeleteEntryCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.DeleteEntry, this.CanDeleteEntry));
-            }
-        }
+		private EntryVM mSelectedEntry;
 
-        /// <summary>
-        /// </summary>
-        private void DeleteEntry()
-        {
-            // Ask for confirmation.
-            var result = MessageBox.Show("Weet je zeker dat je deze post wilt verwijderen?", "Bookkeeping", MessageBoxButton.YesNoCancel);
+		public EntryVM SelectedEntry
+		{
+			get
+			{
+				return mSelectedEntry;
+			}
+			set
+			{
+				mSelectedEntry = value;
+				NotifyPropertyChanged();
+				NotifyPropertyChanged("SelectedEntryDescription");
+				AddEntryCommand.RaiseCanExecuteChanged();
+				DeleteEntryCommand.RaiseCanExecuteChanged();
+			}
+		}
 
-            if (result == MessageBoxResult.Yes)
-            {
-                // Delete entry
-                mEntryDataService.Delete(Mapper.Map<Entry>(SelectedEntry));
-            }
+		#endregion Property SelectedEntry
 
-            mEntriesHaveChanged = true;
-        }
+		#region Property SelectedEntryDescription
 
-        /// <summary>Determines whether the StartMeasurement command can be executed.
-        /// </summary>
-        private bool CanDeleteEntry()
-        {
-            if ((SelectedEntry != null) && (SelectedEntry.ChildEntries == null))
-            {
-                return true;
-            }
+		public string SelectedEntryDescription
+		{
+			get
+			{
+				if (SelectedEntry != null)
+				{
+					return SelectedEntry.Description;
+				}
+				return "";
+			}
+			set
+			{
+				SelectedEntry.Description = value;
 
-            return false;
-        }
+				var entry = SelectedEntry.ToEntry();
 
-        #endregion Command DeleteEntryCommand
-    }
+				//// Get the root before the update. This will clear the root node.
+				//var root = entry.RootEntry();
+
+				//var rootInList = Entries.FirstOrDefault(e => e.Key == root.Key);
+
+				mEntryDataService.Update(entry);
+
+				var entryVm = EntryVM.FromEntry(entry);
+
+				var rootInList = GetRootEntryOf(entryVm);
+
+				if (rootInList != null)
+				{
+					rootInList.UpdateChild(entryVm);
+				}
+
+				mEntriesHaveChanged = true;
+			}
+		}
+
+		#endregion Property SelectedEntryDescription
+
+		#region Helper methods
+
+		private void loadData()
+		{
+			Entries = new ObservableCollection<EntryVM>();
+
+			foreach (var rootEntry in mEntryDataService.GetRootEntries())
+			{
+				Entries.Add(Mapper.Map<EntryVM>(rootEntry));
+			}
+		}
+
+		private EntryVM GetRootEntryOf(EntryVM child)
+		{
+			EntryVM retValue = null;
+
+			foreach (var entryVm in Entries)
+			{
+				if (entryVm.HasChildNode(child))
+				{
+					return entryVm;
+				}
+			}
+
+			return retValue;
+		}
+
+		#endregion Helper methods
+	}
 }

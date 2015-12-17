@@ -1,15 +1,12 @@
-﻿using AutoMapper;
-using PL.BookKeeping.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
+using PL.BookKeeping.Entities;
 
 namespace BookKeeping.Client.Models
 {
-    public class EntryVM : BaseTracableObjectVM
+	public class EntryVM : BaseTracableObjectVM
     {
         public string Description { get; set; }
 
@@ -30,10 +27,13 @@ namespace BookKeeping.Client.Models
                 if (mChildEntryVms == null)
                 {
                     mChildEntryVms = new ObservableCollection<EntryVM>();
-                    foreach (var childEntry in ChildEntries.OrderBy(e => e.Description))
-                    {
-                        mChildEntryVms.Add(Mapper.Map<EntryVM>(childEntry));
-                    }
+					if (ChildEntries != null)
+					{
+						foreach (var childEntry in ChildEntries.OrderBy(e => e.Description))
+						{
+							mChildEntryVms.Add(Mapper.Map<EntryVM>(childEntry));
+						}
+					}
                 }
 
                 return mChildEntryVms;
@@ -111,5 +111,26 @@ namespace BookKeeping.Client.Models
 
             return false;
         }
-    }
+
+		internal bool HasChildNode(EntryVM child)
+		{
+			var foundChild = ChildEntryVms.Where(c => c.Key == child.Key);
+			if (foundChild != null)
+			{
+				return true;
+			}
+			else
+			{
+				foreach (var myChild in ChildEntryVms)
+				{
+					if (myChild.HasChildNode(child))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+	}
 }
