@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using AutoMapper;
 using BookKeeping.Client.Models;
@@ -14,6 +13,8 @@ using Prism.Regions;
 
 namespace BookKeeping.Client.ViewModels
 {
+	/// <summary>Allows CRUD operations on entry definitions.
+	/// </summary>
 	public class DefineEntriesVM : ViewModelBase, INavigationAware
 	{
 		#region Fields
@@ -56,7 +57,6 @@ namespace BookKeeping.Client.ViewModels
 
 		public void OnNavigatedFrom(NavigationContext navigationContext)
 		{
-
 		}
 
 		#endregion INavigationAware
@@ -191,10 +191,17 @@ namespace BookKeeping.Client.ViewModels
 			if (result == MessageBoxResult.Yes)
 			{
 				// Delete entry
-				mEntryDataService.Delete(Mapper.Map<Entry>(SelectedEntry));
-			}
+				var rootInList = GetRootEntryOf(SelectedEntry);
 
-			mEntriesHaveChanged = true;
+				mEntryDataService.Delete(SelectedEntry.ToEntry());
+
+				if (rootInList != null)
+				{
+					rootInList.DeleteChild(SelectedEntry);
+				}
+
+				mEntriesHaveChanged = true;
+			}
 		}
 
 		/// <summary>Determines whether the StartMeasurement command can be executed.
@@ -256,11 +263,6 @@ namespace BookKeeping.Client.ViewModels
 				SelectedEntry.Description = value;
 
 				var entry = SelectedEntry.ToEntry();
-
-				//// Get the root before the update. This will clear the root node.
-				//var root = entry.RootEntry();
-
-				//var rootInList = Entries.FirstOrDefault(e => e.Key == root.Key);
 
 				mEntryDataService.Update(entry);
 

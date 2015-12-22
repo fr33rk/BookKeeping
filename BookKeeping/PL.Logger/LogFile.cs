@@ -22,8 +22,7 @@ namespace PL.Logger
 		public string Message { get; private set; }
 	}
 
-	/// <summary>
-	/// General log file for .net applications.
+	/// <summary>General log file for .net applications.
 	/// General usage:
 	///    Create with constructor
 	///    Set LogLevel. Log lines of this level and higher are actually written in the log file.
@@ -193,8 +192,7 @@ namespace PL.Logger
 		/// </summary>
 		private StreamWriter mFile;
 
-		/// <summary>
-		/// Write the log start line.
+		/// <summary>Write the log start line.
 		/// </summary>
 		public void WriteLogStart()
 		{
@@ -212,8 +210,7 @@ namespace PL.Logger
 			}
 		}
 
-		/// <summary>
-		/// Write the log end line
+		/// <summary>Write the log end line
 		/// </summary>
 		public void WriteLogEnd()
 		{
