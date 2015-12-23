@@ -6,8 +6,10 @@ using PL.BookKeeping.Entities;
 
 namespace BookKeeping.Client.Models
 {
-	public class EntryVM : BaseTracableObjectVM
+	public class EntryVM : BaseTracableObjectVMOfT<Entry, EntryVM>
 	{
+		#region Entry
+
 		public string Description { get; set; }
 
 		public int? ParentEntryKey { get; set; }
@@ -15,6 +17,8 @@ namespace BookKeeping.Client.Models
 		public Entry ParentEntry { get; set; }
 
 		public ICollection<Entry> ChildEntries { get; set; }
+
+		#endregion Entry
 
 		#region Property ChildEntryVms
 
@@ -67,19 +71,7 @@ namespace BookKeeping.Client.Models
 
 		#endregion Property RouteString
 
-		#region Mapping
-
-		public Entry ToEntry()
-		{
-			return Mapper.Map<Entry>(this);
-		}
-
-		public static EntryVM FromEntry(Entry entry)
-		{
-			return Mapper.Map<EntryVM>(entry);
-		}
-
-		#endregion Mapping
+		#region Child mutations
 
 		public bool UpdateChild(EntryVM newChild)
 		{
@@ -150,5 +142,7 @@ namespace BookKeeping.Client.Models
 
 			return false;
 		}
+
+		#endregion Child mutations
 	}
 }

@@ -1,72 +1,86 @@
-﻿using PL.BookKeeping.Entities;
-using System;
+﻿using System;
+using PL.BookKeeping.Entities;
 
 namespace BookKeeping.Client.Models
 {
-    public class ProcessingRuleVM
-    {
-        public int? EntryKey { get; set; }
+	/// <summary>Wrapper class around  the ProcessingRule entity.
+	///
+	/// </summary>
+	public class ProcessingRuleVM : BaseTracableObjectVMOfT<ProcessingRule, ProcessingRuleVM>
+	{
+		#region ProcessingRule entity
 
-        public Entry Entry { get; set; }
+		public int? EntryKey { get; set; }
 
-        public int Priority { get; set; }
+		public Entry Entry { get; set; }
 
-        public string NameRule { get; set; }
+		public int Priority { get; set; }
 
-        public string AccountRule { get; set; }
+		public string NameRule { get; set; }
 
-        public string CounterAccountRule { get; set; }
+		public string AccountRule { get; set; }
 
-        public string CodeRule { get; set; }
+		public string CounterAccountRule { get; set; }
 
-        public MutationType? MutationTypeRule { get; set; }
+		public string CodeRule { get; set; }
 
-        public string AmountRule { get; set; }
+		public MutationType? MutationTypeRule { get; set; }
 
-        public string MutationKindRule { get; set; }
+		public string AmountRule { get; set; }
 
-        public string RemarksRule { get; set; }
+		public string MutationKindRule { get; set; }
 
-        public override string ToString()
-        {
-            string retValue = "";
+		public string RemarksRule { get; set; }
 
-            if (NameRule != null)
-            {
-                retValue += String.Format("Naam = {0}", NameRule);
-            }
+		#endregion ProcessingRule entity
 
-            if (AccountRule != null)
-            {
-                retValue += String.Format("Rekening = {0}", AccountRule);
-            }
+		#region ToString
 
-            if (CounterAccountRule != null)
-            {
-                retValue += String.Format("Tegenrekening = {0}", CounterAccountRule);
-            }
+		/// <summary>Returns a <see cref="System.String" /> that represents this instance.
+		/// </summary>
+		/// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+		public override string ToString()
+		{
+			string retValue = "";
 
-            if (CodeRule != null)
-            {
-                retValue += String.Format("Code = {0}", CodeRule);
-            }
+			if (NameRule != null)
+			{
+				retValue += String.Format("Naam = {0}", NameRule);
+			}
 
-            if (MutationTypeRule != null)
-            {
-                retValue += String.Format("Af/bij = {0}", MutationTypeRule.ToString());
-            }
+			if (AccountRule != null)
+			{
+				retValue += String.Format("Rekening = {0}", AccountRule);
+			}
 
-            if (AmountRule != null)
-            {
-                retValue += String.Format("Bedrag = {0}", AmountRule);
-            }
+			if (CounterAccountRule != null)
+			{
+				retValue += String.Format("Tegenrekening = {0}", CounterAccountRule);
+			}
 
-            if (RemarksRule != null)
-            {
-                retValue += String.Format("Opmerking = {0}", AmountRule);
-            }
+			if (CodeRule != null)
+			{
+				retValue += String.Format("Code = {0}", CodeRule);
+			}
 
-            return retValue;
-        }
-    }
+			if (MutationTypeRule != null)
+			{
+				retValue += String.Format("Af/bij = {0}", MutationTypeRule.ToString());
+			}
+
+			if (AmountRule != null)
+			{
+				retValue += String.Format("Bedrag = {0}", AmountRule);
+			}
+
+			if (RemarksRule != null)
+			{
+				retValue += String.Format("Opmerking = {0}", AmountRule);
+			}
+
+			return retValue;
+		}
+
+		#endregion ToString
+	}
 }
