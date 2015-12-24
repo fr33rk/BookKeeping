@@ -5,6 +5,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -32,5 +33,17 @@ namespace PL.BookKeeping.Business.Services.DataServices
         {
             return base.CompleteQry(query.Include(e => e.Entry));
         }
-    }
+
+		public IList<ProcessingRule> GetByEntry(Entry entry)
+		{
+			using (var unitOfWork = this.mUOWFactory.Create())
+			{
+				var repository = unitOfWork.GetRepository<ProcessingRule>();
+				return CompleteQry(repository.GetQuery(true))
+					.Where(r => r.EntryKey == entry.Key)
+					.OrderBy(r => r.Priority)
+					.ToList();
+			}
+		}
+	}
 }

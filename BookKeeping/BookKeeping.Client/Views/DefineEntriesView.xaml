@@ -50,7 +50,16 @@
             <TextBlock Grid.Column="0" Grid.Row="0" Text="Omschrijving:" Margin="4" Padding="5,2" HorizontalAlignment="Right"/>
             <TextBox Grid.Column="1" Text="{Binding SelectedEntryDescription}" Margin="4"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Related rules:" HorizontalAlignment="Right" Margin="4"/>
-            <DataGrid Grid.Row="1"  Grid.Column="1" Grid.RowSpan="2" Margin="4"/>            
+            <DataGrid x:Name="RulesDataGrid" Grid.Row="2" Grid.Column="1"
+                      AutoGenerateColumns="False" ItemsSource="{Binding AttachedProcessingRules}"
+                      IsReadOnly="True"
+                      CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False"
+                      SelectionMode="Single" SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Entry" Width="*" Binding="{Binding Entry.Description, FallbackValue=Negeren}" />
+                    <DataGridTextColumn Header="Rule" Width="4*" Binding="{Binding}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" 
                     Orientation="Horizontal" HorizontalAlignment="Right" >

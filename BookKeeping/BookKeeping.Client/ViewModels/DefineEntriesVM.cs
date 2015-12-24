@@ -20,6 +20,7 @@ namespace BookKeeping.Client.ViewModels
 		#region Fields
 
 		private IEntryDataService mEntryDataService;
+		private IProcessingRuleDataService mProcessingRuleDataService;
 		private IRegionManager mRegionManager;
 		private IEventAggregator mEventAggregator;
 		private bool mEntriesHaveChanged;
@@ -29,10 +30,11 @@ namespace BookKeeping.Client.ViewModels
 		#region Constructor(s)
 
 		public DefineEntriesVM(IEntryDataService entryDataService, IRegionManager regionManager,
-			IEventAggregator eventAggregator)
+			IProcessingRuleDataService processingRuleDataService, IEventAggregator eventAggregator)
 		{
 			mEntryDataService = entryDataService;
 			mRegionManager = regionManager;
+			mProcessingRuleDataService = processingRuleDataService;
 			mEventAggregator = eventAggregator;
 		}
 
@@ -237,6 +239,9 @@ namespace BookKeeping.Client.ViewModels
 			set
 			{
 				mSelectedEntry = value;
+
+				loadAttachedProcessingRules();
+
 				NotifyPropertyChanged();
 				NotifyPropertyChanged("SelectedEntryDescription");
 				AddEntryCommand.RaiseCanExecuteChanged();
@@ -281,7 +286,26 @@ namespace BookKeeping.Client.ViewModels
 
 		#endregion Property SelectedEntryDescription
 
+		#region Property AttachedRules
+
+		public ObservableCollection<ProcessingRuleVM> AttachedProcessingRules { get; private set; } = new ObservableCollection<ProcessingRuleVM>();
+
+		#endregion Property AttachedRules
+
 		#region Helper methods
+
+		private void loadAttachedProcessingRules()
+		{
+			if (mSelectedEntry != null)
+			{
+				AttachedProcessingRules.Clear(); // = new ObservableCollection<ProcessingRuleVM>();
+
+				foreach (var rule in mProcessingRuleDataService.GetByEntry(mSelectedEntry.ToEntry()))
+				{
+					AttachedProcessingRules.Add(ProcessingRuleVM.FromEntry(rule));
+				}
+			}
+		}
 
 		private void loadData()
 		{
