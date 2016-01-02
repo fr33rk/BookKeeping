@@ -7,7 +7,7 @@ namespace BookKeeping.Client.Models
 	/// <summary>VM equivalent of a BaseTracableObject entry.
 	/// </summary>
 	public class BaseTracableObjectVMOfT<TEntity, TEntityVM>
-		where TEntity : BaseTraceableObject
+        where TEntity : BaseTraceableObject
 	{
 		#region BaseTraceableObject
 
@@ -31,14 +31,14 @@ namespace BookKeeping.Client.Models
 
 		#region Wrapping and unwrapping
 
-		public TEntity ToEntry()
+		public TEntity ToEntity()
 		{
 			return Mapper.Map<TEntity>(this);
 		}
 
-		public static TEntityVM FromEntry(TEntity entry)
+		public static TEntityVM FromEntity(TEntity entity)
 		{
-			return Mapper.Map<TEntityVM>(entry);
+			return Mapper.Map<TEntityVM>(entity);
 		}
 
 		#endregion Wrapping and unwrapping

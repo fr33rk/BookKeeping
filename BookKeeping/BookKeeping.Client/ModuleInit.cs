@@ -36,6 +36,8 @@ namespace BookKeeping.Client
             Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
             Mapper.CreateMap<Entry, EntryVM>();
             Mapper.CreateMap<EntryVM, Entry>();
+            Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
+            Mapper.CreateMap<ProcessingRuleVM, ProcessingRule>();
         }      
     }
 }

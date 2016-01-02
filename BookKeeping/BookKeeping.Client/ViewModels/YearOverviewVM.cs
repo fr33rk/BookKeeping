@@ -89,12 +89,16 @@ namespace BookKeeping.Client.ViewModels
                 flatten(rootEntry);
             }
 
+            // Then get all entries and periods of the selected year.
+            var entryPeriods = mEntryPeriodDataService.GetByYear(mYear);
+
+
             // Then fill the entry periods.
             foreach (var entryOfYear in mEntriesOfYear)
             {
-                var entryPeriods = mEntryPeriodDataService.GetByEntryAndYear(entryOfYear.Entry, mYear);
+                var entryPeriodsOfentry = entryPeriods.Where(ep => ep.EntryKey == entryOfYear.Entry.Key).ToList();
 
-                entryOfYear.SetPeriodData(entryPeriods);
+                entryOfYear.SetPeriodData(entryPeriodsOfentry);
             }
 
             // Add the totals..

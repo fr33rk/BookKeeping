@@ -124,7 +124,7 @@ namespace BookKeeping.Client.Models
 
 		internal bool HasChildNode(EntryVM child)
 		{
-			var foundChild = ChildEntryVms.Where(c => c.Key == child.Key);
+			var foundChild = ChildEntryVms.Where(c => c.Key == child.Key).FirstOrDefault();
 			if (foundChild != null)
 			{
 				return true;

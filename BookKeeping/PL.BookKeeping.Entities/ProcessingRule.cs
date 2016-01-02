@@ -65,11 +65,13 @@ namespace PL.BookKeeping.Entities
 
         }
 
-        private bool AmountRuleAppliesTo(decimal amount)
+        public bool AmountRuleAppliesTo(decimal amount)
         {
             // format like minValue [< | <= | >= | >] x
             // combined with x [< | <= | = | >= | >]
             throw new NotImplementedException();
+
+            // First operator = (<=|<|>|>=)(?=\s*x)
         }
 
         /// <summary>Check if the amount rule has a valid format.
@@ -79,6 +81,8 @@ namespace PL.BookKeeping.Entities
         public bool IsValidAmountRule(string amountRule)
         {
             throw new NotImplementedException();
-        }
+        }        
+
+        
     }
 }

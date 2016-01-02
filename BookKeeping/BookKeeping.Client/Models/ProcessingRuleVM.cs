@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using PL.BookKeeping.Entities;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace BookKeeping.Client.Models
 {
@@ -81,6 +84,31 @@ namespace BookKeeping.Client.Models
 			return retValue;
 		}
 
-		#endregion ToString
-	}
+        internal IList<Transaction> FilterList(ref IList<Transaction> transactions)
+        {
+            var rule = ToEntity();
+
+            var retValue = transactions.Where(t =>
+            {
+                return NameRule != null ? Regex.IsMatch(t.Name, NameRule) : true
+                && AccountRule != null ? Regex.IsMatch(t.Account, AccountRule) : true
+                && CounterAccountRule != null ? Regex.IsMatch(t.CounterAccount, CounterAccountRule) : true
+                && CodeRule != null ? Regex.IsMatch(t.Code, CodeRule) : true
+                && MutationTypeRule != null ? t.MutationType == MutationTypeRule : true
+                && MutationKindRule != null ? Regex.IsMatch(t.MutationKind, MutationKindRule) : true
+                && RemarksRule != null ? Regex.IsMatch(t.Remarks, RemarksRule) : true
+                && rule.AmountRuleAppliesTo(t.Amount);
+            })
+            .ToList();
+
+            foreach(var transaction in retValue)
+            {
+                transactions.Remove(transaction);
+            }
+
+            return retValue;
+        }
+
+        #endregion ToString
+    }
 }

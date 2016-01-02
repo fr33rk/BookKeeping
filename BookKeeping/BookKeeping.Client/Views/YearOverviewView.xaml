@@ -48,6 +48,7 @@
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Level}" Value="2">
                                 <Setter Property="FontStyle" Value="Italic" />
+                                <Setter Property="Background" Value="LightCyan" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

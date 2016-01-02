@@ -118,7 +118,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\BaseTracableObjectVM.cs" />
+    <Compile Include="Models\BaseTracableObjectVMOfT.cs" />
     <Compile Include="Models\EntryOfYearVM.cs" />
     <Compile Include="Models\EntryVM.cs" />
     <Compile Include="Models\ProcessingRuleVM.cs" />

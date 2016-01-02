@@ -195,7 +195,7 @@ namespace BookKeeping.Client.ViewModels
 				// Delete entry
 				var rootInList = GetRootEntryOf(SelectedEntry);
 
-				mEntryDataService.Delete(SelectedEntry.ToEntry());
+				mEntryDataService.Delete(SelectedEntry.ToEntity());
 
 				if (rootInList != null)
 				{
@@ -267,11 +267,11 @@ namespace BookKeeping.Client.ViewModels
 			{
 				SelectedEntry.Description = value;
 
-				var entry = SelectedEntry.ToEntry();
+				var entry = SelectedEntry.ToEntity();
 
 				mEntryDataService.Update(entry);
 
-				var entryVm = EntryVM.FromEntry(entry);
+				var entryVm = EntryVM.FromEntity(entry);
 
 				var rootInList = GetRootEntryOf(entryVm);
 
@@ -300,9 +300,9 @@ namespace BookKeeping.Client.ViewModels
 			{
 				AttachedProcessingRules.Clear(); // = new ObservableCollection<ProcessingRuleVM>();
 
-				foreach (var rule in mProcessingRuleDataService.GetByEntry(mSelectedEntry.ToEntry()))
+				foreach (var rule in mProcessingRuleDataService.GetByEntry(mSelectedEntry.ToEntity()))
 				{
-					AttachedProcessingRules.Add(ProcessingRuleVM.FromEntry(rule));
+					AttachedProcessingRules.Add(ProcessingRuleVM.FromEntity(rule));
 				}
 			}
 		}

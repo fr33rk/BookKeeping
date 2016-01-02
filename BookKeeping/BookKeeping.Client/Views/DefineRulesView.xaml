@@ -84,14 +84,15 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="1" Grid.Column="1" Text="Post:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <ComboBox Grid.Row="1" Grid.Column="2" Margin="4" 
-                      ItemsSource="{Binding AvailableEntries}" DisplayMemberPath="RouteString" SelectedValuePath="@RouteString"
-                      SelectedItem="{Binding SelectedRule.Entry}"/>
+                      ItemsSource="{Binding AvailableEntries}" DisplayMemberPath="RouteString" SelectedValuePath="RouteString"
+                      SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Text="Naamregel:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Grid.Row="2" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.NameRule}"/>
@@ -112,17 +113,23 @@
                      Text="{Binding SelectedRule.MutationKindRule}"/>
             <TextBlock Grid.Row="8" Grid.Column="1" Text="Opmerkingregel:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Grid.Row="8" Grid.Column="2" Margin="4"
-                     Text="{Binding SelectedRule.DescriptionRule}"/>
+                     Text="{Binding SelectedRule.RemarksRule}"/>
             <TextBlock Grid.Row="9" Grid.Column="1" Text="Mutatietyperegel:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Grid.Row="9" Grid.Column="2" Margin="4"
-                     Text="{Binding SelectedRule.MutaionTypeRule}"/>
+                     Text="{Binding SelectedRule.MutationTypeRule}"/>
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="Toepassen op:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="10" Grid.Column="2" Margin="4" 
+                      ItemsSource="{Binding AvailablePeriods}" DisplayMemberPath="Description" SelectedValuePath="Description"
+                      SelectedItem="{Binding SelectedPeriod, Mode=TwoWay}"/>
 
-            <StackPanel Grid.Row="11" Grid.ColumnSpan="2" HorizontalAlignment="Left">
-                <Button Style="{StaticResource MediumSquareButtonStyle}">
+
+            <StackPanel Grid.Row="12" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+                <Button Style="{StaticResource MediumSquareButtonStyle}"
+                        Command="{Binding ShowPreviewCommand}">
                     <Image Source="{StaticResource imgPlay}"/>                           
                 </Button>
             </StackPanel>
-            <StackPanel Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="12" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
                 <Button Style="{StaticResource MediumSquareButtonStyle}">
                     <Image Source="{StaticResource imgSave}"/>
                 </Button>
@@ -130,7 +137,7 @@
         </Grid>
 
         <DataGrid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10"
-                  ItemsSource="{Binding SelectedTransactions}" AlternatingRowBackground="#FFD3E69F" />
+                  ItemsSource="{Binding MatchingTransactions}" AlternatingRowBackground="#FFD3E69F" />
 
         <StackPanel Grid.Row="3" Grid.ColumnSpan="2" 
                     Orientation="Horizontal" HorizontalAlignment="Right" >

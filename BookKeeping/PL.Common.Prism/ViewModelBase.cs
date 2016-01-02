@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Prism.Mvvm;
+using System.Linq;
+using Prism.Commands;
 
 namespace PL.Common.Prism
 {
@@ -17,9 +19,21 @@ namespace PL.Common.Prism
         {
             base.OnPropertyChanged(propertyName);
             this.InvokeChangeCanExecute();
+            UpdateCommandCanExecute();
         }
 
         #endregion INotifyPropertyChanged
 
+        private void UpdateCommandCanExecute()
+        {
+            foreach (var command in this.GetType()
+                .GetProperties()
+                .Where(pi => pi.PropertyType == typeof(DelegateCommand))
+                .Select(pi => pi.GetValue(this))
+                .Cast< DelegateCommand >())
+            {
+                command.RaiseCanExecuteChanged();
+            }           
+        }
     }
 }
