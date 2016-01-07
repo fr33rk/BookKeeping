@@ -92,7 +92,6 @@ namespace BookKeeping.Client.ViewModels
             // Then get all entries and periods of the selected year.
             var entryPeriods = mEntryPeriodDataService.GetByYear(mYear);
 
-
             // Then fill the entry periods.
             foreach (var entryOfYear in mEntriesOfYear)
             {

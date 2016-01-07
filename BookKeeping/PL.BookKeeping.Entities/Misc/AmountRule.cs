@@ -36,7 +36,6 @@ namespace PL.BookKeeping.Entities.Misc
                         operatorToString(mMinOperator),
                         operatorToString(mMaxOperator),
                         mMaxValue.Value);
-                        
                 }
             }
 
@@ -80,7 +79,6 @@ namespace PL.BookKeeping.Entities.Misc
 
         private bool isSingleExpression(string expression)
         {
-
             //  ^x(<=|>=|<|>|=)\d+(\.|,)?\d*
             //     ^ assert position at start of the string
             //     x matches the character x literally(case sensitive)
@@ -131,7 +129,7 @@ namespace PL.BookKeeping.Entities.Misc
 
                 if (mMinOperator != Operator.Unspecified)
                 {
-                    retValue &= isMatch(invert(mMinOperator), mMinValue.Value, value); 
+                    retValue &= isMatch(invert(mMinOperator), mMinValue.Value, value);
                 }
             }
 
@@ -146,14 +144,19 @@ namespace PL.BookKeeping.Entities.Misc
             {
                 case Operator.EqualTo:
                     return minComparisson == 0;
+
                 case Operator.EqualToOrGreaterThan:
-                    return minComparisson >= 0;                    
+                    return minComparisson >= 0;
+
                 case Operator.GreaterThan:
-                    return minComparisson > 0;                    
+                    return minComparisson > 0;
+
                 case Operator.SmallerThan:
-                    return minComparisson < 0;                    
+                    return minComparisson < 0;
+
                 case Operator.EqualToOrSmallerThan:
-                    return minComparisson <= 0;                   
+                    return minComparisson <= 0;
+
                 case Operator.Unspecified:
                 default:
                     return false;
@@ -212,7 +215,7 @@ namespace PL.BookKeeping.Entities.Misc
                 default:
                     return "?";
             }
-        }        
+        }
 
         private Operator invert(Operator anOperator)
         {
@@ -220,12 +223,16 @@ namespace PL.BookKeeping.Entities.Misc
             {
                 case Operator.EqualToOrGreaterThan:
                     return Operator.EqualToOrSmallerThan;
+
                 case Operator.GreaterThan:
                     return Operator.SmallerThan;
+
                 case Operator.SmallerThan:
                     return Operator.GreaterThan;
+
                 case Operator.EqualToOrSmallerThan:
                     return Operator.EqualToOrGreaterThan;
+
                 case Operator.EqualTo:
                 case Operator.Unspecified:
                 default:

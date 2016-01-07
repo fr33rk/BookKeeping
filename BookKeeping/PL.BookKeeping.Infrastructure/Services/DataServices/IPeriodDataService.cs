@@ -1,6 +1,6 @@
-﻿using System;
+﻿using PL.BookKeeping.Entities;
+using System;
 using System.Collections.Generic;
-using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Infrastructure.Services.DataServices
 {

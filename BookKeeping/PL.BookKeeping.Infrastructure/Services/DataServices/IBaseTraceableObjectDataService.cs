@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
+using System.Collections.Generic;
 
 namespace PL.BookKeeping.Infrastructure.Services.DataServices
 {
@@ -23,7 +19,6 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         /// </summary>
         /// <param name="entity">The entity.</param>
         void Update(TEntity entity);
-
 
         /// <summary>Deletes the specified entity from the database.
         /// </summary>

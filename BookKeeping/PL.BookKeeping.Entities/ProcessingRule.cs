@@ -1,6 +1,5 @@
 ﻿using PL.BookKeeping.Entities.Misc;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
@@ -52,11 +51,7 @@ namespace PL.BookKeeping.Entities
             }
         }
 
-
         #endregion Property AmountRule
-
-
-
 
         public string MutationKindRule { get; set; }
 
@@ -94,7 +89,6 @@ namespace PL.BookKeeping.Entities
                 retValue &= Regex.IsMatch(transaction.Remarks, RemarksRule);
 
             return retValue;
-
         }
 
         public bool AmountRuleAppliesTo(decimal amount)
@@ -114,6 +108,6 @@ namespace PL.BookKeeping.Entities
         public bool IsValidAmountRule(string amountRule)
         {
             return new AmountRule().IsValid(amountRule);
-        }       
+        }
     }
 }

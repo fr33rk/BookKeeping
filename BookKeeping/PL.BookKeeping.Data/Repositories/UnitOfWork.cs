@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.Logger;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 
 namespace PL.BookKeeping.Data.Repositories
 {
@@ -82,13 +82,8 @@ namespace PL.BookKeeping.Data.Repositories
                         entry.Entity.GetType().Name, e.Message, e.InnerException.ToString());
                     mLogFile.Error(message);
                     Console.WriteLine(message);
-
                 }
-
-                
-                
             }
-
         }
 
         /// <summary>
@@ -154,6 +149,6 @@ namespace PL.BookKeeping.Data.Repositories
             }
         }
 
-        #endregion
+        #endregion IDisposable implementation
     }
 }

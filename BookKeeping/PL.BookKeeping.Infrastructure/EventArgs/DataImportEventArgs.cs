@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PL.BookKeeping.Infrastructure
 {
@@ -16,7 +12,5 @@ namespace PL.BookKeeping.Infrastructure
 
         public int Imported { get; private set; }
         public int Duplicate { get; private set; }
-
     }
-
 }

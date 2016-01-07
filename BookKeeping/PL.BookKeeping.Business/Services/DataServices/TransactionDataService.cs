@@ -5,8 +5,6 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using System.Text.RegularExpressions;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {

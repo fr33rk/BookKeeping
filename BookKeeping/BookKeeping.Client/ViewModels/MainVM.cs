@@ -1,25 +1,22 @@
-﻿using System;
-using BookKeeping.Client.Views;
+﻿using BookKeeping.Client.Views;
+using Microsoft.Practices.Unity;
 using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
-using Prism.Regions;
 using Prism.Events;
-using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
-using System.Collections.Generic;
-using Microsoft.Practices.Unity;
-using Prism.Unity;
+using Prism.Regions;
 using System.Collections.ObjectModel;
 
 namespace BookKeeping.Client.ViewModels
 {
     public class MainVM : ViewModelBase, INavigationAware, IRegionMemberLifetime
     {
-        IRegionManager mRegionManager;
-        IPeriodDataService mPeriodDataService;
-        IEventAggregator mEventAggregator;
-        IUnityContainer mContainer;
+        private IRegionManager mRegionManager;
+        private IPeriodDataService mPeriodDataService;
+        private IEventAggregator mEventAggregator;
+        private IUnityContainer mContainer;
 
         public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
             IUnityContainer unityContainer)
@@ -55,7 +52,6 @@ namespace BookKeeping.Client.ViewModels
                                                                            new ParameterOverride("year", year),
                                                                        })
                                    );
-
             }
         }
 
@@ -117,7 +113,7 @@ namespace BookKeeping.Client.ViewModels
         /// <summary>Field for the StartMeasurement command.
         /// </summary>
         private DelegateCommand mDefineEntriesCommand;
-        
+
         /// <summary>Gets StartMeasurement command.
         /// </summary>
         [System.ComponentModel.Browsable(false)]
@@ -148,8 +144,7 @@ namespace BookKeeping.Client.ViewModels
             return true;
         }
 
-        #endregion Command SelectFilesCommand
-
+        #endregion Command DefineEntriesCommand
 
         #region Command DefineRulesCommand
 
@@ -187,14 +182,12 @@ namespace BookKeeping.Client.ViewModels
             return true;
         }
 
-        #endregion Command DefineRulesCommand				
-
+        #endregion Command DefineRulesCommand
 
         #region INavigationAware
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -204,7 +197,6 @@ namespace BookKeeping.Client.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
         }
 
         #endregion INavigationAware
@@ -221,6 +213,4 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion IRegionMemberLifetime
     }
-
-    
 }

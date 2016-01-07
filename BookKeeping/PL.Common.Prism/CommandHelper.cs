@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Reflection;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
+using System.Linq;
+using System.Reflection;
 
 namespace PL.Common.Prism
 {
@@ -37,6 +37,5 @@ namespace PL.Common.Prism
                 }
             }
         }
-
     }
 }

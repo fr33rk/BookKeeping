@@ -3,7 +3,6 @@ using PL.Logger;
 using Prism.Commands;
 using Prism.Events;
 
-
 namespace BookKeeping.Client.ViewModels
 {
     public class ExampleVM : ViewModelBase
@@ -17,7 +16,7 @@ namespace BookKeeping.Client.ViewModels
             mLogFile = logFile;
             mEventAggregator = eventAggregator;
 
-           // mEventAggregator.GetEvent<StatusChangedEvent>().Subscribe(this.StatusChanged, ThreadOption.UIThread);
+            // mEventAggregator.GetEvent<StatusChangedEvent>().Subscribe(this.StatusChanged, ThreadOption.UIThread);
         }
 
         #region Command ExampleCommand
@@ -56,6 +55,6 @@ namespace BookKeeping.Client.ViewModels
             return true;
         }
 
-        #endregion Command StartMeasurement
+        #endregion Command ExampleCommand
     }
 }

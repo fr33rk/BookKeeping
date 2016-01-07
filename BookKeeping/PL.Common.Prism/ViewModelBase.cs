@@ -1,7 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using System.Linq;
-using Prism.Commands;
+using System.Runtime.CompilerServices;
 
 namespace PL.Common.Prism
 {
@@ -30,10 +30,10 @@ namespace PL.Common.Prism
                 .GetProperties()
                 .Where(pi => pi.PropertyType == typeof(DelegateCommand))
                 .Select(pi => pi.GetValue(this))
-                .Cast< DelegateCommand >())
+                .Cast<DelegateCommand>())
             {
                 command.RaiseCanExecuteChanged();
-            }           
+            }
         }
     }
 }

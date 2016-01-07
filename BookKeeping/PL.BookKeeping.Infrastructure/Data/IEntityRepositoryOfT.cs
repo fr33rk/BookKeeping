@@ -1,10 +1,8 @@
-﻿using System;
+﻿using RefactorThis.GraphDiff;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using RefactorThis.GraphDiff;
 
 namespace PL.BookKeeping.Infrastructure.Data
 {
@@ -86,7 +84,7 @@ namespace PL.BookKeeping.Infrastructure.Data
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>Gets all entities available in the repository.</summary>
-        /// Note that this method executes the default query returned by GetQuery() 
+        /// Note that this method executes the default query returned by GetQuery()
         /// <returns>Enumerable of all entities.</returns>
         IEnumerable<TEntity> GetAll();
 

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace PL.BookKeeping.Infrastructure.Services
 {
@@ -10,6 +10,5 @@ namespace PL.BookKeeping.Infrastructure.Services
 
         /// <summary>Occurs when a transaction had been processed. </summary>
         event EventHandler<DataProcessedEventArgs> OnDataProcessed;
-
     }
 }

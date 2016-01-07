@@ -2,12 +2,9 @@
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -57,7 +54,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
                     .Where(ep => (ep.Entry.Key == entry.Key) && (ep.Period.PeriodStart.Year == year));
 
                 qry = CompleteQry(qry);
-                
+
                 return qry.ToList();
             }
         }
@@ -73,7 +70,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 qry = CompleteQry(qry);
 
                 return qry.ToList();
-
             }
         }
     }

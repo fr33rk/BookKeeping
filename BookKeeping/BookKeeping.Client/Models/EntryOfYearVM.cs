@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
 using PL.Common.Prism;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BookKeeping.Client.Models
 {
@@ -20,7 +20,6 @@ namespace BookKeeping.Client.Models
             public decimal Amount;
         }
 
-
         public EntryOfYearVM(Entry entry)
         {
             Entry = entry;
@@ -37,6 +36,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Jan);
             }
         }
+
         public decimal? Feb
         {
             get
@@ -44,6 +44,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Feb);
             }
         }
+
         public decimal? Mar
         {
             get
@@ -51,6 +52,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Mar);
             }
         }
+
         public decimal? Apr
         {
             get
@@ -58,6 +60,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Apr);
             }
         }
+
         public decimal? May
         {
             get
@@ -65,6 +68,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Mei);
             }
         }
+
         public decimal? Jun
         {
             get
@@ -72,6 +76,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Jun);
             }
         }
+
         public decimal? Jul
         {
             get
@@ -79,6 +84,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Jul);
             }
         }
+
         public decimal? Aug
         {
             get
@@ -86,6 +92,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Aug);
             }
         }
+
         public decimal? Sep
         {
             get
@@ -93,6 +100,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Sep);
             }
         }
+
         public decimal? Okt
         {
             get
@@ -100,6 +108,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Okt);
             }
         }
+
         public decimal? Nov
         {
             get
@@ -107,6 +116,7 @@ namespace BookKeeping.Client.Models
                 return GetAmountByIndex((int)ShortMonthName.Nov);
             }
         }
+
         public decimal? Dec
         {
             get
@@ -136,7 +146,6 @@ namespace BookKeeping.Client.Models
                 }
 
                 return 0;
-
             }
         }
 

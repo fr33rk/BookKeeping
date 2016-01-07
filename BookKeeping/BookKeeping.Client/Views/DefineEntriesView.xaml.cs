@@ -1,20 +1,8 @@
 ﻿using BookKeeping.Client.Models;
 using BookKeeping.Client.ViewModels;
-using PL.BookKeeping.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BookKeeping.Client.Views
 {
@@ -35,7 +23,6 @@ namespace BookKeeping.Client.Views
 
         private void TextBlock_GotFocus(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
@@ -47,7 +34,7 @@ namespace BookKeeping.Client.Views
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SetValue(SelectedEntry, e.NewValue);            
+            SetValue(SelectedEntry, e.NewValue);
         }
     }
 }

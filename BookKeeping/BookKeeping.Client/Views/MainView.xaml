@@ -30,7 +30,7 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <local:YearOverviewView/>
+                    <local:YearOverviewView />
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

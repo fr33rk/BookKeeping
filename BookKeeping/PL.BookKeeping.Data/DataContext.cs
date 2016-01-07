@@ -1,6 +1,6 @@
-﻿using System.Data.Entity;
-using FirebirdSql.Data.FirebirdClient;
+﻿using FirebirdSql.Data.FirebirdClient;
 using PL.BookKeeping.Entities;
+using System.Data.Entity;
 
 namespace PL.BookKeeping.Data
 {
@@ -10,7 +10,7 @@ namespace PL.BookKeeping.Data
         /// <value>The current user.</value>
         public User CurrentUser { get; set; }
 
-        public DataContext()                             
+        public DataContext()
             //: base(new FbConnection(@"database=localhost:D:\Ontwikkeling\Eigen\BookKeeping\BookKeeping\Database\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
             : base(new FbConnection(@"database=localhost:D:\Projects\TSF\BookKeeping\BookKeeping\Database\BookKeeping.fdb;user=sysdba;password=masterkey"), true)
         {

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PL.BookKeeping.Business.Services.DataServices
@@ -12,7 +12,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
     {
         private Lazy<IPeriodDataService> mPeriodDataService;
         private IEntryPeriodDataService mEntryPeriodDataService;
-
 
         #region Constructor(s)
 
@@ -53,7 +52,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
             }
 
             return base.AttachEntities(unitOfWork, entity);
-
         }
 
         public override void Add(Entry entity)
@@ -73,7 +71,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 newEntryPeriod.Period = period;
                 mEntryPeriodDataService.Add(newEntryPeriod);
             }
-
         }
 
         public IList<Entry> Get3rdLevelEntries()

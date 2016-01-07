@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
+using System.Collections.Generic;
 
 namespace PL.BookKeeping.Infrastructure.Services.DataServices
 {
-	public interface IProcessingRuleDataService : IBaseTraceableObjectDataService<ProcessingRule>
+    public interface IProcessingRuleDataService : IBaseTraceableObjectDataService<ProcessingRule>
     {
         IList<ProcessingRule> GetAllSorted();
 
-		IList<ProcessingRule> GetByEntry(Entry entry);
-	}
-    
+        IList<ProcessingRule> GetByEntry(Entry entry);
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace PL.BookKeeping.Entities
+﻿namespace PL.BookKeeping.Entities
 {
     /// <summary>User definition.
     /// </summary>

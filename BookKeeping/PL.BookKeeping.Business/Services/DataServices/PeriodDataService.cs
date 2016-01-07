@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -25,7 +25,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
             { 11, "Nov"},
             { 12, "Dec"},
         };
-
 
         private IEntryDataService mEntryDataService;
         private IEntryPeriodDataService mEntryPeriodDataService;
@@ -48,7 +47,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
             retValue.Year = transactionDate.Year;
             retValue.Name = mMonthNames[retValue.PeriodStart.Month];
 
-
             base.Add(retValue);
 
             EntryPeriod newEntryPeriod;
@@ -65,7 +63,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 mEntryPeriodDataService.Add(newEntryPeriod);
             }
 
-
             return retValue;
         }
 
@@ -79,10 +76,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
                     .Distinct()
                     .OrderBy(e => e);
 
-                return retValue.ToList();                    
+                return retValue.ToList();
             }
         }
-
-
     }
 }

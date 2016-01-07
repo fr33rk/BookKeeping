@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Prism.Logging;
+﻿using Prism.Logging;
+using System.Windows;
 
 namespace BookKeeping.Client
 {

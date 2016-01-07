@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
-using PL.BookKeeping.Entities.Misc;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
@@ -47,7 +46,7 @@ namespace BookKeeping.Client.ViewModels
             mEntryDataService = entryDataService;
             mPeriodDataService = periodDataService;
             mTransactionDataService = transactionDataService;
-            MatchingTransactions = new ObservableCollection<Transaction>();            
+            MatchingTransactions = new ObservableCollection<Transaction>();
         }
 
         #endregion Constructor(s)

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PL.BookKeeping.Entities;
-using PL.BookKeeping.Infrastructure.Data;
+﻿using PL.BookKeeping.Infrastructure.Data;
 using PL.Logger;
+using System;
+using System.Data.Entity;
 
 namespace PL.BookKeeping.Data.Repositories
 {
@@ -17,7 +12,6 @@ namespace PL.BookKeeping.Data.Repositories
         where TContext : DbContext
     {
         private ILogFile mLogFile;
-
 
         public UnitOfWorkFactoryOfT(ILogFile logFile)
         {

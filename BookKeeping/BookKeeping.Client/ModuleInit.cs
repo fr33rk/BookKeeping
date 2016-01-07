@@ -9,7 +9,7 @@ using Prism.Regions;
 
 namespace BookKeeping.Client
 {
-    class ModuleInit : IModule
+    internal class ModuleInit : IModule
     {
         private readonly IRegionManager mRegionManager;
 
@@ -27,7 +27,7 @@ namespace BookKeeping.Client
         public void Initialize()
         {
             mContainer.RegisterType<object, MainView>(typeof(MainView).FullName);
-            mContainer.RegisterType<object, ImportDataView> (typeof(ImportDataView).FullName);
+            mContainer.RegisterType<object, ImportDataView>(typeof(ImportDataView).FullName);
             mContainer.RegisterType<object, DefineEntriesView>(typeof(DefineEntriesView).FullName);
             mContainer.RegisterType<object, DefineRulesView>(typeof(DefineRulesView).FullName);
 
@@ -38,6 +38,6 @@ namespace BookKeeping.Client
             Mapper.CreateMap<EntryVM, Entry>();
             Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
             Mapper.CreateMap<ProcessingRuleVM, ProcessingRule>();
-        }      
+        }
     }
 }

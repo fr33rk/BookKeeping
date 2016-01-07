@@ -33,7 +33,6 @@ namespace PL.BookKeeping.Entities
 
         #endregion Property Year
 
-
         #region Helper methods
 
         public override string ToString()
