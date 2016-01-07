@@ -1,88 +1,116 @@
-﻿using System;
+﻿using PL.BookKeeping.Entities;
+using PL.BookKeeping.Entities.Misc;
+using System;
 using System.Collections.Generic;
-using PL.BookKeeping.Entities;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace BookKeeping.Client.Models
 {
-	/// <summary>Wrapper class around  the ProcessingRule entity.
-	///
-	/// </summary>
-	public class ProcessingRuleVM : BaseTracableObjectVMOfT<ProcessingRule, ProcessingRuleVM>
-	{
-		#region ProcessingRule entity
+    /// <summary>Wrapper class around  the ProcessingRule entity.
+    ///
+    /// </summary>
+    public class ProcessingRuleVM : BaseTracableObjectVMOfT<ProcessingRule, ProcessingRuleVM>
+    {
+        #region Fields
 
-		public int? EntryKey { get; set; }
+        private AmountRule mAmountRule;
 
-		public Entry Entry { get; set; }
+        #endregion Fields
 
-		public int Priority { get; set; }
+        #region Constructor(s)
 
-		public string NameRule { get; set; }
+        public ProcessingRuleVM()
+            : base()
+        {
+            mAmountRule = new AmountRule();
+        }
 
-		public string AccountRule { get; set; }
+        #endregion Constructor(s)
 
-		public string CounterAccountRule { get; set; }
+        #region ProcessingRule entity
 
-		public string CodeRule { get; set; }
+        public int? EntryKey { get; set; }
 
-		public MutationType? MutationTypeRule { get; set; }
+        public Entry Entry { get; set; }
 
-		public string AmountRule { get; set; }
+        public int Priority { get; set; }
 
-		public string MutationKindRule { get; set; }
+        public string NameRule { get; set; }
 
-		public string RemarksRule { get; set; }
+        public string AccountRule { get; set; }
 
-		#endregion ProcessingRule entity
+        public string CounterAccountRule { get; set; }
 
-		#region ToString
+        public string CodeRule { get; set; }
 
-		/// <summary>Returns a <see cref="System.String" /> that represents this instance.
-		/// </summary>
-		/// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-		public override string ToString()
-		{
-			string retValue = "";
+        public MutationType? MutationTypeRule { get; set; }
 
-			if (NameRule != null)
-			{
-				retValue += String.Format("Naam = {0}", NameRule);
-			}
+        public string AmountRule
+        {
+            get
+            {
+                return mAmountRule.ToString();
+            }
+            set
+            {
+                mAmountRule.FromString(value);
+                NotifyPropertyChanged();
+            }
+        }
 
-			if (AccountRule != null)
-			{
-				retValue += String.Format("Rekening = {0}", AccountRule);
-			}
+        public string MutationKindRule { get; set; }
 
-			if (CounterAccountRule != null)
-			{
-				retValue += String.Format("Tegenrekening = {0}", CounterAccountRule);
-			}
+        public string RemarksRule { get; set; }
 
-			if (CodeRule != null)
-			{
-				retValue += String.Format("Code = {0}", CodeRule);
-			}
+        #endregion ProcessingRule entity
 
-			if (MutationTypeRule != null)
-			{
-				retValue += String.Format("Af/bij = {0}", MutationTypeRule.ToString());
-			}
+        #region ToString
 
-			if (AmountRule != null)
-			{
-				retValue += String.Format("Bedrag = {0}", AmountRule);
-			}
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        public override string ToString()
+        {
+            string retValue = "";
 
-			if (RemarksRule != null)
-			{
-				retValue += String.Format("Opmerking = {0}", AmountRule);
-			}
+            if (NameRule != null)
+            {
+                retValue += String.Format("Naam = {0}", NameRule);
+            }
 
-			return retValue;
-		}
+            if (AccountRule != null)
+            {
+                retValue += String.Format("Rekening = {0}", AccountRule);
+            }
+
+            if (CounterAccountRule != null)
+            {
+                retValue += String.Format("Tegenrekening = {0}", CounterAccountRule);
+            }
+
+            if (CodeRule != null)
+            {
+                retValue += String.Format("Code = {0}", CodeRule);
+            }
+
+            if (MutationTypeRule != null)
+            {
+                retValue += String.Format("Af/bij = {0}", MutationTypeRule.ToString());
+            }
+
+            if (AmountRule != null)
+            {
+                retValue += String.Format("Bedrag = {0}", AmountRule);
+            }
+
+            if (RemarksRule != null)
+            {
+                retValue += String.Format("Opmerking = {0}", AmountRule);
+            }
+
+            return retValue;
+        }
 
         internal IList<Transaction> FilterList(ref IList<Transaction> transactions)
         {
@@ -101,7 +129,7 @@ namespace BookKeeping.Client.Models
             })
             .ToList();
 
-            foreach(var transaction in retValue)
+            foreach (var transaction in retValue)
             {
                 transactions.Remove(transaction);
             }

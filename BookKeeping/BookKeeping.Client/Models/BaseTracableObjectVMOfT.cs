@@ -1,12 +1,13 @@
 ﻿using System;
 using AutoMapper;
 using PL.BookKeeping.Entities;
+using PL.Common.Prism;
 
 namespace BookKeeping.Client.Models
 {
 	/// <summary>VM equivalent of a BaseTracableObject entry.
 	/// </summary>
-	public class BaseTracableObjectVMOfT<TEntity, TEntityVM>
+	public class BaseTracableObjectVMOfT<TEntity, TEntityVM> : ViewModelBase
         where TEntity : BaseTraceableObject
 	{
 		#region BaseTraceableObject

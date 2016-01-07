@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PL.BookKeeping.Entities.Misc;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
@@ -24,7 +25,38 @@ namespace PL.BookKeeping.Entities
 
         public MutationType? MutationTypeRule { get; set; }
 
-        public string AmountRule { get; set; }
+        #region Property AmountRule
+
+        private AmountRule mAmountRule;
+
+        public string AmountRule
+        {
+            get
+            {
+                return mAmountRule?.ToString();
+            }
+            set
+            {
+                if (value != null)
+                {
+                    if (mAmountRule == null)
+                    {
+                        mAmountRule = new AmountRule();
+                    }
+
+                    if (!mAmountRule.FromString(value))
+                    {
+                        throw new ArgumentException(string.Format("Invalid amount rule: {0}", value));
+                    }
+                }
+            }
+        }
+
+
+        #endregion Property AmountRule
+
+
+
 
         public string MutationKindRule { get; set; }
 
@@ -67,11 +99,12 @@ namespace PL.BookKeeping.Entities
 
         public bool AmountRuleAppliesTo(decimal amount)
         {
-            // format like minValue [< | <= | >= | >] x
-            // combined with x [< | <= | = | >= | >]
-            throw new NotImplementedException();
+            if (mAmountRule != null)
+            {
+                return mAmountRule.IsMatch(amount);
+            }
 
-            // First operator = (<=|<|>|>=)(?=\s*x)
+            return false;
         }
 
         /// <summary>Check if the amount rule has a valid format.
@@ -80,9 +113,7 @@ namespace PL.BookKeeping.Entities
         /// <returns>True, when the amount rule is valid.</returns>
         public bool IsValidAmountRule(string amountRule)
         {
-            throw new NotImplementedException();
-        }        
-
-        
+            return new AmountRule().IsValid(amountRule);
+        }       
     }
 }

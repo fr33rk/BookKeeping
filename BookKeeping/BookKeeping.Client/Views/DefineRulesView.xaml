@@ -107,7 +107,7 @@
                      Text="{Binding SelectedRule.CodeRule}"/>
             <TextBlock Grid.Row="6" Grid.Column="1" Text="Bedragregel:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Grid.Row="6" Grid.Column="2" Margin="4"
-                     Text="{Binding SelectedRule.AmountRule}"/>
+                     Text="{Binding SelectedRule.AmountRule, Mode=TwoWay}"/>
             <TextBlock Grid.Row="7" Grid.Column="1" Text="Mutatiesoortregel:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Grid.Row="7" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.MutationKindRule}"/>

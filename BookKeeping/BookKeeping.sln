@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Client", "BookKeeping.Client\BookKeeping.Client.csproj", "{4603EC21-2AE1-4515-9C7C-58E9A68A106E}"
 EndProject
@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{55
 	ProjectSection(SolutionItems) = preProject
 		Database\BookKeeping.FDB = Database\BookKeeping.FDB
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.BookKeeping.EntitiesTests", "PL.BookKeeping.EntitiesTests\PL.BookKeeping.EntitiesTests.csproj", "{2EA08323-F640-43FE-B416-FE403FCB5911}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,12 +58,16 @@ Global
 		{87F76E27-EF8D-454E-B87A-257741EB2BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87F76E27-EF8D-454E-B87A-257741EB2BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87F76E27-EF8D-454E-B87A-257741EB2BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA08323-F640-43FE-B416-FE403FCB5911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA08323-F640-43FE-B416-FE403FCB5911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA08323-F640-43FE-B416-FE403FCB5911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA08323-F640-43FE-B416-FE403FCB5911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://panteraleo.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -86,5 +92,8 @@ Global
 		SccProjectUniqueName7 = PL.Common.Prism\\PL.Common.Prism.csproj
 		SccProjectName7 = PL.Common.Prism
 		SccLocalPath7 = PL.Common.Prism
+		SccProjectUniqueName8 = PL.BookKeeping.EntitiesTests\\PL.BookKeeping.EntitiesTests.csproj
+		SccProjectName8 = PL.BookKeeping.EntitiesTests
+		SccLocalPath8 = PL.BookKeeping.EntitiesTests
 	EndGlobalSection
 EndGlobal

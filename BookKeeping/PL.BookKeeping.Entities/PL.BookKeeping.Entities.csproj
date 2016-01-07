@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="EntryPeriod.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="Misc\AmountRule.cs" />
     <Compile Include="MutationType.cs" />
     <Compile Include="Period.cs" />
     <Compile Include="ProcessingRule.cs" />
