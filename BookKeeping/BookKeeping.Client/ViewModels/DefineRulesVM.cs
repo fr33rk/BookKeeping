@@ -3,8 +3,10 @@ using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
+using PL.Logger;
 using Prism.Commands;
 using Prism.Regions;
+using Stateless;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -34,19 +36,25 @@ namespace BookKeeping.Client.ViewModels
         private IEntryDataService mEntryDataService;
         private IPeriodDataService mPeriodDataService;
         private ITransactionDataService mTransactionDataService;
+        private ILogFile mLogFile;
+        private ProcessingRuleVM mSavedProcessingRuleVM;
 
         #endregion Fields
 
         #region Constructor(s)
 
         public DefineRulesVM(IProcessingRuleDataService processingRuleDataService, IEntryDataService entryDataService,
-            IPeriodDataService periodDataService, ITransactionDataService transactionDataService)
+            IPeriodDataService periodDataService, ITransactionDataService transactionDataService, ILogFile logFile)
         {
             mProcessingRuleDataService = processingRuleDataService;
             mEntryDataService = entryDataService;
             mPeriodDataService = periodDataService;
             mTransactionDataService = transactionDataService;
+            mLogFile = logFile;
+
             MatchingTransactions = new ObservableCollection<Transaction>();
+
+            InitializeStateMachine();
         }
 
         #endregion Constructor(s)
@@ -66,10 +74,122 @@ namespace BookKeeping.Client.ViewModels
         {
             mNavigationService = navigationContext.NavigationService;
 
-            loadData();
+            mMainStm.Fire(Trigger.Start);
         }
 
         #endregion INavigationAware
+
+        #region Command AddEntryCommand
+
+        /// <summary>Field for the AddRule command.
+        /// </summary>
+        private DelegateCommand mAddRuleCommand;
+
+        /// <summary>Gets AddRule command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand AddRuleCommand
+        {
+            get
+            {
+                return this.mAddRuleCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mAddRuleCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.AddRule, this.CanAddRule));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void AddRule()
+        {
+            mMainStm.Fire(Trigger.AddRule);
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanAddRule()
+        {
+            return mMainStm.IsInState(State.DoSomething);
+        }
+
+        #endregion Command AddEntryCommand
+
+        #region Command DeleteRuleCommand
+
+        /// <summary>Field for the DeleteRule command.
+        /// </summary>
+        private DelegateCommand mDeleteRuleCommand;
+
+        /// <summary>Gets DeleteRule command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand DeleteRuleCommand
+        {
+            get
+            {
+                return this.mDeleteRuleCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mDeleteRuleCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.DeleteRule, this.CanDeleteRule));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DeleteRule()
+        {
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanDeleteRule()
+        {
+            return mMainStm.IsInState(State.DoSomething);
+        }
+
+        #endregion Command DeleteRuleCommand
+
+        #region Command EditRuleCommand
+
+        /// <summary>Field for the EditRule command.
+        /// </summary>
+        private DelegateCommand mEditRuleCommand;
+
+        /// <summary>Gets EditRule command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand EditRuleCommand
+        {
+            get
+            {
+                return this.mEditRuleCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mEditRuleCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.EditRule, this.CanEditRule));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void EditRule()
+        {
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanEditRule()
+        {
+            return mMainStm.IsInState(State.DoSomething);
+        }
+
+        #endregion Command EditRuleCommand
 
         #region Command NavigateBackCommand
 
@@ -107,7 +227,7 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private bool CanNavigateBack()
         {
-            return true;
+            return mMainStm.IsInState(State.DoSomething);
         }
 
         #endregion Command NavigateBackCommand
@@ -160,6 +280,159 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Command ShowPreviewCommand
 
+        #region Command MoveUpCommand
+
+        /// <summary>Field for the MoveUp command.
+        /// </summary>
+        private DelegateCommand mMoveUpCommand;
+
+        /// <summary>Gets MoveUp command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand MoveUpCommand
+        {
+            get
+            {
+                return this.mMoveUpCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mMoveUpCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.MoveUp, this.CanMoveUp));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void MoveUp()
+        {
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanMoveUp()
+        {
+            return mMainStm.IsInState(State.DoSomething)
+                && (mSelectedEntry != null)
+                && (DefinedRules.FirstOrDefault()?.Key != mSelectedRule.Key);
+        }
+
+        #endregion Command MoveUpCommand
+
+        #region Command MoveDownCommand
+
+        /// <summary>Field for the MoveDown command.
+        /// </summary>
+        private DelegateCommand mMoveDownCommand;
+
+        /// <summary>Gets MoveDown command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand MoveDownCommand
+        {
+            get
+            {
+                return this.mMoveDownCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mMoveDownCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.MoveDown, this.CanMoveDown));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void MoveDown()
+        {
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanMoveDown()
+        {
+            return mMainStm.IsInState(State.DoSomething)
+                && (mSelectedRule != null)
+                && (DefinedRules.LastOrDefault()?.Key != mSelectedRule.Key);
+        }
+
+        #endregion Command MoveDownCommand
+
+        #region Command CancelAddEditCommand
+
+        /// <summary>Field for the CancelAddEdit command.
+        /// </summary>
+        private DelegateCommand mCancelAddEditCommand;
+
+        /// <summary>Gets CancelAddEdit command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand CancelAddEditCommand
+        {
+            get
+            {
+                return this.mCancelAddEditCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mCancelAddEditCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.CancelAddEdit, this.CanCancelAddEdit));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CancelAddEdit()
+        {
+            mMainStm.Fire(Trigger.CancelAddEdit);
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanCancelAddEdit()
+        {
+            return mMainStm.IsInState(State.AddEditRule);
+        }
+
+        #endregion Command CancelAddEditCommand
+
+        #region Command SaveRuleCommand
+
+        /// <summary>Field for the SaveRule command.
+        /// </summary>
+        private DelegateCommand mSaveRuleCommand;
+
+        /// <summary>Gets SaveRule command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand SaveRuleCommand
+        {
+            get
+            {
+                return this.mSaveRuleCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mSaveRuleCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.SaveRule, this.CanSaveRule));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SaveRule()
+        {
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanSaveRule()
+        {
+            return mMainStm.IsInState(State.AddEditRule);
+        }
+
+        #endregion Command SaveRuleCommand
+
         #region Property DefinedRules
 
         private ObservableCollection<ProcessingRuleVM> mDefinedRules;
@@ -202,6 +475,7 @@ namespace BookKeeping.Client.ViewModels
                     // First entry is the 'ignore' option.
                     SelectedEntry = AvailableEntries.First(e => e.Key == cIgnoreKey);
                 }
+
                 NotifyPropertyChanged();
             }
         }
@@ -231,13 +505,16 @@ namespace BookKeeping.Client.ViewModels
             {
                 mSelectedEntry = value;
 
-                if (mSelectedEntry.Key == cIgnoreKey)
+                if (mSelectedRule != null)
                 {
-                    mSelectedRule.Entry = null;
-                }
-                else
-                {
-                    mSelectedRule.Entry = mSelectedEntry.ToEntity();
+                    if (mSelectedEntry.Key == cIgnoreKey)
+                    {
+                        mSelectedRule.Entry = null;
+                    }
+                    else
+                    {
+                        mSelectedRule.Entry = mSelectedEntry.ToEntity();
+                    }
                 }
                 NotifyPropertyChanged();
             }
@@ -270,14 +547,26 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Property AvailablePeriods
 
-        #region Property MatchingRules
+        #region Property Matching Transactions
 
         public ObservableCollection<Transaction> MatchingTransactions
         {
             get; private set;
         }
 
-        #endregion Property MatchingRules
+        #endregion Property Matching Transactions
+
+        #region Property IsSelectionChangeAllowed
+
+        public bool IsSelectionChangeAllowed
+        {
+            get
+            {
+                return mMainStm.IsInState(State.DoSomething);
+            }
+        }
+
+        #endregion Property IsSelectionChangeAllowed
 
         #region Helper methods
 
@@ -313,8 +602,134 @@ namespace BookKeeping.Client.ViewModels
             {
                 AvailablePeriods.Add(new PeriodSelectionVM(year, year.ToString()));
             }
+            SelectedRule = DefinedRules?.FirstOrDefault();
+
+            mMainStm.Fire(Trigger.RulesLoaded);
+        }
+
+        private void startAddNewRule()
+        {
+            mSavedProcessingRuleVM = mSelectedRule;
+
+            var newRule = new ProcessingRuleVM();
+            var index = DefinedRules.IndexOf(SelectedRule);
+            DefinedRules.Insert(index, newRule);
+            SelectedRule = newRule;
+        }
+
+        private void saveRule()
+        {
+            // Add the rule in the database
+            //mProcessingRuleDataService.Add(SelectedEntry)
+        }
+
+        private void restoreRule()
+        {
+            DefinedRules.Remove(SelectedRule);
+            SelectedRule = mSavedProcessingRuleVM;
+
+            mMainStm.Fire(Trigger.RestoreDone);
+        }
+
+        private void askPermissionToDelete()
+        {
+        }
+
+        private void deleteRule()
+        {
         }
 
         #endregion Helper methods
+
+        #region State machine
+
+        private enum State
+        {
+            Idle,
+            LoadingCurrentRules,
+            DoSomething,
+            AddEditRule,
+            AddEditRuleDone,
+            SavingRule,
+            RestoringRule,
+            StartDeletingRule,
+            AskingPermissionToDelete,
+            DeletingRule,
+        }
+
+        private enum Trigger
+        {
+            Start,
+            RulesLoaded,
+            AddRule,
+            EditRule,
+            CancelAddEdit,
+            SaveAddEdit,
+            SaveDone,
+            RestoreDone,
+            AddEditDone,
+            DeleteRule,
+            AbortDelete,
+            ConinueDelete,
+            DeleteDone,
+        }
+
+        private StateMachine<State, Trigger> mMainStm;
+
+        private void InitializeStateMachine()
+        {
+            mMainStm = new StateMachine<State, Trigger>(State.Idle);
+
+            mMainStm.OnTransitioned((t) =>
+                {
+                    mLogFile.Debug(string.Format("PeriodSelectionVM - VMStateMachine, changed state to {0}", t.Destination));
+                    NotifyPropertyChanged();
+                    NotifyPropertyChanged("IsSelectionChangeAllowed");
+                });
+
+            mMainStm.Configure(State.Idle)
+                .Permit(Trigger.Start, State.LoadingCurrentRules);
+
+            mMainStm.Configure(State.LoadingCurrentRules)
+                .OnEntry(() => loadData())
+                .Permit(Trigger.RulesLoaded, State.DoSomething);
+
+            mMainStm.Configure(State.DoSomething)
+                .Permit(Trigger.AddRule, State.AddEditRule)
+                .PermitIf(Trigger.EditRule, State.AddEditRule, () => mSelectedRule != null)
+                .Permit(Trigger.DeleteRule, State.StartDeletingRule);
+
+            // Add/edit rule sub state machine
+            mMainStm.Configure(State.AddEditRule)
+                .OnEntryFrom(Trigger.AddRule, () => startAddNewRule())
+                .Permit(Trigger.SaveAddEdit, State.SavingRule)
+                .Permit(Trigger.CancelAddEdit, State.RestoringRule);
+
+            mMainStm.Configure(State.AddEditRuleDone)
+                .OnEntry(() => mMainStm.Fire(Trigger.AddEditDone))
+                .Permit(Trigger.AddEditDone, State.DoSomething);
+
+            mMainStm.Configure(State.SavingRule)
+                .SubstateOf(State.AddEditRule)
+                .OnEntry(() => saveRule())
+                .Permit(Trigger.SaveDone, State.AddEditRuleDone);
+
+            mMainStm.Configure(State.RestoringRule)
+                .SubstateOf(State.AddEditRule)
+                .OnEntry(() => restoreRule())
+                .Permit(Trigger.RestoreDone, State.AddEditRuleDone);
+
+            // Delete
+            mMainStm.Configure(State.StartDeletingRule)
+                .OnEntry(() => askPermissionToDelete())
+                .Permit(Trigger.ConinueDelete, State.DeletingRule)
+                .Permit(Trigger.AbortDelete, State.DoSomething);
+
+            mMainStm.Configure(State.DeletingRule)
+                .OnEntry(() => deleteRule())
+                .Permit(Trigger.DeleteDone, State.DoSomething);
+        }
+
+        #endregion State machine
     }
 }

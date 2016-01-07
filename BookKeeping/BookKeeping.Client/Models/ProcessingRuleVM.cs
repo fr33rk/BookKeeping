@@ -109,6 +109,11 @@ namespace BookKeeping.Client.Models
                 retValue += String.Format("Opmerking = {0}", AmountRule);
             }
 
+            if (retValue == string.Empty)
+            {
+                retValue = "< Lege definitie >";
+            }
+
             return retValue;
         }
 
@@ -138,5 +143,10 @@ namespace BookKeeping.Client.Models
         }
 
         #endregion ToString
+
+        public ProcessingRuleVM Clone()
+        {
+            return (ProcessingRuleVM)this.MemberwiseClone();
+        }
     }
 }
