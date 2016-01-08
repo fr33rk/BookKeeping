@@ -130,7 +130,7 @@
             <StackPanel Grid.Row="13" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Style="{StaticResource MediumSquareButtonStyle}"
                         Command="{Binding CancelAddEditCommand}">
-                    <Image Source="{StaticResource imgCancel}" />
+                    <Image Source="{StaticResource imgCancel}"/>
                 </Button>
 
                 <Button Style="{StaticResource MediumSquareButtonStyle}"
