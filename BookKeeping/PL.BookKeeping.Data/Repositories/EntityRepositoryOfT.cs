@@ -258,5 +258,10 @@ namespace PL.BookKeeping.Data.Repositories
                 return this.GetQuery().Count();
             }
         }
+
+        public IEnumerable<TEntity> ExecuteProcedure(string procedureName, params object[] parameters)
+        {
+            return mContext.Database.SqlQuery<TEntity>(string.Format("EXECUTE PROCEDURE {0}", procedureName), parameters);
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace PL.BookKeeping.Data.Repositories
 
                 foreach (var eve in e.EntityValidationErrors)
                 {
-                    message = String.Format("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                    message = string.Format("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
                         eve.Entry.Entity.GetType().Name, eve.Entry.State);
                     mLogFile.Error(message);
                     Console.WriteLine(message);

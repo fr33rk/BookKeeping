@@ -1,6 +1,5 @@
 ﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Entities.Misc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -76,37 +75,37 @@ namespace BookKeeping.Client.Models
 
             if (NameRule != null)
             {
-                retValue += String.Format("Naam = {0}", NameRule);
+                retValue += string.Format("Naam = {0}", NameRule);
             }
 
             if (AccountRule != null)
             {
-                retValue += String.Format("Rekening = {0}", AccountRule);
+                retValue += string.Format("Rekening = {0}", AccountRule);
             }
 
             if (CounterAccountRule != null)
             {
-                retValue += String.Format("Tegenrekening = {0}", CounterAccountRule);
+                retValue += string.Format("Tegenrekening = {0}", CounterAccountRule);
             }
 
             if (CodeRule != null)
             {
-                retValue += String.Format("Code = {0}", CodeRule);
+                retValue += string.Format("Code = {0}", CodeRule);
             }
 
             if (MutationTypeRule != null)
             {
-                retValue += String.Format("Af/bij = {0}", MutationTypeRule.ToString());
+                retValue += string.Format("Af/bij = {0}", MutationTypeRule.ToString());
             }
 
             if (AmountRule != null)
             {
-                retValue += String.Format("Bedrag = {0}", AmountRule);
+                retValue += string.Format("Bedrag = {0}", AmountRule.ToString());
             }
 
             if (RemarksRule != null)
             {
-                retValue += String.Format("Opmerking = {0}", AmountRule);
+                retValue += string.Format("Opmerking = {0}", RemarksRule);
             }
 
             if (retValue == string.Empty)
@@ -117,20 +116,29 @@ namespace BookKeeping.Client.Models
             return retValue;
         }
 
-        internal IList<Transaction> FilterList(ref IList<Transaction> transactions)
+        internal IList<Transaction> FilterList(ref IList<Transaction> transactions, int? year)
         {
             var rule = ToEntity();
 
             var retValue = transactions.Where(t =>
             {
-                return NameRule != null ? Regex.IsMatch(t.Name, NameRule) : true
-                && AccountRule != null ? Regex.IsMatch(t.Account, AccountRule) : true
-                && CounterAccountRule != null ? Regex.IsMatch(t.CounterAccount, CounterAccountRule) : true
-                && CodeRule != null ? Regex.IsMatch(t.Code, CodeRule) : true
-                && MutationTypeRule != null ? t.MutationType == MutationTypeRule : true
-                && MutationKindRule != null ? Regex.IsMatch(t.MutationKind, MutationKindRule) : true
-                && RemarksRule != null ? Regex.IsMatch(t.Remarks, RemarksRule) : true
-                && rule.AmountRuleAppliesTo(t.Amount);
+                bool isMatch = true;
+
+                if (year.HasValue)
+                {
+                    isMatch = t.Date.Year == year;
+                }
+
+                isMatch &= !string.IsNullOrEmpty(NameRule) ? Regex.IsMatch(t.Name, NameRule) : true;
+                isMatch &= !string.IsNullOrEmpty(AccountRule) ? Regex.IsMatch(t.Account, AccountRule) : true;
+                isMatch &= !string.IsNullOrEmpty(CounterAccountRule) ? Regex.IsMatch(t.CounterAccount, CounterAccountRule) : true;
+                isMatch &= !string.IsNullOrEmpty(CodeRule) ? Regex.IsMatch(t.Code, CodeRule) : true;
+                isMatch &= MutationTypeRule != null ? t.MutationType == MutationTypeRule : true;
+                isMatch &= !string.IsNullOrEmpty(MutationKindRule) ? Regex.IsMatch(t.MutationKind, MutationKindRule) : true;
+                isMatch &= !string.IsNullOrEmpty(RemarksRule) ? Regex.IsMatch(t.Remarks, RemarksRule) : true;
+                isMatch &= ((AmountRule != null) && (!string.IsNullOrEmpty(AmountRule.ToString()))) ? rule.AmountRuleAppliesTo(t.Amount) : true;
+
+                return isMatch;
             })
             .ToList();
 
@@ -144,9 +152,13 @@ namespace BookKeeping.Client.Models
 
         #endregion ToString
 
+        #region Clone
+
         public ProcessingRuleVM Clone()
         {
             return (ProcessingRuleVM)this.MemberwiseClone();
         }
+
+        #endregion Clone        
     }
 }

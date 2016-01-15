@@ -125,6 +125,11 @@ namespace PL.BookKeeping.Entities.Misc
 
             if (isValid())
             {
+                if (value < 0)
+                {
+                    value *= -1;
+                }
+
                 retValue = isMatch(mMaxOperator, mMaxValue.Value, value);
 
                 if (mMinOperator != Operator.Unspecified)

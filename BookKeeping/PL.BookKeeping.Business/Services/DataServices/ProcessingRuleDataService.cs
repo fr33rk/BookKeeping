@@ -43,5 +43,27 @@ namespace PL.BookKeeping.Business.Services.DataServices
                     .ToList();
             }
         }
+
+        public override void Add(ProcessingRule entity)
+        {
+            // First add the entity to the database.
+            //base.Add(entity);
+
+            // Next update the priorities
+            using (var unitOfWork = mUOWFactory.Create())
+            {
+                var repository = unitOfWork.GetRepository<ProcessingRule>();
+
+                entity = AttachEntities(unitOfWork, entity);
+
+                repository.ExecuteProcedure("UPDATE_RULE_PRIORITY", entity.Priority);
+
+                unitOfWork.SaveChanges();
+
+                repository.Add(entity);
+
+                unitOfWork.SaveChanges();
+            }
+        }
     }
 }

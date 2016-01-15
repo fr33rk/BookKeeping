@@ -94,5 +94,7 @@ namespace PL.BookKeeping.Infrastructure.Data
         /// <param name="predicate">The predicate.</param>
         /// <returns>The number of entities that match the criteria.</returns>
         int Count(Expression<Func<TEntity, bool>> predicate = null);
+
+        IEnumerable<TEntity> ExecuteProcedure(string procedureName, params object[] parameters);
     }
 }

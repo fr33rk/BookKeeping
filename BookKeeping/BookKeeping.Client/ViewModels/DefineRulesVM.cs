@@ -264,10 +264,8 @@ namespace BookKeeping.Client.ViewModels
             {
                 var transactions = mTransactionDataService.GetAll();
 
-                var result = mSelectedRule.FilterList(ref transactions);
-                MatchingTransactions.AddRange(result);
-
-                //MatchingTransactions.AddRange(mTransactionDataService.GetByRule(mSelectedRule.ToEntity(), mSelectedPeriod.Year));
+                var result = mSelectedRule.FilterList(ref transactions, SelectedPeriod.Year);
+                MatchingTransactions.AddRange(result);                
             }
         }
 
@@ -422,6 +420,7 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void SaveRule()
         {
+            mMainStm.Fire(Trigger.SaveAddEdit);
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
@@ -568,6 +567,19 @@ namespace BookKeeping.Client.ViewModels
 
         #endregion Property IsSelectionChangeAllowed
 
+        #region Property IsEditing
+
+        
+        public bool IsEditing
+        {
+            get
+            {
+                return mMainStm.IsInState(State.AddEditRule);
+            }
+        }
+
+        #endregion Property IsEditing
+
         #region Helper methods
 
         private void loadData()
@@ -598,6 +610,8 @@ namespace BookKeeping.Client.ViewModels
             AvailablePeriods = new ObservableCollection<PeriodSelectionVM>();
             AvailablePeriods.Add(new PeriodSelectionVM(null, "Alle"));
 
+            SelectedPeriod = AvailablePeriods.First();
+
             foreach (var year in availableYears)
             {
                 AvailablePeriods.Add(new PeriodSelectionVM(year, year.ToString()));
@@ -613,6 +627,7 @@ namespace BookKeeping.Client.ViewModels
 
             var newRule = new ProcessingRuleVM();
             var index = DefinedRules.IndexOf(SelectedRule);
+            newRule.Priority = index + 1;
             DefinedRules.Insert(index, newRule);
             SelectedRule = newRule;
         }
@@ -620,13 +635,16 @@ namespace BookKeeping.Client.ViewModels
         private void saveRule()
         {
             // Add the rule in the database
-            //mProcessingRuleDataService.Add(SelectedEntry)
+            mProcessingRuleDataService.Add(SelectedRule.ToEntity());
+
+            mMainStm.Fire(Trigger.SaveDone);
         }
 
         private void restoreRule()
         {
             DefinedRules.Remove(SelectedRule);
             SelectedRule = mSavedProcessingRuleVM;
+            MatchingTransactions.Clear();
 
             mMainStm.Fire(Trigger.RestoreDone);
         }
@@ -685,6 +703,7 @@ namespace BookKeeping.Client.ViewModels
                     mLogFile.Debug(string.Format("PeriodSelectionVM - VMStateMachine, changed state to {0}", t.Destination));
                     NotifyPropertyChanged();
                     NotifyPropertyChanged("IsSelectionChangeAllowed");
+                    NotifyPropertyChanged("IsEditing");
                 });
 
             mMainStm.Configure(State.Idle)
