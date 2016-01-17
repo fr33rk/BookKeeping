@@ -2,6 +2,7 @@
 using Microsoft.Practices.Unity;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
+using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
@@ -17,14 +18,18 @@ namespace BookKeeping.Client.ViewModels
         private IPeriodDataService mPeriodDataService;
         private IEventAggregator mEventAggregator;
         private IUnityContainer mContainer;
+        private IDataProcessorService mDataProcessorService;
+        private ITransactionDataService mTransactionDataService;
 
         public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
-            IUnityContainer unityContainer)
+            IUnityContainer unityContainer, IDataProcessorService dataProcessorService, ITransactionDataService transactionDataService)
         {
             mRegionManager = regionManager;
             mPeriodDataService = periodDataService;
             mEventAggregator = eventAggregator;
             mContainer = unityContainer;
+            mDataProcessorService = dataProcessorService;
+            mTransactionDataService = transactionDataService;
 
             mEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
             mEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
@@ -183,6 +188,48 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion Command DefineRulesCommand
+
+        #region Command ReApplyRulesCommand
+
+        /// <summary>Field for the ReApplyRules command.
+        /// </summary>
+        private DelegateCommand mReApplyRulesCommand;
+
+        /// <summary>Gets ReApplyRules command.
+        /// </summary>
+        [System.ComponentModel.Browsable(false)]
+        public DelegateCommand ReApplyRulesCommand
+        {
+            get
+            {
+                return this.mReApplyRulesCommand
+                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                    // is not yet bound to the View, the command is instantiated in a different thread than the
+                    // main thread. Prevent this by checking on the SynchronizationContext.
+                    ?? (this.mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
+                    ? null : new DelegateCommand(this.ReApplyRules, this.CanReApplyRules));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ReApplyRules()
+        {
+            mTransactionDataService.ResetPeriodEntryLinks();
+
+            mDataProcessorService.Process(mTransactionDataService.GetAll());
+
+            loadData();
+        }
+
+        /// <summary>Determines whether the StartMeasurement command can be executed.
+        /// </summary>
+        private bool CanReApplyRules()
+        {
+            return true;
+        }
+
+        #endregion Command ReApplyRulesCommand
 
         #region INavigationAware
 

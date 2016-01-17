@@ -85,5 +85,13 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 return qry.ToList();
             }
         }
+
+        public void ResetPeriodEntryLinks()
+        {
+            using (var unitOfWork = this.mUOWFactory.Create())
+            {
+                unitOfWork.GetRepository<Transaction>().ExecuteProcedure("RESET_TRANSACTIONS", new object[0]);
+            }
+        }
     }
 }

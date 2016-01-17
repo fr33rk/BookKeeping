@@ -37,6 +37,7 @@ namespace PL.Logger
         #region Fields
 
         private const int cMaxFileSize = 1048576; // 1 MB
+        private bool mUseSingleLineLogging;
 
         // Object used for locking (Thread safety)
         private object mLockObject;
@@ -49,17 +50,19 @@ namespace PL.Logger
         /// </summary>
         /// <param name="sName">The second part of the name of the log file. The first part is the domain name.</param>
         public LogFile(String sName)
-            : this(sName, DefaultLogLevel, cMaxFileSize)
+            : this(sName, DefaultLogLevel, cMaxFileSize, true)
         {
             // Nothing additional to do here.
         }
 
-        /// <summary>Create the LogFile class. The log file will be written in the same folder as the executable by default.
+        /// <summary>
+        /// Create the LogFile class. The log file will be written in the same folder as the executable by default.
         /// </summary>
         /// <param name="sName">The second part of the name of the log file. The first part is the domain name.</param>
-        /// <param name="logLevel">The log level.</param>
+        /// <param name="logLevel">The minimum log level. E.g when set to info, debug messages wont be logged.</param>
         /// <param name="maxFileSize">Maximum size of the file in bytes.</param>
-        public LogFile(String sName, LogLevel logLevel, int maxFileSize)
+        /// <param name="useSingleLineLogging">if set to <c>true</c> multi line log entries will be rewritten to single line logs.</param>
+        public LogFile(String sName, LogLevel logLevel, int maxFileSize, bool useSingleLineLogging)
         {
             if (sName.Length > 0)
             {
@@ -67,7 +70,7 @@ namespace PL.Logger
                                          , System.Reflection.Assembly.GetEntryAssembly().Location
                                          , sName);
 
-                mFile = new StreamWriter(FileName, true);
+                mFile = new StreamWriter(FileName, true);                
             }
             else
             {
@@ -81,6 +84,7 @@ namespace PL.Logger
             mLoglevel = logLevel;
             this.mMaxFileSize = maxFileSize;
             mEnableArchiving = true;
+            mUseSingleLineLogging = useSingleLineLogging;
 
             mLockObject = new object();
         }
@@ -247,8 +251,11 @@ namespace PL.Logger
         {
             if (loglevel <= mLoglevel)
             {
-                sLine = sLine.Replace("\r", "<CR>");
-                sLine = sLine.Replace("\n", "<LF>");
+                if (mUseSingleLineLogging)
+                {
+                    sLine = sLine.Replace("\r", "<CR>");
+                    sLine = sLine.Replace("\n", "<LF>");
+                }
 
                 string logLine = String.Format("{0} [{1, 8}] - {2}", GetTime(), LogLevelToText(loglevel), sLine);
                 TextWriter.Synchronized(mFile).WriteLine(logLine);

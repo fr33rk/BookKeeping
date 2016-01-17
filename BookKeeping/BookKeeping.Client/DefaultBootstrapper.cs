@@ -62,7 +62,7 @@ namespace BookKeeping.Client
         protected override ILoggerFacade CreateLogger()
         {
             LogFile.DefaultLogLevel = LogFile.LogLevel.Debug;
-            mLogFile = new LogFile("Main");
+            mLogFile = new LogFile("Main", LogFile.LogLevel.Debug, 2097152, false); // Max 2 Mb
             mLogFile.WriteLogStart();
 
             return new PlLoggerFacade(mLogFile);

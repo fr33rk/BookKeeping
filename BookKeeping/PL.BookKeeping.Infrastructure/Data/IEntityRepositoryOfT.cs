@@ -95,6 +95,19 @@ namespace PL.BookKeeping.Infrastructure.Data
         /// <returns>The number of entities that match the criteria.</returns>
         int Count(Expression<Func<TEntity, bool>> predicate = null);
 
-        IEnumerable<TEntity> ExecuteProcedure(string procedureName, params object[] parameters);
+
+        /// <summary>Executes a stored procedure which yields not results.
+        /// </summary>
+        /// <param name="procedureName">Name of the procedure.</param>
+        /// <param name="parameters">The parameters passed to the procedure.</param>
+        /// <returns>The result of the database engine.</returns>
+        int ExecuteProcedure(string procedureName, params object[] parameters);
+
+        /// <summary>Queries a stored procedure.
+        /// </summary>
+        /// <param name="procedureName">Name of the procedure.</param>
+        /// <param name="parameters">The parameters passed to the procedure.</param>
+        /// <returns>The list of found results.</returns>
+        IEnumerable<TEntity> QueryProcedure(string procedureName, params object[] parameters);
     }
 }

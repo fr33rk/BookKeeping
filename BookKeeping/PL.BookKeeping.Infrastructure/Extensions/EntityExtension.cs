@@ -1,6 +1,6 @@
 ﻿using PL.BookKeeping.Entities;
 
-namespace PL.BookKeeping.Infrastructure.EntityExtensions
+namespace PL.BookKeeping.Infrastructure.Extensions
 {
     public static class EntityExtension
     {

@@ -259,9 +259,57 @@ namespace PL.BookKeeping.Data.Repositories
             }
         }
 
-        public IEnumerable<TEntity> ExecuteProcedure(string procedureName, params object[] parameters)
+        /// <summary>Executes a stored procedure which yields not results.
+        /// </summary>
+        /// <param name="procedureName">Name of the procedure.</param>
+        /// <param name="parameters">The parameters passed to the procedure.</param>
+        /// <returns>
+        /// The result of the database engine.
+        /// </returns>
+        public int ExecuteProcedure(string procedureName, params object[] parameters)
         {
-            return mContext.Database.SqlQuery<TEntity>(string.Format("EXECUTE PROCEDURE {0}", procedureName), parameters);
+            var paramList = new List<string>();
+
+            // Create a list of @px values
+            for (int i = 0; i < parameters.Count(); i++)
+            {
+                paramList.Add(string.Format("@P{0}", i));
+            }
+
+            string command;
+
+            if (parameters.Count() > 0)
+            {
+                command = string.Format("EXECUTE PROCEDURE {0} ({1})", procedureName, string.Join(",", paramList));
+            }
+            else
+            {
+                command = string.Format("EXECUTE PROCEDURE {0}", procedureName);
+            }
+
+            return mContext.Database.ExecuteSqlCommand(command, parameters);            
+        }
+
+        /// <summary>Queries a stored procedure.
+        /// </summary>
+        /// <param name="procedureName">Name of the procedure.</param>
+        /// <param name="parameters">The parameters passed to the procedure.</param>
+        /// <returns>
+        /// The list of found results.
+        /// </returns>
+        public IEnumerable<TEntity> QueryProcedure(string procedureName, params object[] parameters)
+        {
+            var paramList = new List<string>();
+
+            // Create a list of @px values
+            for (int i = 0; i < parameters.Count(); i++)
+            {
+                paramList.Add(string.Format("@P{0}", i));
+            }
+
+            string command = string.Format("EXECUTE PROCEDURE {0} ({1})", procedureName, string.Join(",", paramList));
+
+            return mContext.Database.SqlQuery<TEntity>(command, parameters);
         }
     }
 }

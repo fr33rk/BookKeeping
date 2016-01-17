@@ -5,6 +5,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -56,14 +57,51 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
                 entity = AttachEntities(unitOfWork, entity);
 
+                // Move all lower priority rules one priority down.
                 repository.ExecuteProcedure("UPDATE_RULE_PRIORITY", entity.Priority);
-
-                unitOfWork.SaveChanges();
-
-                repository.Add(entity);
-
-                unitOfWork.SaveChanges();
+                
+                // Insert the new rule
+                base.Add(entity);
             }
+        }
+
+        /// <summary>When the entity, which is added to the database, contains references to other objects then
+        /// these objects need to be reloaded within the lifetime of the unitOfWork so that Entity Framework knows
+        /// which items need to be updated or added.
+        /// </summary>
+        /// <param name="unitOfWork">The unit of work gives access to the repositories.</param>
+        /// <param name="entity">The entity for which the referenced objects need to be attached.</param>
+        /// <returns>
+        /// The same entity with the newly attached referenced objects.
+        /// </returns>
+        public override ProcessingRule AttachEntities(IUnitOfWork unitOfWork, ProcessingRule entity)
+        {
+            entity = base.AttachEntities(unitOfWork, entity);
+
+            if (entity.Entry != null)
+            {
+                var entries = unitOfWork.GetRepository<Entry>();
+                entity.Entry = entries.FirstOrDefault(e => e.Key == entity.Entry.Key);
+                entity.EntryKey = entity.Entry.Key;
+            }
+            return entity;
+        }
+
+        public void SwapByPriority(ProcessingRule swapThis, ProcessingRule swapWithThat)
+        {
+            int priority = swapThis.Priority;
+
+            swapThis.Priority = swapWithThat.Priority;
+
+            // Priority needs to be unique in the database. So first set to -1 to avoid problems with this constraint.
+            swapWithThat.Priority = -1;
+            Update(swapWithThat);
+
+            Update(swapThis);
+
+            // Give the final priority
+            swapWithThat.Priority = priority;
+            Update(swapWithThat);
         }
     }
 }

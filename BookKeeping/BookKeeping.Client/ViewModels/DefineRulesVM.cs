@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
+using PL.BookKeeping.Infrastructure.Extensions;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using PL.Logger;
@@ -55,6 +56,8 @@ namespace BookKeeping.Client.ViewModels
             MatchingTransactions = new ObservableCollection<Transaction>();
 
             InitializeStateMachine();
+
+            mLogFile.Debug(string.Format("DefineRulesVM.MainStm: {0}", mMainStm.ToDotGraph()));
         }
 
         #endregion Constructor(s)
@@ -180,6 +183,7 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void EditRule()
         {
+            mMainStm.Fire(Trigger.EditRule);
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
@@ -265,7 +269,7 @@ namespace BookKeeping.Client.ViewModels
                 var transactions = mTransactionDataService.GetAll();
 
                 var result = mSelectedRule.FilterList(ref transactions, SelectedPeriod.Year);
-                MatchingTransactions.AddRange(result);                
+                MatchingTransactions.AddRange(result);
             }
         }
 
@@ -304,6 +308,10 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void MoveUp()
         {
+            var swapThisVM = SelectedRule;
+            var withThatVM = DefinedRules[DefinedRules.IndexOf(SelectedRule) - 1];
+
+            swap(swapThisVM, withThatVM);
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
@@ -311,7 +319,7 @@ namespace BookKeeping.Client.ViewModels
         private bool CanMoveUp()
         {
             return mMainStm.IsInState(State.DoSomething)
-                && (mSelectedEntry != null)
+                && (mSelectedRule != null)
                 && (DefinedRules.FirstOrDefault()?.Key != mSelectedRule.Key);
         }
 
@@ -343,6 +351,9 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void MoveDown()
         {
+            var swapThisVM = SelectedRule;
+            var withThatVM = DefinedRules[DefinedRules.IndexOf(SelectedRule) + 1];
+            swap(swapThisVM, withThatVM);
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
@@ -465,16 +476,22 @@ namespace BookKeeping.Client.ViewModels
             {
                 mSelectedRule = value;
 
-                if (mSelectedRule?.EntryKey != null)
+                if (mSelectedRule != null)
                 {
-                    SelectedEntry = AvailableEntries.First(e => e.Key == mSelectedRule.EntryKey);
+                    if (mSelectedRule?.EntryKey != null)
+                    {
+                        SelectedEntry = AvailableEntries.First(e => e.Key == mSelectedRule.EntryKey);
+                    }
+                    else
+                    {
+                        // First entry is the 'ignore' option.
+                        SelectedEntry = AvailableEntries.First(e => e.Key == cIgnoreKey);
+                    }
                 }
                 else
                 {
-                    // First entry is the 'ignore' option.
-                    SelectedEntry = AvailableEntries.First(e => e.Key == cIgnoreKey);
+                    SelectedEntry = null;
                 }
-
                 NotifyPropertyChanged();
             }
         }
@@ -569,7 +586,6 @@ namespace BookKeeping.Client.ViewModels
 
         #region Property IsEditing
 
-        
         public bool IsEditing
         {
             get
@@ -632,10 +648,37 @@ namespace BookKeeping.Client.ViewModels
             SelectedRule = newRule;
         }
 
+        private void startEditRule()
+        {
+            mSavedProcessingRuleVM = mSelectedRule;
+
+            // Reload the rule from the database so that it is managed by EF.
+            //SelectedRule = SelectedRule.Clone();
+            SelectedRule = ProcessingRuleVM.FromEntity(mProcessingRuleDataService.GetByKey(SelectedRule.Key, true));
+        }
+
         private void saveRule()
         {
-            // Add the rule in the database
-            mProcessingRuleDataService.Add(SelectedRule.ToEntity());
+            var ruleToSave = SelectedRule.ToEntity();
+            ProcessingRuleVM ruleToReplace;
+
+            if (SelectedRule.Key == 0)
+            {
+                // Add the rule in the database
+                mProcessingRuleDataService.Add(ruleToSave);
+                ruleToReplace = SelectedRule;
+            }
+            else
+            {
+                // Update the rule
+                mProcessingRuleDataService.Update(ruleToSave);
+                ruleToReplace = mSavedProcessingRuleVM;
+            }
+
+            // Replace the element in the DefinedRules to update the list in the view.
+            var savedRuleVM = ProcessingRuleVM.FromEntity(ruleToSave);
+            DefinedRules.Replace(ruleToReplace, savedRuleVM);
+            SelectedRule = ProcessingRuleVM.FromEntity(ruleToSave);
 
             mMainStm.Fire(Trigger.SaveDone);
         }
@@ -655,6 +698,27 @@ namespace BookKeeping.Client.ViewModels
 
         private void deleteRule()
         {
+        }
+
+        private void swap(ProcessingRuleVM swapThisVM, ProcessingRuleVM withThatVM)
+        {
+            var swapThis = SelectedRule.ToEntity();
+            var withThat = withThatVM.ToEntity();
+
+            // Update the database.
+            mProcessingRuleDataService.SwapByPriority(swapThis, withThat);
+
+            var newSwapThisVM = ProcessingRuleVM.FromEntity(swapThis);
+            var newWithThatVM = ProcessingRuleVM.FromEntity(withThat);
+
+            // Replace the VM's
+            DefinedRules.Replace(swapThisVM, newSwapThisVM);
+            DefinedRules.Replace(withThatVM, newWithThatVM);
+
+            // Also update the list.
+            DefinedRules.Swap(newSwapThisVM, newWithThatVM);
+
+            SelectedRule = newSwapThisVM;
         }
 
         #endregion Helper methods
@@ -721,6 +785,7 @@ namespace BookKeeping.Client.ViewModels
             // Add/edit rule sub state machine
             mMainStm.Configure(State.AddEditRule)
                 .OnEntryFrom(Trigger.AddRule, () => startAddNewRule())
+                .OnEntryFrom(Trigger.EditRule, () => startEditRule())
                 .Permit(Trigger.SaveAddEdit, State.SavingRule)
                 .Permit(Trigger.CancelAddEdit, State.RestoringRule);
 

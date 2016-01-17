@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
-using PL.BookKeeping.Infrastructure.EntityExtensions;
+using PL.BookKeeping.Infrastructure.Extensions;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;

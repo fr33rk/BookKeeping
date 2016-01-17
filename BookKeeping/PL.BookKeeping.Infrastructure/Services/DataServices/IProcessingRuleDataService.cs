@@ -8,5 +8,7 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         IList<ProcessingRule> GetAllSorted();
 
         IList<ProcessingRule> GetByEntry(Entry entry);
+
+        void SwapByPriority(ProcessingRule swapThis, ProcessingRule swapWithThat);
     }
 }

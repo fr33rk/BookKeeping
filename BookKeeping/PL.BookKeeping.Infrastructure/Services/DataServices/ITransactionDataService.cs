@@ -8,5 +8,7 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         new bool Add(Transaction transaction);
 
         IEnumerable<Transaction> GetByEntryPeriod(EntryPeriod entryPeriod);
+
+        void ResetPeriodEntryLinks();
     }
 }
