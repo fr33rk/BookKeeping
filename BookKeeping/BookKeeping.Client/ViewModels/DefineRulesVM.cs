@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -694,10 +695,26 @@ namespace BookKeeping.Client.ViewModels
 
         private void askPermissionToDelete()
         {
+            // Ask for confirmation.
+            var result = MessageBox.Show("Weet je zeker dat je deze regel wilt verwijderen?", "Bookkeeping", MessageBoxButton.YesNoCancel);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                mMainStm.Fire(Trigger.ConinueDelete);
+            }
+            else
+            {
+                mMainStm.Fire(Trigger.AbortDelete);
+            }
         }
 
         private void deleteRule()
         {
+            mProcessingRuleDataService.Delete(SelectedRule.ToEntity());
+
+            DefinedRules.Remove(SelectedRule);
+
+            mMainStm.Fire(Trigger.DeleteDone);
         }
 
         private void swap(ProcessingRuleVM swapThisVM, ProcessingRuleVM withThatVM)
