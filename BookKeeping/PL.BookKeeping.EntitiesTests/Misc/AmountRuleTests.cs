@@ -65,6 +65,8 @@ namespace PL.BookKeeping.Entities.Misc.Tests
             tests.Add(new IsMatchTestSet("B.11", "0 < x > 1.05", 1.05m, false));
             tests.Add(new IsMatchTestSet("B.12", "0 < x > 1.05", 1.06m, true));
 
+            tests.Add(new IsMatchTestSet("C.1", "1.02 < x < 1.05", 1.03m, true));
+
             foreach (var test in tests)
             {
                 RunIsMatchTest(test);

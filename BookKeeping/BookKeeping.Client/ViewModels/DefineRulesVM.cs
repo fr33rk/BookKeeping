@@ -147,6 +147,7 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void DeleteRule()
         {
+            mMainStm.Fire(Trigger.DeleteRule);
         }
 
         /// <summary>Determines whether the StartMeasurement command can be executed.

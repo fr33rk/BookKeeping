@@ -32,10 +32,10 @@ namespace PL.BookKeeping.Entities.Misc
                 else
                 {
                     return String.Format("{0:0.00} {1} x {2} {3:0.00}",
-                        mMinValue.Value,
+                        mMinValue.Value.ToString(CultureInfo.InvariantCulture),
                         operatorToString(mMinOperator),
                         operatorToString(mMaxOperator),
-                        mMaxValue.Value);
+                        mMaxValue.Value.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
@@ -132,7 +132,7 @@ namespace PL.BookKeeping.Entities.Misc
 
                 retValue = isMatch(mMaxOperator, mMaxValue.Value, value);
 
-                if (mMinOperator != Operator.Unspecified)
+                if (retValue && mMinOperator != Operator.Unspecified)
                 {
                     retValue &= isMatch(invert(mMinOperator), mMinValue.Value, value);
                 }
