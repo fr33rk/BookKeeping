@@ -6,14 +6,17 @@ using PL.Logger;
 using Prism.Commands;
 using Prism.Regions;
 using Stateless;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace BookKeeping.Client.ViewModels
 {
-    public class ImportDataVM : ViewModelBase, INavigationAware
+    public class ImportDataVM : ViewModelBase, INavigationAware, IDisposable
     {
+        #region Fields
+
         private IDataImporterService mDataImportService;
         private IDataProcessorService mDataProcessorService;
         private ILogFile mLogFile;
@@ -21,6 +24,16 @@ namespace BookKeeping.Client.ViewModels
         private BackgroundWorker mProcessorWorker;
         private IList<Transaction> mImportedTransactions;
 
+        #endregion Fields
+
+        #region Constructor(s)
+
+        /// <summary>Initializes a new instance of the <see cref="ImportDataVM"/> class.
+        /// </summary>
+        /// <param name="regionManager">The region manager.</param>
+        /// <param name="dataImportService">The data import service.</param>
+        /// <param name="dataProcessorService">The data processor service.</param>
+        /// <param name="logFile">The log file.</param>
         public ImportDataVM(IRegionManager regionManager, IDataImporterService dataImportService, IDataProcessorService dataProcessorService, ILogFile logFile)
         {
             InitializeStateMachine();
@@ -41,6 +54,8 @@ namespace BookKeeping.Client.ViewModels
             mProcessorWorker.DoWork += ProcessorWorker_DoWork;
             mProcessorWorker.RunWorkerCompleted += ProcessorWorker_RunWorkerCompleted;
         }
+
+        #endregion Constructor(s)
 
         #region ProcessorWorker
 
@@ -379,5 +394,52 @@ namespace BookKeeping.Client.ViewModels
         }
 
         #endregion INavigationAware
+
+        #region IDisposable
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>Finalizes an instance of the <see cref="ImportDataVM"/> class.
+        /// </summary>
+        ~ImportDataVM()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="includeManaged"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool includeManaged)
+        {
+            if (includeManaged)
+            {
+                // free managed resources
+            }
+
+            try
+            {
+                if (mImportWorker != null)
+                {
+                    mImportWorker.Dispose();
+                }
+
+                if (mProcessorWorker != null)
+                {
+                    mProcessorWorker.Dispose();
+                }
+            }
+            catch (ObjectDisposedException e)
+            {
+                mLogFile.Error(string.Format("~ImportDataVM raised exception: {0}", e.ToString()));
+            }
+        }
+
+        #endregion IDisposable
     }
 }
