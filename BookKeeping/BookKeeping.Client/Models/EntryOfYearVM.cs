@@ -180,18 +180,16 @@ namespace BookKeeping.Client.Models
                 {
                     mColumns[i] = new column(null, 0);
                 }
+
+                if (entryOfYear.mColumns[i] != null)
+                {
+                    mColumns[i].Amount += entryOfYear.mColumns[i].Amount;
+                }
                 else
                 {
                     if (entryOfYear.mColumns[i] != null)
                     {
-                        mColumns[i].Amount += entryOfYear.mColumns[i].Amount;
-                    }
-                    else
-                    {
-                        if (entryOfYear.mColumns[i] != null)
-                        {
-                            mColumns[i].Amount = entryOfYear.mColumns[i].Amount;
-                        }
+                        mColumns[i].Amount = entryOfYear.mColumns[i].Amount;
                     }
                 }
             }

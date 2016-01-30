@@ -30,6 +30,7 @@ namespace BookKeeping.Client
             mContainer.RegisterType<object, ImportDataView>(typeof(ImportDataView).FullName);
             mContainer.RegisterType<object, DefineEntriesView>(typeof(DefineEntriesView).FullName);
             mContainer.RegisterType<object, DefineRulesView>(typeof(DefineRulesView).FullName);
+			mContainer.RegisterType<object, ReApplyRulesView>(typeof(ReApplyRulesView).FullName);
 
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 

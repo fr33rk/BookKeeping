@@ -661,7 +661,8 @@ namespace BookKeeping.Client.ViewModels
 
         private void saveRule()
         {
-            var ruleToSave = SelectedRule.ToEntity();
+            // nullify empty strings
+            var ruleToSave = SelectedRule.NullifyEmptyStrings().ToEntity();
             ProcessingRuleVM ruleToReplace;
 
             if (SelectedRule.Key == 0)

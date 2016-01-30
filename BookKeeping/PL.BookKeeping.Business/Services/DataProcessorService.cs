@@ -78,6 +78,9 @@ namespace PL.BookKeeping.Business.Services
                                 mTransactionDataService.Update(transaction);
                                 mEntryPeriodDataService.Update(entryPeriod);
 
+                                // Update the parent (total) entries
+                                updateParentTotals(entryPeriod, transaction.Amount);
+
                                 // We're done.
                                 mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), entryPeriod.Entry.Description, entryPeriod.Period.ToString(), rule.Priority.ToString()));
 
@@ -132,6 +135,27 @@ namespace PL.BookKeeping.Business.Services
                                             (p.Period.PeriodEnd > transaction.Date))
                                 .FirstOrDefault();
         }
+
+        private void updateParentTotals(EntryPeriod entryPeriod, decimal amount)
+        {
+            if (entryPeriod.Entry.ParentEntryKey.HasValue)
+            {
+                var parentEntryPeriod = mEntryPeriods.Where(ep => (ep.EntryKey == entryPeriod.Entry.ParentEntryKey) && (ep.Period.Key == entryPeriod.Period.Key)).FirstOrDefault();
+
+                if (parentEntryPeriod != null)
+                {
+                    parentEntryPeriod.TotalAmount += amount;
+                    mEntryPeriodDataService.Update(parentEntryPeriod);
+
+                    updateParentTotals(parentEntryPeriod, amount);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Parent entry period of {0} does not exist", entryPeriod.Key));
+                }
+            }
+        }
+
 
         #region Event DataProcessed
 

@@ -128,6 +128,7 @@
     <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ExampleVM.cs" />
+    <Compile Include="ViewModels\ReApplyRulesVM.cs" />
     <Compile Include="ViewModels\YearOverviewVM.cs" />
     <Compile Include="Views\DefineEntriesView.xaml.cs">
       <DependentUpon>DefineEntriesView.xaml</DependentUpon>
@@ -140,6 +141,9 @@
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReApplyRulesView.xaml.cs">
+      <DependentUpon>ReApplyRulesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\YearOverviewView.xaml.cs">
       <DependentUpon>YearOverviewView.xaml</DependentUpon>
@@ -179,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReApplyRulesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

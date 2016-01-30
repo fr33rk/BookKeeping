@@ -76,7 +76,7 @@ namespace PL.BookKeeping.Business.Services
             {
                 while (!reader.EndOfStream)
                 {
-                    var values = reader.ReadLine().Split(sepparators, 9, StringSplitOptions.None);
+                    var values = reader.ReadLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
                     transaction = ProcessLine(values);
                     if (mTransactionDataService.Add(transaction))
                     {

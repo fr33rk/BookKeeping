@@ -215,12 +215,14 @@ namespace BookKeeping.Client.ViewModels
         /// </summary>
         private void ReApplyRules()
         {
-            mTransactionDataService.ResetPeriodEntryLinks();
+			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(ReApplyRulesView).FullName);
 
-            mDataProcessorService.Process(mTransactionDataService.GetAll());
+			//mTransactionDataService.ResetPeriodEntryLinks();
 
-            loadData();
-        }
+			//mDataProcessorService.Process(mTransactionDataService.GetAll());
+
+			//loadData();
+		}
 
         /// <summary>Determines whether the StartMeasurement command can be executed.
         /// </summary>

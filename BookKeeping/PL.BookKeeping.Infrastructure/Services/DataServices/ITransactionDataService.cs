@@ -1,5 +1,6 @@
 ﻿using PL.BookKeeping.Entities;
 using System.Collections.Generic;
+using System;
 
 namespace PL.BookKeeping.Infrastructure.Services.DataServices
 {
@@ -10,5 +11,6 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         IEnumerable<Transaction> GetByEntryPeriod(EntryPeriod entryPeriod);
 
         void ResetPeriodEntryLinks();
-    }
+		IList<Transaction> GetOfPeriod(DateTime startDate, DateTime endDate);
+	}
 }

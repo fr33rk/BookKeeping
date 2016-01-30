@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -71,8 +72,11 @@ namespace BookKeeping.Client.ViewModels
 
         private void DataProcessorService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataProcessedEventArgs e)
         {
-            ProcessedTransactions = e.Processed;
-            IgnoredTransactions = e.Ignored;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ProcessedTransactions = e.Processed;
+                IgnoredTransactions = e.Ignored;
+            });
         }
 
         #endregion ProcessorWorker
@@ -91,8 +95,11 @@ namespace BookKeeping.Client.ViewModels
 
         private void DataImportService_OnDataProcessed(object sender, PL.BookKeeping.Infrastructure.DataImportedEventArgs e)
         {
-            TransactionsImported = e.Imported;
-            DuplicateTransactions = e.Duplicate;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                TransactionsImported = e.Imported;
+                DuplicateTransactions = e.Duplicate;
+            });
         }
 
         #endregion ImportWorker

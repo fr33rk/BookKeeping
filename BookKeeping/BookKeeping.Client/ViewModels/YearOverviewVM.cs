@@ -103,8 +103,9 @@ namespace BookKeeping.Client.ViewModels
             // Add the totals..
             var totalOut = new EntryOfYearVM(new Entry() { Description = "Total" });
 
-            foreach (var entryOfYear in mEntriesOfYear)
+            foreach (var rootEntry in rootList)
             {
+                var entryOfYear = mEntriesOfYear.First(eoy => eoy.Entry.Key == rootEntry.Key);
                 totalOut.AddToTotals(entryOfYear);
             }
 

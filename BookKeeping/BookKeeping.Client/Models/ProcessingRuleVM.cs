@@ -71,49 +71,51 @@ namespace BookKeeping.Client.Models
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            string retValue = "";
+            var rules = new List<string>();
 
             if (NameRule != null)
             {
-                retValue += string.Format("Naam = {0}", NameRule);
+                rules.Add(string.Format("Naam = {0}", NameRule));
             }
 
             if (AccountRule != null)
             {
-                retValue += string.Format("Rekening = {0}", AccountRule);
+                rules.Add(string.Format("Rekening = {0}", AccountRule));
             }
 
             if (CounterAccountRule != null)
             {
-                retValue += string.Format("Tegenrekening = {0}", CounterAccountRule);
+                rules.Add(string.Format("Tegenrekening = {0}", CounterAccountRule));
             }
 
             if (CodeRule != null)
             {
-                retValue += string.Format("Code = {0}", CodeRule);
+                rules.Add(string.Format("Code = {0}", CodeRule));
             }
 
             if (MutationTypeRule != null)
             {
-                retValue += string.Format("Af/bij = {0}", MutationTypeRule.ToString());
+                rules.Add(string.Format("Af/bij = {0}", MutationTypeRule.ToString()));
             }
 
             if (AmountRule != null)
             {
-                retValue += string.Format("Bedrag = {0}", AmountRule.ToString());
+                rules.Add(string.Format("Bedrag = {0}", AmountRule.ToString()));
             }
 
             if (RemarksRule != null)
             {
-                retValue += string.Format("Opmerking = {0}", RemarksRule);
+                rules.Add(string.Format("Opmerking = {0}", RemarksRule));
             }
 
-            if (retValue == string.Empty)
+            if (rules.Count == 0)
             {
-                retValue = "< Lege definitie >";
+                return "< Lege definitie >";
             }
-
-            return retValue;
+            else
+            {
+                return string.Join("; ", rules);
+            }
         }
 
         internal IList<Transaction> FilterList(ref IList<Transaction> transactions, int? year)
@@ -171,6 +173,20 @@ namespace BookKeeping.Client.Models
             return (ProcessingRuleVM)this.MemberwiseClone();
         }
 
-        #endregion Clone        
+        #endregion Clone
+
+
+
+        internal ProcessingRuleVM NullifyEmptyStrings()
+        {
+            if (string.IsNullOrEmpty(NameRule)) NameRule = null;
+            if (string.IsNullOrEmpty(AccountRule)) AccountRule = null;
+            if (string.IsNullOrEmpty(CounterAccountRule)) CounterAccountRule = null;
+            if (string.IsNullOrEmpty(CodeRule)) CodeRule = null;
+            if (string.IsNullOrEmpty(MutationKindRule)) MutationKindRule = null;
+            if (string.IsNullOrEmpty(RemarksRule)) RemarksRule = null;
+
+            return this;
+        }
     }
 }
