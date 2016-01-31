@@ -28,16 +28,16 @@
         <Button Grid.Column="1" Grid.Row="3" Content="Start" Height="23" Margin="4"
                 Command="{Binding ImportFilesCommand}" />
         <StackPanel Grid.Column="1" Grid.Row="4" Margin="4">
-            <TextBlock Text="Imported:" />
-            <TextBlock Text="Duplicate:" />
-            <TextBlock Text="Processed:" />
-            <TextBlock Text="Ignored:" />
+            <TextBlock Text="Imported:" Margin="4" />
+            <TextBlock Text="Duplicate:" Margin="4"/>
+            <TextBlock Text="Processed:" Margin="4"/>
+            <TextBlock Text="Ignored:" Margin="4"/>
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.Row="4" Margin="4">
-            <TextBlock Text="{Binding TransactionsImported, Mode=OneWay, FallbackValue=0}" />
-            <TextBlock Text="{Binding DuplicateTransactions, Mode=OneWay, FallbackValue=0}" />
-            <TextBlock Text="{Binding ProcessedTransactions, Mode=OneWay, FallbackValue=0}" />
-            <TextBlock Text="{Binding IgnoredTransactions, Mode=OneWay, FallbackValue=0}" />
+            <TextBlock Text="{Binding TransactionsImported, Mode=OneWay, FallbackValue=0}" Margin="4"/>
+            <TextBlock Text="{Binding DuplicateTransactions, Mode=OneWay, FallbackValue=0}" Margin="4"/>
+            <TextBlock Text="{Binding ProcessedTransactions, Mode=OneWay, FallbackValue=0}" Margin="4"/>
+            <TextBlock Text="{Binding IgnoredTransactions, Mode=OneWay, FallbackValue=0}" Margin="4"/>
         </StackPanel>
         <StackPanel Grid.Row="5" Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource MediumSquareButtonStyle}"

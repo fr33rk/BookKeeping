@@ -5,6 +5,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -45,32 +46,49 @@ namespace PL.BookKeeping.Business.Services.DataServices
                                          .Include(e => e.Entry));
         }
 
-        public IList<EntryPeriod> GetByEntryAndYear(Entry entry, int year)
-        {
-            using (var unitOfWork = this.mUOWFactory.Create())
-            {
-                var repository = unitOfWork.GetRepository<EntryPeriod>();
-                var qry = repository.GetQuery()
-                    .Where(ep => (ep.Entry.Key == entry.Key) && (ep.Period.PeriodStart.Year == year));
+		#region IEntryPeriodDataService
 
-                qry = CompleteQry(qry);
+		public IList<EntryPeriod> GetByEntryAndYear(Entry entry, int year)
+		{
+			using (var unitOfWork = this.mUOWFactory.Create())
+			{
+				var repository = unitOfWork.GetRepository<EntryPeriod>();
+				var qry = repository.GetQuery()
+					.Where(ep => (ep.Entry.Key == entry.Key) && (ep.Period.PeriodStart.Year == year));
 
-                return qry.ToList();
-            }
-        }
+				qry = CompleteQry(qry);
 
-        public IList<EntryPeriod> GetByYear(int year)
-        {
-            using (var unitOfWork = this.mUOWFactory.Create())
-            {
-                var repository = unitOfWork.GetRepository<EntryPeriod>();
-                var qry = repository.GetQuery()
-                    .Where(ep => ep.Period.PeriodStart.Year == year);
+				return qry.ToList();
+			}
+		}
 
-                qry = CompleteQry(qry);
+		public IList<EntryPeriod> GetByYear(int year)
+		{
+			using (var unitOfWork = this.mUOWFactory.Create())
+			{
+				var repository = unitOfWork.GetRepository<EntryPeriod>();
+				var qry = repository.GetQuery()
+					.Where(ep => ep.Period.PeriodStart.Year == year);
 
-                return qry.ToList();
-            }
-        }
-    }
+				qry = CompleteQry(qry);
+
+				return qry.ToList();
+			}
+		}
+
+		public void ReCalculateTotalAmounts(DateTime periodStart, DateTime periodEnd)
+		{
+			// Next update the priorities
+			using (var unitOfWork = mUOWFactory.Create())
+			{
+				var repository = unitOfWork.GetRepository<EntryPeriod>();
+
+				// Move all lower priority rules one priority down.
+				repository.ExecuteProcedure("RECALC_AMOUNTS", periodStart, periodEnd);
+			}
+		}
+
+
+		#endregion IEntryPeriodDataService
+	}
 }

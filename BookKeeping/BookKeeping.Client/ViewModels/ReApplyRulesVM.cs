@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Linq;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
@@ -20,6 +21,8 @@ namespace BookKeeping.Client.ViewModels
 		private IRegionNavigationService mNavigationService;
 		private ITransactionDataService mTransactionDataService;
 		private IDataProcessorService mDataProcessorService;
+		private IEntryPeriodDataService mEntryPeriodDataService;
+		private IPeriodDataService mPeriodDataService;
 		private IList<Transaction> mSelectedTransactions;
 
 		#endregion Fields
@@ -27,13 +30,15 @@ namespace BookKeeping.Client.ViewModels
 		#region Constructor(s)
 
 		public ReApplyRulesVM(IRegionNavigationService navigationService, ITransactionDataService transactionDataService,
-			IDataProcessorService dataProcessorService)
+			IEntryPeriodDataService entryPeriodDataService, IPeriodDataService periodDataService, IDataProcessorService dataProcessorService)
 		{
 			InitializeStateMachine();
 
 			mNavigationService = navigationService;
 			mTransactionDataService = transactionDataService;
 			mDataProcessorService = dataProcessorService;
+			mEntryPeriodDataService = entryPeriodDataService;
+			mPeriodDataService = periodDataService;
 
 			mDataProcessorService.OnDataProcessed += DataProcessorService_OnDataProcessed;
 		}
@@ -241,7 +246,8 @@ namespace BookKeeping.Client.ViewModels
 			{
 				if (mEndDate != value)
 				{
-					mEndDate = value;
+					// We get the beginning of the day (00:00). but we need the end (23:59).
+					mEndDate = value.AddDays(1).AddTicks(-1);
 					NotifyPropertyChanged();
 				}
 			}
@@ -317,6 +323,7 @@ namespace BookKeeping.Client.ViewModels
 			WaitingOnInput,
 			LoadingTransactions,
 			ReapplingRules,
+			RecalculatingTotalAmounts,
 		}
 
 		private enum VMTrigger
@@ -325,6 +332,7 @@ namespace BookKeeping.Client.ViewModels
 			WaitOnInput,
 			LoadTransactions,
 			ReApplyRules,
+			RecalculateTotalAmounts,
 			ReApplyingDone
 		}
 
@@ -347,6 +355,10 @@ namespace BookKeeping.Client.ViewModels
 
 			mVMStateMachine.Configure(VMState.ReapplingRules)
 				.OnEntry(() => reApplyRules())
+				.Permit(VMTrigger.RecalculateTotalAmounts, VMState.RecalculatingTotalAmounts);
+
+			mVMStateMachine.Configure(VMState.RecalculatingTotalAmounts)
+				.OnEntry(() => reCalculateTotalAmounts())
 				.Permit(VMTrigger.ReApplyingDone, VMState.WaitingOnInput);
 		}
 
@@ -354,13 +366,33 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Helper functions
 
+		private void reCalculateTotalAmounts()
+		{
+			Task.Factory.StartNew(() =>
+			{
+				if (ReApplyToAll)
+				{
+					var startDate = mSelectedTransactions.Min(t => t.Date);
+					var endDate = mSelectedTransactions.Max(t => t.Date);
+
+					mEntryPeriodDataService.ReCalculateTotalAmounts(startDate, endDate);					
+				}
+				else
+				{
+					mEntryPeriodDataService.ReCalculateTotalAmounts(StartDate, EndDate);
+				}
+
+				mVMStateMachine.Fire(VMTrigger.ReApplyingDone);				
+			});
+		}
+
 		private void reApplyRules()
 		{
 			Task.Factory.StartNew(() =>
 			{
 				mDataProcessorService.Process(mSelectedTransactions);
 
-				mVMStateMachine.Fire(VMTrigger.ReApplyingDone);
+				mVMStateMachine.Fire(VMTrigger.RecalculateTotalAmounts);
 			});
 		}
 
@@ -389,6 +421,8 @@ namespace BookKeeping.Client.ViewModels
 			var lastMonth = DateTime.Now.AddMonths(-1);
 			StartDate = new DateTime(lastMonth.Year, lastMonth.Month, 1);
 			EndDate = new DateTime(lastMonth.Year, lastMonth.Month, DateTime.DaysInMonth(lastMonth.Year, lastMonth.Month));
+
+			EndDate = EndDate.AddDays(1).AddTicks(-1);
 
 			ReApplyToAll = true;
 		}
