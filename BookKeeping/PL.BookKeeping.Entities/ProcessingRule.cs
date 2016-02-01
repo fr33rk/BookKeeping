@@ -100,14 +100,5 @@ namespace PL.BookKeeping.Entities
 
             return false;
         }
-
-        /// <summary>Check if the amount rule has a valid format.
-        /// </summary>
-        /// <param name="amountRule">The amount rule to check.</param>
-        /// <returns>True, when the amount rule is valid.</returns>
-        public bool IsValidAmountRule(string amountRule)
-        {
-            return new AmountRule().IsValid(amountRule);
-        }
     }
 }
