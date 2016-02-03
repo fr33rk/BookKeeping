@@ -90,6 +90,7 @@
     <Compile Include="Services\DataServices\PeriodDataService.cs" />
     <Compile Include="Services\DataServices\ProcessingRuleDataService.cs" />
     <Compile Include="Services\DataServices\TransactionDataService.cs" />
+    <Compile Include="Services\FileReaderService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PL.BookKeeping.Data\PL.BookKeeping.Data.csproj">
