@@ -55,7 +55,11 @@ namespace PL.BookKeeping.Entities.Misc
 			if (expression != null)
 			{
 				// Remove all spaces from the expression to simplify the regular expressions.
-				expression = removeSpaces(expression).ToLower();
+				// Remove all ',' decimal separators and replace them by '.' (invariant culture)
+				// Convert all to lower case so that 'x' is always in lower caps.
+				expression = removeSpaces(expression)
+					.Replace(',', '.')
+					.ToLower();
 
 				if (isSingleExpression(expression))
 				{
