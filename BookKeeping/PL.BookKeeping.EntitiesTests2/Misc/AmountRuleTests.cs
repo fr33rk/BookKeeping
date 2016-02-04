@@ -16,7 +16,7 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 			Assert.AreEqual(expectedResult, rule.IsMatch(value));
 		}
 
-		static object[] IsMatchTestCases =
+		private static object[] IsMatchTestCases =
 		{
 			// A) Test the single equation
 			new object[] { "x = 1.05"  , 1.05m, true  },
@@ -64,7 +64,7 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 			Assert.AreEqual(expectedResult, rule.FromString(input));
 		}
 
-		static object[] IsValidTestSet =
+		private static object[] IsValidTestSet =
 		{
 			// A) Single expressions
 			// A.1) Operators
@@ -145,7 +145,7 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 			Assert.AreEqual(output, rule.ToString());
 		}
 
-		static object[] ToStringTestSet =
+		private static object[] ToStringTestSet =
 		{
 			// A) Spaces
 			new object[] {"x<1", "x < 1.00"},
@@ -159,7 +159,7 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 			// B) x
 			new object[] {"X < 1", "x < 1.00"},
 			new object[] {"1 < X < 2", "1.00 < x < 2.00"},
-			
+
 			// C) invalid
 			new object[] {"y < 1", null},
 
@@ -175,12 +175,6 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 			new object[] {"1, < x < 2,005", "1.00 < x < 2.01"},
 		};
 
-
 		#endregion ToStringTest
-
-
-
-
-
 	}
 }

@@ -6,8 +6,8 @@
     <ProjectGuid>{887FE226-D2CA-4AF9-928C-355E3775BAB2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PL.BookKeeping.EntitiesTests2</RootNamespace>
-    <AssemblyName>PL.BookKeeping.EntitiesTests2</AssemblyName>
+    <RootNamespace>PL.BookKeeping.EntitiesTests</RootNamespace>
+    <AssemblyName>PL.BookKeeping.EntitiesTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
