@@ -36,8 +36,7 @@ namespace PL.BookKeeping.Business
             mContainer.RegisterType<IProcessingRuleDataService, ProcessingRuleDataService>(new ContainerControlledLifetimeManager());
 
             mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
-            mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
-			mContainer.RegisterType<IFileReaderService, FileReaderService>();
+            mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());			
         }
     }
 }

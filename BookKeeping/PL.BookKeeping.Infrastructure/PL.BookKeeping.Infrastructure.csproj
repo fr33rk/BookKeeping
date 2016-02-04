@@ -101,7 +101,6 @@
     <Compile Include="Services\IAuthorizationService.cs" />
     <Compile Include="Services\IDataImporterService.cs" />
     <Compile Include="Services\IDataProcessorService.cs" />
-    <Compile Include="Services\IFileReaderService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
@@ -18,7 +19,6 @@ namespace PL.BookKeeping.Business.Services
 
 		private ITransactionDataService mTransactionDataService;
 		private ILogFile mLogFile;
-		private IFileReaderService mFileReaderService;
 
 		private int mImported;
 		private int mDuplicate;
@@ -30,8 +30,7 @@ namespace PL.BookKeeping.Business.Services
 		/// <summary>Initializes a new instance of the <see cref="DataImporterService"/> class.
 		/// </summary>
 		/// <param name="transactionDataService">The transaction data service.</param>
-		public DataImporterService(ITransactionDataService transactionDataService, ILogFile logFile,
-			IFileReaderService fileReaderService)
+		public DataImporterService(ITransactionDataService transactionDataService, ILogFile logFile)
 		{
 			mTransactionDataService = transactionDataService;
 			mLogFile = logFile;
@@ -78,23 +77,19 @@ namespace PL.BookKeeping.Business.Services
 		private IList<Transaction> import(string fileName)
 		{
 			var retValue = new List<Transaction>();
+			var reader = new StreamReader(fileName);
+
+			// First line is a header...
+			reader.ReadLine();
+			var sepparators = new string[] { "\",\"" };
+
+			Transaction transaction;
+
 			try
-			{ 
-				mFileReaderService.Open(fileName);
-
-				// First line is a header...
-				mFileReaderService.ReadLine();
-				var sepparators = new string[] { "\",\"" };
-
-				Transaction transaction;
-
-			
-				while (!mFileReaderService.EndOfStream)
+			{
+				while (!reader.EndOfStream)
 				{
-					var values = mFileReaderService.ReadLine()
-						.ToUpper()
-						.Split(sepparators, 9, StringSplitOptions.None);
-
+					var values = reader.ReadLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
 					transaction = processLine(values);
 					if (mTransactionDataService.Add(transaction))
 					{
@@ -114,6 +109,7 @@ namespace PL.BookKeeping.Business.Services
 			}
 
 			return retValue;
+
 		}
 
 		private Transaction processLine(string[] values)
