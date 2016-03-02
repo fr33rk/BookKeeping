@@ -22,9 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{55
 		Database\BookKeeping.FDB = Database\BookKeeping.FDB
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.BookKeeping.BusinessTests", "PL.BookKeeping.BusinessTests\PL.BookKeeping.BusinessTests.csproj", "{4669EC02-90EF-4C52-AC74-FDDF11269C06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.BookKeeping.Business.Tests", "PL.BookKeeping.BusinessTests\PL.BookKeeping.Business.Tests.csproj", "{4669EC02-90EF-4C52-AC74-FDDF11269C06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.BookKeeping.EntitiesTests", "PL.BookKeeping.EntitiesTests\PL.BookKeeping.EntitiesTests.csproj", "{887FE226-D2CA-4AF9-928C-355E3775BAB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL.BookKeeping.Entities.Tests", "PL.BookKeeping.EntitiesTests\PL.BookKeeping.Entities.Tests.csproj", "{887FE226-D2CA-4AF9-928C-355E3775BAB2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FA667C9-941D-480B-9EFE-6473255D10B9}"
 	ProjectSection(SolutionItems) = preProject
@@ -103,10 +103,10 @@ Global
 		SccProjectUniqueName7 = PL.Common.Prism\\PL.Common.Prism.csproj
 		SccProjectName7 = PL.Common.Prism
 		SccLocalPath7 = PL.Common.Prism
-		SccProjectUniqueName8 = PL.BookKeeping.BusinessTests\\PL.BookKeeping.BusinessTests.csproj
+		SccProjectUniqueName8 = PL.BookKeeping.BusinessTests\\PL.BookKeeping.Business.Tests.csproj
 		SccProjectName8 = PL.BookKeeping.BusinessTests
 		SccLocalPath8 = PL.BookKeeping.BusinessTests
-		SccProjectUniqueName9 = PL.BookKeeping.EntitiesTests\\PL.BookKeeping.EntitiesTests.csproj
+		SccProjectUniqueName9 = PL.BookKeeping.EntitiesTests\\PL.BookKeeping.Entities.Tests.csproj
 		SccProjectName9 = PL.BookKeeping.EntitiesTests
 		SccLocalPath9 = PL.BookKeeping.EntitiesTests
 	EndGlobalSection

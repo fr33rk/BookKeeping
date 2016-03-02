@@ -22,6 +22,7 @@ namespace PL.BookKeeping.Business.Services
 
 		private int mImported;
 		private int mDuplicate;
+		private StreamReader mFileStream;
 
 		#endregion Fields
 
@@ -74,22 +75,42 @@ namespace PL.BookKeeping.Business.Services
 
 		#region Helper methods
 
+		#region FileStream
+
+		virtual protected void openFileStream(string fileName)
+		{
+			mFileStream = new StreamReader(fileName);
+		}
+
+		virtual protected string readLine()
+		{
+			return mFileStream.ReadLine();
+		}
+
+		virtual protected bool isAtEndOfStream()
+		{
+			return mFileStream.EndOfStream;
+		}
+
+		#endregion FileStream
+
 		private IList<Transaction> import(string fileName)
 		{
 			var retValue = new List<Transaction>();
-			var reader = new StreamReader(fileName);
-
-			// First line is a header...
-			reader.ReadLine();
 			var sepparators = new string[] { "\",\"" };
 
 			Transaction transaction;
 
 			try
 			{
-				while (!reader.EndOfStream)
+				openFileStream(fileName);
+
+				// First line is a header...
+				readLine();
+
+				while (!isAtEndOfStream())
 				{
-					var values = reader.ReadLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
+					var values = readLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
 					transaction = processLine(values);
 					if (mTransactionDataService.Add(transaction))
 					{
@@ -109,7 +130,6 @@ namespace PL.BookKeeping.Business.Services
 			}
 
 			return retValue;
-
 		}
 
 		private Transaction processLine(string[] values)
