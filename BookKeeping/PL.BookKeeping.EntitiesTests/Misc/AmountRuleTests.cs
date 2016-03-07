@@ -80,7 +80,7 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 			new object[] { "x  = 1" , true },
 			new object[] { "x  =  1" , true },
 			// A.3) Values
-			new object[] { "x = 1" , true },
+//			new object[] { "x = 1" , true },
 			new object[] { "x = 1." , true },
 			new object[] { "x = 1.0" , true },
 			new object[] { "x = 1.01" , true },

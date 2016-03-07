@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using PL.BookKeeping.Entities;
-using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
 
@@ -12,249 +12,268 @@ namespace PL.BookKeeping.Business.Services.Tests
 	[TestFixture()]
 	public class DataImporterServiceTests
 	{
-		static List<string> ImportAllFiles = new List<string>()
+		private class DataImporterService_ImportFileTest : DataImporterService
 		{
-			"FileX", "FileA", "FileB", "FileC"
-		};
-
-		static List<string> ImportInvalidFile = new List<string>()
-		{
-			"FileX"
-		};
-
-		static List<string> ImportFileWithOnlyHeader = new List<string>()
-		{
-			"FileA"
-		};
-
-
-		static List<string> ImportFileWithOneRecord = new List<string>()
-		{
-			"FileB"
-		};
-
-		private class TestTransactionService : ITransactionDataService
-		{
-			public IList<Transaction> AddedTransactions { get; }
-
-			public TestTransactionService()
-			{
-				AddedTransactions = new List<Transaction>();
-			}
-
-			public bool Add(BookKeeping.Entities.Transaction transaction)
-			{
-				AddedTransactions.Add(transaction);
-				return true;
-			}
-
-			public BookKeeping.Entities.Transaction AttachEntities(IUnitOfWork unitOfWork, BookKeeping.Entities.Transaction entity)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Delete(BookKeeping.Entities.Transaction entity)
-			{
-				throw new NotImplementedException();
-			}
-
-			public IList<BookKeeping.Entities.Transaction> GetAll(bool complete = false)
-			{
-				throw new NotImplementedException();
-			}
-
-			public IEnumerable<BookKeeping.Entities.Transaction> GetByEntryPeriod(BookKeeping.Entities.EntryPeriod entryPeriod)
-			{
-				throw new NotImplementedException();
-			}
-
-			public BookKeeping.Entities.Transaction GetByKey(int key, bool complete = false)
-			{
-				throw new NotImplementedException();
-			}
-
-			public IList<BookKeeping.Entities.Transaction> GetOfPeriod(DateTime startDate, DateTime endDate)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void ResetPeriodEntryLinks()
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Update(BookKeeping.Entities.Transaction entity)
-			{
-				throw new NotImplementedException();
-			}
-
-			void IBaseTraceableObjectDataService<BookKeeping.Entities.Transaction>.Add(BookKeeping.Entities.Transaction entity)
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		private class TestLogFile : ILogFile
-		{
-			public IList<string> Errors { get; }
-
-			public TestLogFile()
-			{
-				Errors = new List<string>();
-			}
-
-			public event EventHandler<LogEventArgs> OnLog;
-
-			public void Critical(string message)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Debug(string message)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Error(string message)
-			{
-				Errors.Add(message);
-			}
-
-			public void Info(string message)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Warning(string message)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void WriteLogEnd()
-			{
-				throw new NotImplementedException();
-			}
-
-			public void WriteLogStart()
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		private class DataImporterService_ErrorOpeningTheFile : DataImporterService
-		{
-			public DataImporterService_ErrorOpeningTheFile(ITransactionDataService transactionDataService, ILogFile logFile)
+			public DataImporterService_ImportFileTest(ITransactionDataService transactionDataService, ILogFile logFile)
 				: base(transactionDataService, logFile)
 			{
-				RaiseFileNotFoundException = false;
 			}
 
-			public enum TestFile
+			private List<TestFile> mTestFiles = new List<TestFile>();
+			private TestFile mCurrentTestFile;
+
+			public void AddTestFile(TestFile testFile)
 			{
-				/// <summary>File A contains only a header.</summary>
-				FileWithOnlyHeader,
-				/// <summary>File B contains 1 transaction.</summary>
-				FileWithOneRecord,
-				/// <summary>File C contains 10 transactions.</summary>
-				FileC,
-				/// <summary>File X contains faulty configured transactions</summary>
-				FileX,
+				mTestFiles.Add(testFile);
 			}
-
-			private TestFile mUsedTestFile;
-
-			public bool RaiseFileNotFoundException { get; set; }
 
 			protected override void openFileStream(string fileName)
 			{
-				if (RaiseFileNotFoundException)
+				mCurrentTestFile = mTestFiles.Where(t => t.Name == fileName)
+								.FirstOrDefault();
+
+				if (mCurrentTestFile == null)
 					throw new System.IO.FileNotFoundException();
-				else
-				{
-					if (fileName == "FileA")
-					{
-						mUsedTestFile = TestFile.FileWithOnlyHeader;
-						mLineCounter = fileWithOnlyHeader.Length-1;
-					}
-					else if (fileName == "FileB")
-					{
-						mUsedTestFile = TestFile.FileWithOneRecord;
-						mLineCounter = fileWithOneRecord.Length-1;
-					}
-				}
 			}
 
 			protected override string readLine()
 			{
-				if (mUsedTestFile == TestFile.FileWithOnlyHeader)
-				{
-					return fileWithOnlyHeader[mLineCounter--];
-				}
-				else if (mUsedTestFile == TestFile.FileWithOneRecord)
-				{
-					return fileWithOneRecord[mLineCounter--];
-				}
-
-				return "";
+				return mCurrentTestFile.GetNextLine();				
 			}
-
-			private string[] fileWithOnlyHeader = new string[1]
-			{
-				"DATE,NAME,ACCOUNT,OUNTERACCOUT,CODE,KIND,AMOUNT,KIND,REMARKS",
-			};
-
-			public string[] fileWithOneRecord = new string[2]
-			{
-				"DATE,NAME,ACCOUNT,COUNTERACCOUT,CODE,KIND,AMOUNT,KIND,REMARKS",
-				@"19780921,Freerk,1234567890,0987654321,A,AF,2109.78,PIN,Remarks",
-			};
-
-			private int mLineCounter = -1;
 
 			protected override bool isAtEndOfStream()
 			{
-				return mLineCounter == -1;
+				return mCurrentTestFile.IsEndOfFile;
 			}
+		}
+
+		private class TestFile
+		{
+			private List<string> mLines = new List<string>();
+			private List<Transaction> mTransactions = new List<Transaction>();
+			private int mLineCounter = 0;
+
+			public TestFile(string name, string header)
+			{
+				Name = name;
+				mLines.Add(header);
+			}
+
+			public void AddRecord(string record, Transaction transaction)
+			{
+				mLines.Add(record);
+				mTransactions.Add(transaction);
+			}
+
+			public string GetNextLine()
+			{
+				return mLines[mLineCounter++];
+			}
+
+			public Transaction GetTransactionByIndex(int index)
+			{
+				// First line is the header. 
+				return mTransactions[index];
+			}
+
+			public bool IsEndOfFile
+			{
+				get
+				{
+					return mLineCounter >= mLines.Count;
+				}
+			}
+
+			public string Name { get; private set; }
+
+
+		}
+
+		#region ImportFilesTest_ErrorOpeningTheFile
+
+		private TestFile mFileWithOnlyHeader;
+		private TestFile mFileWithOneRecord;
+		private TestFile mFileWithMultipleRecords;
+
+		[TestFixtureSetUp]
+		public void InitializeTests()
+		{
+
+			string header = "DATE,NAME,ACCOUNT,COUNTERACCOUT,CODE,KIND,AMOUNT,KIND,REMARKS";
+
+			mFileWithOnlyHeader = new TestFile("FileWithOnlyHeader", header);			
+
+			mFileWithOneRecord = new TestFile("FileWithOneRecord",  header);
+			mFileWithOneRecord.AddRecord("\"19780921\",\"Freerk\",\"1234567890\",\"0987654321\",\"A\",\"AF\",\"2109.78\",\"PIN\",\"Remarks\"",
+				new Transaction()
+				{
+					Date = new DateTime(1978, 09, 21),
+					Name = "FREERK",
+					Account = "1234567890",
+					CounterAccount = "0987654321",
+					Code = "A",
+					MutationType = MutationType.Debit,
+					Amount = -2109.78m,
+					MutationKind = "PIN",
+					Remarks = "REMARKS"
+				});
+
+			mFileWithMultipleRecords = new TestFile("FileWithMultipleRecords", header);
+			mFileWithMultipleRecords.AddRecord("\"19780921\",\"Freerk\",\"1234567890\",\"0987654321\",\"A\",\"AF\",\"2109.78\",\"PIN\",\"Remarks\"",
+				new Transaction()
+				{
+					Date = new DateTime(1978, 09, 21),
+					Name = "FREERK",
+					Account = "1234567890",
+					CounterAccount = "0987654321",
+					Code = "A",
+					MutationType = MutationType.Debit,
+					Amount = -2109.78m,
+					MutationKind = "PIN",
+					Remarks = "REMARKS"
+				});
+
+			mFileWithMultipleRecords.AddRecord("\"19790713\",\"Djuke\",\"2345678901\",\"9876543210\",\"B\",\"BIJ\",\"19797.13\",\"ACC\",\"\"",
+				new Transaction()
+				{
+					Date = new DateTime(1979, 07, 13),
+					Name = "DJUKE",
+					Account = "2345678901",
+					CounterAccount = "9876543210",
+					Code = "B",
+					MutationType = MutationType.Credit,
+					Amount = 19797.13m,
+					MutationKind = "ACC",
+					Remarks = ""
+				});
+		}
+
+		private DataImporterService_ImportFileTest createUnitUnderTest(ITransactionDataService transactionDataService, ILogFile logFile)
+		{
+			var retValue = new DataImporterService_ImportFileTest(transactionDataService, logFile);
+
+			retValue.AddTestFile(mFileWithOnlyHeader);
+			retValue.AddTestFile(mFileWithOneRecord);
+			retValue.AddTestFile(mFileWithMultipleRecords);
+
+			return retValue;
 		}
 
 
 		// Error opening the file
 		// Expected: no transactions returned, entry in the log file.
-		[Test()]
+		[Test]
 		public void ImportFilesTest_ErrorOpeningTheFile()
 		{
 			var mockLogFile = Substitute.For<ILogFile>();
 			var mockTransactionDataSerice = Substitute.For<ITransactionDataService>();
 
-			var unitUnderTest = new DataImporterService_ErrorOpeningTheFile(mockTransactionDataSerice, mockLogFile);
-			unitUnderTest.ImportFiles(ImportInvalidFile);
+			var unitUnderTest = createUnitUnderTest(mockTransactionDataSerice, mockLogFile);
+			unitUnderTest.ImportFiles(new List<string>() { "InvalidFileName" } );
 
 			mockLogFile.Received(1).Error(Arg.Is<string>(x => x.Contains("Unable to import")));
 			mockTransactionDataSerice.DidNotReceive().Add(Arg.Any<Transaction>());
 		}
 
-		[Test()]
+		#endregion ImportFilesTest_ErrorOpeningTheFile
+
+
+		[Test]
 		public void ImportFilesTest_ImportFileWithOnlyHeader()
 		{
-			var stubLogFile = Substitute.For<ILogFile>();
+			var mockLogFile = Substitute.For<ILogFile>();
 			var mockTransactionDataSerice = Substitute.For<ITransactionDataService>();
 
-			var unitUnderTest = new DataImporterService_ErrorOpeningTheFile(mockTransactionDataSerice, stubLogFile);
-			unitUnderTest.ImportFiles(ImportFileWithOnlyHeader);
+			var unitUnderTest = createUnitUnderTest(mockTransactionDataSerice, mockLogFile);
 
-			mockTransactionDataSerice.DidNotReceive().Add(Arg.Any<Transaction>());			
+			unitUnderTest.ImportFiles(new List<string>() { mFileWithOnlyHeader.Name });
+
+			mockLogFile.DidNotReceive().Error(Arg.Any<string>());
+			mockTransactionDataSerice.DidNotReceive().Add(Arg.Any<Transaction>());
 		}
 
 		[Test]
 		public void ImportFilesTest_ImportFileWithOneRecord()
 		{
-			var stubLogFile = Substitute.For<ILogFile>();
+			// Creation and initialization.
+			var mockLogFile = Substitute.For<ILogFile>();
 			var mockTransactionDataSerice = Substitute.For<ITransactionDataService>();
 
-			var unitUnderTest = new DataImporterService_ErrorOpeningTheFile(mockTransactionDataSerice, stubLogFile);
-			unitUnderTest.ImportFiles(ImportFileWithOneRecord);
+			mockTransactionDataSerice.Add(Arg.Any<Transaction>()).Returns(true);
 
-			mockTransactionDataSerice.Received(1).Add(Arg.Is<Transaction>(t => t.Name == "FREERK"));
+			var unitUnderTest = createUnitUnderTest(mockTransactionDataSerice, mockLogFile);
+			// Start test
+			unitUnderTest.ImportFiles(new List<string>() { mFileWithOneRecord.Name });
+
+			// Check test results
+			mockLogFile.DidNotReceive().Error(Arg.Any<string>());
+			// Test that the correct transaction has been added.
+			mockTransactionDataSerice.Received(1).Add(Arg.Is<Transaction>(t => t.IsEqual(mFileWithOneRecord.GetTransactionByIndex(0))));
+		}
+
+		[Test]
+		public void ImportFilesTest_ImportFileWithMultipleRecords()
+		{
+			// Creation and initialization.
+			var mockLogFile = Substitute.For<ILogFile>();
+			var mockTransactionDataSerice = Substitute.For<ITransactionDataService>();
+
+			mockTransactionDataSerice.Add(Arg.Any<Transaction>()).Returns(true);
+
+			var unitUnderTest = createUnitUnderTest(mockTransactionDataSerice, mockLogFile);
+			// Start test
+			unitUnderTest.ImportFiles(new List<string>() { mFileWithMultipleRecords.Name });
+
+			// Check test results
+			mockLogFile.DidNotReceive().Error(Arg.Any<string>());
+
+			// Test that the correct transaction has been added.
+			mockTransactionDataSerice.Received(2).Add(Arg.Any<Transaction>());
+			mockTransactionDataSerice.Received(1).Add(Arg.Is<Transaction>(t => t.IsEqual(mFileWithMultipleRecords.GetTransactionByIndex(0))));
+			mockTransactionDataSerice.Received(1).Add(Arg.Is<Transaction>(t => t.IsEqual(mFileWithMultipleRecords.GetTransactionByIndex(1))));
+		}
+
+		[Test]
+		public void ImportFilesTest_TriggeredUpdateImported()
+		{
+			var stubLogFile = Substitute.For<ILogFile>();
+			var stubTransactionDataSerice = Substitute.For<ITransactionDataService>();
+
+			stubTransactionDataSerice.Add(Arg.Any<Transaction>()).Returns(true);
+
+			var unitUnderTest = createUnitUnderTest(stubTransactionDataSerice, stubLogFile);
+
+			unitUnderTest.ImportFiles(new List<string>() { mFileWithMultipleRecords.Name });
+
+			//unitUnderTest.Received(2).OnDataProcessed
+
+		}
+
+
+
+		[Test]
+		public void ImportFilesTest_ImportCorruptFile()
+		{
+			Assert.Fail();
+		}
+
+
+		[Test]
+		public void ImportFilesTest_ImportMulitpleFiles()
+		{
+			Assert.Fail();
+		}
+
+		[Test]
+		public void ImportFilesTest_ImportMultipleFilesIncludingCorrupted()
+		{
+			Assert.Fail();
+		}
+
+		[Test]
+		public void ImportFilesTest_ImportMultipleFilesIncludingMissingFile()
+		{
+			Assert.Fail();
 		}
 	}
 }

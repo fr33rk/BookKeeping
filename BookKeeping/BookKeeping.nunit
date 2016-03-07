@@ -1,7 +1,7 @@
 ﻿<NUnitProject>
   <Settings activeconfig="Debug" />
   <Config name="Debug" binpathtype="Auto">
-    <assembly path="PL.BookKeeping.BusinessTests\bin\Debug\PL.BookKeeping.BusinessTests.dll" />
+    <assembly path="PL.BookKeeping.BusinessTests\bin\Debug\PL.BookKeeping.Business.Tests.dll" />
     <assembly path="PL.BookKeeping.EntitiesTests\bin\Debug\PL.BookKeeping.EntitiesTests.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto" />

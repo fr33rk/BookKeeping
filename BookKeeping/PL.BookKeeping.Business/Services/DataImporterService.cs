@@ -126,7 +126,7 @@ namespace PL.BookKeeping.Business.Services
 			}
 			catch (Exception e)
 			{
-				mLogFile.Error(string.Format("Unable to import {0}. The following exception occurred: {1}", fileName, e.Message));
+				mLogFile.Error(string.Format("Unable to import {0}. The following exception occurred: {1}", fileName, e.Message));				
 			}
 
 			return retValue;
@@ -147,7 +147,7 @@ namespace PL.BookKeeping.Business.Services
 			retValue.CounterAccount = values[3];
 			retValue.Code = values[4];
 			retValue.MutationType = values[5].ToUpper() == "AF" ? MutationType.Debit : MutationType.Credit;
-			retValue.Amount = Convert.ToDecimal(values[6]);
+			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.InvariantCulture);
 			retValue.MutationKind = values[7];
 			retValue.Remarks = values[8];
 
