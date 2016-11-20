@@ -40,7 +40,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <summary>Add a new entity to the database.
         /// </summary>
         /// <param name="entity">The entity, that needs to be added.</param>
-        public virtual void Add(TEntity entity)
+        public virtual bool Add(TEntity entity)
         {
             entity = Mark(entity);
 
@@ -51,14 +51,14 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 entity = AttachEntities(unitOfWork, entity);
 
                 repository.Add(entity);
-                unitOfWork.SaveChanges();
+                return unitOfWork.SaveChanges();
             }
         }
 
         /// <summary>Update an existing entity in the database.
         /// </summary>
         /// <param name="entity">The entity that needs to be updated.</param>
-        public virtual void Update(TEntity entity)
+        public virtual bool Update(TEntity entity)
         {
             using (var unitOfWork = this.mUOWFactory.Create())
             {
@@ -67,7 +67,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 entity = AttachEntities(unitOfWork, entity);
 
                 repository.Update(entity, e => e.Key);
-                unitOfWork.SaveChanges();
+                return unitOfWork.SaveChanges();
             }
         }
 
@@ -75,7 +75,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void Delete(TEntity entity)
+        public bool Delete(TEntity entity)
         {
             using (var unitOfWork = this.mUOWFactory.Create())
             {
@@ -83,7 +83,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
                 repository.Delete(e => e.Key == entity.Key);
 
-                unitOfWork.SaveChanges();
+                return unitOfWork.SaveChanges();
             }
         }
 

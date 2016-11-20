@@ -45,11 +45,12 @@ namespace PL.BookKeeping.Data.Repositories
         /// Saves the changes inside the unit of work.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public void SaveChanges()
+        public bool SaveChanges()
         {
             try
             {
                 this._dbContext.SaveChanges();
+				return true;
             }
             catch (DbEntityValidationException e)
             {
@@ -84,6 +85,8 @@ namespace PL.BookKeeping.Data.Repositories
                     Console.WriteLine(message);
                 }
             }
+
+			return false;
         }
 
         /// <summary>

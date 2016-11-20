@@ -44,7 +44,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			}
 		}
 
-		public override void Add(ProcessingRule entity)
+		public override bool Add(ProcessingRule entity)
 		{
 			// First add the entity to the database.
 			//base.Add(entity);
@@ -60,7 +60,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 				repository.ExecuteProcedure("UPDATE_RULE_PRIORITY", entity.Priority);
 
 				// Insert the new rule
-				base.Add(entity);
+				return base.Add(entity);
 			}
 		}
 

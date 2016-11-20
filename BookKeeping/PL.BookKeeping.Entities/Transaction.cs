@@ -15,7 +15,7 @@ namespace PL.BookKeeping.Entities
         [Required, StringLength(18)]
         public string Account { get; set; }
 
-        [StringLength(18)]
+        [StringLength(27)]
         public string CounterAccount { get; set; }
 
         [StringLength(2)]

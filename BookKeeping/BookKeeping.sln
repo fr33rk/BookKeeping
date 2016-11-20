@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Client", "BookKeeping.Client\BookKeeping.Client.csproj", "{4603EC21-2AE1-4515-9C7C-58E9A68A106E}"
 EndProject
@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		BookKeeping.nunit = BookKeeping.nunit
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Client.Android", "BookKeeping.Client.Android\BookKeeping.Client.Android.csproj", "{4FCF7327-DF59-402F-B6B9-32528A3EDC04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,12 +75,18 @@ Global
 		{887FE226-D2CA-4AF9-928C-355E3775BAB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{887FE226-D2CA-4AF9-928C-355E3775BAB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{887FE226-D2CA-4AF9-928C-355E3775BAB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCF7327-DF59-402F-B6B9-32528A3EDC04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FCF7327-DF59-402F-B6B9-32528A3EDC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FCF7327-DF59-402F-B6B9-32528A3EDC04}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4FCF7327-DF59-402F-B6B9-32528A3EDC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FCF7327-DF59-402F-B6B9-32528A3EDC04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCF7327-DF59-402F-B6B9-32528A3EDC04}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://panteraleo.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -109,5 +117,8 @@ Global
 		SccProjectUniqueName9 = PL.BookKeeping.EntitiesTests\\PL.BookKeeping.Entities.Tests.csproj
 		SccProjectName9 = PL.BookKeeping.EntitiesTests
 		SccLocalPath9 = PL.BookKeeping.EntitiesTests
+		SccProjectUniqueName10 = BookKeeping.Client.Android\\BookKeeping.Client.Android.csproj
+		SccProjectName10 = BookKeeping.Client.Android
+		SccLocalPath10 = BookKeeping.Client.Android
 	EndGlobalSection
 EndGlobal

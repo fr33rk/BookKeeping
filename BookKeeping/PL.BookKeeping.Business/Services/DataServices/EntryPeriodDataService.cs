@@ -84,7 +84,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 				var repository = unitOfWork.GetRepository<EntryPeriod>();
 
 				// Move all lower priority rules one priority down.
-				repository.ExecuteProcedure("RECALC_AMOUNTS", periodStart, periodEnd);
+				repository.ExecuteProcedure("RECALC_AMOUNTS", periodEnd, periodStart);
 			}
 		}
 

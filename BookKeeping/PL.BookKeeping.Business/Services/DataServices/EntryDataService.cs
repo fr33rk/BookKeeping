@@ -54,10 +54,10 @@ namespace PL.BookKeeping.Business.Services.DataServices
             return base.AttachEntities(unitOfWork, entity);
         }
 
-        public override void Add(Entry entity)
+        public override bool Add(Entry entity)
         {
             // First add the entry to the database.
-            base.Add(entity);
+            var result = base.Add(entity);
 
             // Then create a EntryPeriod for each period in the database.
             var periods = mPeriodDataService.Value.GetAll();
@@ -71,6 +71,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
                 newEntryPeriod.Period = period;
                 mEntryPeriodDataService.Add(newEntryPeriod);
             }
+
+			return result;
         }
 
         public IList<Entry> Get3rdLevelEntries()

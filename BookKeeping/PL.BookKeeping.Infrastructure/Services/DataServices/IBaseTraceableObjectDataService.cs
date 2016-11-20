@@ -13,17 +13,17 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         /// <summary>Add a new entity to the database.
         /// </summary>
         /// <param name="entity">The entity, that needs to be added.</param>
-        void Add(TEntity entity);
+        bool Add(TEntity entity);
 
         /// <summary>Update an existing entity in the database.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        void Update(TEntity entity);
+        bool Update(TEntity entity);
 
         /// <summary>Deletes the specified entity from the database.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        void Delete(TEntity entity);
+        bool Delete(TEntity entity);
 
         /// <summary>Tries to find an entity by its key. Will return 'null' when the entity was not found.
         /// </summary>

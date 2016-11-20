@@ -10,7 +10,7 @@ namespace PL.BookKeeping.Infrastructure.Data
         /// <summary>
         /// Saves the changes inside the unit of work.
         /// </summary>
-        void SaveChanges();
+        bool SaveChanges();
 
         /// <summary>
         /// Gets the repository for the specified type that is created specifically for this unit of work.

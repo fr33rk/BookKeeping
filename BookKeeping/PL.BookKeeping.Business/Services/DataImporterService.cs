@@ -144,10 +144,10 @@ namespace PL.BookKeeping.Business.Services
 			retValue.Date = DateTime.ParseExact(values[0], "yyyyMMdd", CultureInfo.InvariantCulture);
 			retValue.Name = values[1];
 			retValue.Account = values[2];
-			retValue.CounterAccount = values[3];
+			retValue.CounterAccount = values[3];			
 			retValue.Code = values[4];
 			retValue.MutationType = values[5].ToUpper() == "AF" ? MutationType.Debit : MutationType.Credit;
-			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.InvariantCulture);
+			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.GetCultureInfo("nl-NL")); // CultureInfo.InvariantCulture);
 			retValue.MutationKind = values[7];
 			retValue.Remarks = values[8];
 

@@ -74,6 +74,10 @@ namespace BookKeeping.Client.ViewModels
 			{
 				mVMStateMachine.Fire(VMTrigger.Start);
 			}
+			else
+			{
+				mVMStateMachine.Fire(VMTrigger.Restart);
+			}
 		}
 
 		#endregion INavigationAware
@@ -333,7 +337,8 @@ namespace BookKeeping.Client.ViewModels
 			LoadTransactions,
 			ReApplyRules,
 			RecalculateTotalAmounts,
-			ReApplyingDone
+			ReApplyingDone,
+			Restart
 		}
 
 		private StateMachine<VMState, VMTrigger> mVMStateMachine;
@@ -347,6 +352,8 @@ namespace BookKeeping.Client.ViewModels
 
 			mVMStateMachine.Configure(VMState.WaitingOnInput)
 				.OnEntryFrom(VMTrigger.Start, () => initialize())
+				.OnEntryFrom(VMTrigger.Restart, () => resetCounters())
+				.PermitReentry(VMTrigger.Restart)
 				.Permit(VMTrigger.LoadTransactions, VMState.LoadingTransactions);
 
 			mVMStateMachine.Configure(VMState.LoadingTransactions)
@@ -413,6 +420,13 @@ namespace BookKeeping.Client.ViewModels
 
 				mVMStateMachine.Fire(VMTrigger.ReApplyRules);
 			});
+		}
+
+		private void resetCounters()
+		{
+			TransactionCount = 0;
+			ProcessedCount = 0;
+			IgnoredCount = 0;
 		}
 
 		private void initialize()
