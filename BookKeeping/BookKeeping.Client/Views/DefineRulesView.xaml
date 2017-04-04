@@ -45,8 +45,8 @@
                       SelectionMode="Single" SelectionUnit="FullRow"
                       IsEnabled="{Binding IsSelectionChangeAllowed}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Entry" Width="*" Binding="{Binding Entry.Description, FallbackValue=Negeren}" />
-                    <DataGridTextColumn Header="Rule" Width="4*" Binding="{Binding}" />
+                    <DataGridTextColumn Header="Post" Width="*" Binding="{Binding Entry.Description, FallbackValue=Negeren}" />
+                    <DataGridTextColumn Header="Regel" Width="4*" Binding="{Binding}" />
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Grid.Column="1" VerticalAlignment="Center">

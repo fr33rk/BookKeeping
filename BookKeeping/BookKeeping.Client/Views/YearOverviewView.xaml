@@ -18,7 +18,7 @@
                       CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False"
                       SelectionMode="Single" SelectionUnit="FullRow" CurrentCellChanged="DataGrid_CurrentCellChanged">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Entry" Width="4*" Binding="{Binding Entry.Description}" />
+                    <DataGridTextColumn Header="Post" Width="4*" Binding="{Binding Entry.Description}" />
                     <DataGridTextColumn Header="Jan" Width="*" Binding="{Binding Jan, StringFormat={}{0:C}}" />
                     <DataGridTextColumn Header="Feb" Width="*" Binding="{Binding Feb, StringFormat={}{0:C}}" />
                     <DataGridTextColumn Header="Mar" Width="*" Binding="{Binding Mar, StringFormat={}{0:C}}" />

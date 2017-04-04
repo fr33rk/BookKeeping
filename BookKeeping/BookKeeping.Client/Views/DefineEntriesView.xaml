@@ -49,15 +49,15 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="Omschrijving:" Margin="4" Padding="5,2" HorizontalAlignment="Right" />
             <TextBox Grid.Column="1" Text="{Binding SelectedEntryDescription}" Margin="4" />
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="Related rules:" HorizontalAlignment="Right" Margin="4" />
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="Gekoppelde regels:" HorizontalAlignment="Right" Margin="4" />
             <DataGrid x:Name="RulesDataGrid" Grid.Row="2" Grid.Column="1"
                       AutoGenerateColumns="False" ItemsSource="{Binding AttachedProcessingRules}"
                       IsReadOnly="True"
                       CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False"
                       SelectionMode="Single" SelectionUnit="FullRow">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Entry" Width="*" Binding="{Binding Entry.Description, FallbackValue=Negeren}" />
-                    <DataGridTextColumn Header="Rule" Width="4*" Binding="{Binding}" />
+                    <DataGridTextColumn Header="Post" Width="*" Binding="{Binding Entry.Description, FallbackValue=Negeren}" />
+                    <DataGridTextColumn Header="Regel" Width="4*" Binding="{Binding}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -17,7 +17,7 @@
                 <MenuItem Header="Post definities" HorizontalAlignment="Left" Command="{Binding DefineEntriesCommand}" />
                 <MenuItem Header="Regel definities" HorizontalAlignment="Left" Command="{Binding DefineRulesCommand}" />
             </MenuItem>
-            <MenuItem Header="Actions">
+            <MenuItem Header="Acties">
                 <MenuItem Header="Importeer data" HorizontalAlignment="Left" Command="{Binding JustDoItCommand}" />
                 <MenuItem Header="Regels opnieuw toepassen" HorizontalAlignment="Left" Command="{Binding ReApplyRulesCommand}" />
             </MenuItem>
