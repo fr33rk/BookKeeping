@@ -12,15 +12,23 @@ namespace DatabaseConverter
 {
 	public partial class Form1 : Form
 	{
+		private MigratorEngine mEngine;
+
 		public Form1()
 		{
 			InitializeComponent();
+			mEngine = new MigratorEngine();
+			mEngine.EngineLog += (sender, args) => edtOutput.Text = args.Output;
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			var engine = new MigratorEngine();
-			engine.ExportToFile();
+			mEngine.ExportToFile();
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			mEngine.ImportFromFile(edtOutput.Text);
 		}
 	}
 }

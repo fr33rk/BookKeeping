@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace PL.BookKeeping.Entities
 {
@@ -13,6 +14,7 @@ namespace PL.BookKeeping.Entities
         [ForeignKey("ParentEntry")]
         public int? ParentEntryKey { get; set; }
 
+		[JsonIgnore]
         public Entry ParentEntry { get; set; }
 
         [InverseProperty("ParentEntry")]

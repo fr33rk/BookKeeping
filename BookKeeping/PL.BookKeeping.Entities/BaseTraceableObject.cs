@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace PL.BookKeeping.Entities
 {
@@ -32,6 +33,7 @@ namespace PL.BookKeeping.Entities
 
         /// <summary>Gets or sets the creator. Should never be manually set.
         /// </summary>
+        [JsonIgnore]
         public virtual User Creator { get; set; }
     }
 }
