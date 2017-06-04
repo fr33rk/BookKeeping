@@ -1,4 +1,5 @@
-﻿using BookKeeping.Client.Views;
+﻿using System.Collections.ObjectModel;
+using BookKeeping.Client.Views;
 using Microsoft.Practices.Unity;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
@@ -8,213 +9,234 @@ using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using System.Collections.ObjectModel;
 
 namespace BookKeeping.Client.ViewModels
 {
-    public class MainVM : ViewModelBase, INavigationAware, IRegionMemberLifetime
-    {
-        private IRegionManager mRegionManager;
-        private IPeriodDataService mPeriodDataService;
-        private IEventAggregator mEventAggregator;
-        private IUnityContainer mContainer;
-        private IDataProcessorService mDataProcessorService;
-        private ITransactionDataService mTransactionDataService;
+	public class MainVM : ViewModelBase, INavigationAware, IRegionMemberLifetime
+	{
+		private IRegionManager mRegionManager;
+		private IPeriodDataService mPeriodDataService;
+		private IEventAggregator mEventAggregator;
+		private IUnityContainer mContainer;
+		private IDataProcessorService mDataProcessorService;
+		private ITransactionDataService mTransactionDataService;
+		private IDataExporterService mDataExporterService;
 
-        public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
-            IUnityContainer unityContainer, IDataProcessorService dataProcessorService, ITransactionDataService transactionDataService)
-        {
-            mRegionManager = regionManager;
-            mPeriodDataService = periodDataService;
-            mEventAggregator = eventAggregator;
-            mContainer = unityContainer;
-            mDataProcessorService = dataProcessorService;
-            mTransactionDataService = transactionDataService;
+		public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
+			IUnityContainer unityContainer, IDataProcessorService dataProcessorService, ITransactionDataService transactionDataService,
+			IDataExporterService dataExporterService)
+		{
+			mRegionManager = regionManager;
+			mPeriodDataService = periodDataService;
+			mEventAggregator = eventAggregator;
+			mContainer = unityContainer;
+			mDataProcessorService = dataProcessorService;
+			mTransactionDataService = transactionDataService;
+			mDataExporterService = dataExporterService;
 
-            mEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
-            mEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
-        }
+			mEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
+			mEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
+		}
 
-        private void DataChangedAction(DataChangedEventArgs obj)
-        {
-            loadData();
-        }
+		private void DataChangedAction(DataChangedEventArgs obj)
+		{
+			loadData();
+		}
 
-        private void InitializationDoneAction(bool value)
-        {
-            loadData();
-        }
+		private void InitializationDoneAction(bool value)
+		{
+			loadData();
+		}
 
-        private void loadData()
-        {
-            AvailableYears = new ObservableCollection<YearOverviewVM>();
+		private void loadData()
+		{
+			AvailableYears = new ObservableCollection<YearOverviewVM>();
 
-            var availableYears = mPeriodDataService.GetAvailableYears();
-            foreach (var year in availableYears)
-            {
-                mAvailableYears.Add(mContainer.Resolve<YearOverviewVM>(new ResolverOverride[]
-                                                                       {
-                                                                           new ParameterOverride("year", year),
-                                                                       })
-                                   );
-            }
-        }
+			var availableYears = mPeriodDataService.GetAvailableYears();
+			foreach (var year in availableYears)
+			{
+				mAvailableYears.Add(mContainer.Resolve<YearOverviewVM>(new ResolverOverride[]
+																	   {
+																		   new ParameterOverride("year", year),
+																	   })
+								   );
+			}
+		}
 
-        private ObservableCollection<YearOverviewVM> mAvailableYears;
+		private ObservableCollection<YearOverviewVM> mAvailableYears;
 
-        public ObservableCollection<YearOverviewVM> AvailableYears
-        {
-            get
-            {
-                return mAvailableYears;
-            }
-            set
-            {
-                mAvailableYears = value;
-                NotifyPropertyChanged();
-            }
-        }
+		public ObservableCollection<YearOverviewVM> AvailableYears
+		{
+			get
+			{
+				return mAvailableYears;
+			}
+			set
+			{
+				mAvailableYears = value;
+				NotifyPropertyChanged();
+			}
+		}
 
-        #region Command JustDoItCommand
+		#region Command JustDoItCommand
 
-        /// <summary>Field for the StartMeasurement command.
-        /// </summary>
-        private DelegateCommand mJustDoItCommand;
+		/// <summary>Field for the StartMeasurement command.
+		/// </summary>
+		private DelegateCommand mJustDoItCommand;
 
-        /// <summary>Gets StartMeasurement command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand JustDoItCommand
-        {
-            get
-            {
-                return this.mJustDoItCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mJustDoItCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.JustDoIt, this.CanStartJustDoIt));
-            }
-        }
+		/// <summary>Gets StartMeasurement command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand JustDoItCommand
+		{
+			get
+			{
+				return mJustDoItCommand
+					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+					// is not yet bound to the View, the command is instantiated in a different thread than the
+					// main thread. Prevent this by checking on the SynchronizationContext.
+					?? (mJustDoItCommand = System.Threading.SynchronizationContext.Current == null
+					? null : new DelegateCommand(JustDoIt, CanStartJustDoIt));
+			}
+		}
 
-        /// <summary>Starts the measurement of a sample.
-        /// </summary>
-        private void JustDoIt()
-        {
-            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(ImportDataView).FullName);
-        }
+		/// <summary>Starts the measurement of a sample.
+		/// </summary>
+		private void JustDoIt()
+		{
+			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(ImportDataView).FullName);
+		}
 
-        /// <summary>Determines whether the StartMeasurement command can be executed.
-        /// </summary>
-        private bool CanStartJustDoIt()
-        {
-            return true;
-        }
+		/// <summary>Determines whether the StartMeasurement command can be executed.
+		/// </summary>
+		private bool CanStartJustDoIt()
+		{
+			return true;
+		}
 
-        #endregion Command JustDoItCommand
+		#endregion Command JustDoItCommand
 
-        #region Command DefineEntriesCommand
+		#region Command ExportDataCommand
 
-        /// <summary>Field for the StartMeasurement command.
-        /// </summary>
-        private DelegateCommand mDefineEntriesCommand;
+		private DelegateCommand mExportDataCommand;
 
-        /// <summary>Gets StartMeasurement command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand DefineEntriesCommand
-        {
-            get
-            {
-                return this.mDefineEntriesCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mDefineEntriesCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.DefineEntries, this.CanDefineEntries));
-            }
-        }
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand ExportDataCommand => mExportDataCommand
+													// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													// is not yet bound to the View, the command is instantiated in a different thread than the
+													// main thread. Prevent this by checking on the SynchronizationContext.
+													?? (mExportDataCommand = System.Threading.SynchronizationContext.Current == null
+														? null
+														: new DelegateCommand(this.ExportData, this.CanExportData));
 
-        /// <summary>Starts the measurement of a sample.
-        /// </summary>
-        private void DefineEntries()
-        {
-            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineEntriesView).FullName);
-        }
+		private void ExportData()
+		{
+			mDataExporterService.Export(@"d:\Database.json");
+		}
 
-        /// <summary>Determines whether the StartMeasurement command can be executed.
-        /// </summary>
-        private bool CanDefineEntries()
-        {
-            return true;
-        }
+		private bool CanExportData()
+		{
+			return true;
+		}
 
-        #endregion Command DefineEntriesCommand
+		#endregion Command ExportDataCommand
 
-        #region Command DefineRulesCommand
+		#region Command DefineEntriesCommand
 
-        /// <summary>Field for the DefineRules command.
-        /// </summary>
-        private DelegateCommand mDefineRulesCommand;
+		/// <summary>Field for the StartMeasurement command.
+		/// </summary>
+		private DelegateCommand mDefineEntriesCommand;
 
-        /// <summary>Gets DefineRules command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand DefineRulesCommand
-        {
-            get
-            {
-                return this.mDefineRulesCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mDefineRulesCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.DefineRules, this.CanDefineRules));
-            }
-        }
+		/// <summary>Gets StartMeasurement command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand DefineEntriesCommand => mDefineEntriesCommand
+													   // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													   // is not yet bound to the View, the command is instantiated in a different thread than the
+													   // main thread. Prevent this by checking on the SynchronizationContext.
+													   ?? (mDefineEntriesCommand = System.Threading.SynchronizationContext.Current == null
+														   ? null : new DelegateCommand(DefineEntries, CanDefineEntries));
 
-        /// <summary>
-        /// </summary>
-        private void DefineRules()
-        {
-            mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineRulesView).FullName);
-        }
+		/// <summary>Starts the measurement of a sample.
+		/// </summary>
+		private void DefineEntries()
+		{
+			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineEntriesView).FullName);
+		}
 
-        /// <summary>Determines whether the StartMeasurement command can be executed.
-        /// </summary>
-        private bool CanDefineRules()
-        {
-            return true;
-        }
+		/// <summary>Determines whether the StartMeasurement command can be executed.
+		/// </summary>
+		private bool CanDefineEntries()
+		{
+			return true;
+		}
 
-        #endregion Command DefineRulesCommand
+		#endregion Command DefineEntriesCommand
 
-        #region Command ReApplyRulesCommand
+		#region Command DefineRulesCommand
 
-        /// <summary>Field for the ReApplyRules command.
-        /// </summary>
-        private DelegateCommand mReApplyRulesCommand;
+		/// <summary>Field for the DefineRules command.
+		/// </summary>
+		private DelegateCommand mDefineRulesCommand;
 
-        /// <summary>Gets ReApplyRules command.
-        /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand ReApplyRulesCommand
-        {
-            get
-            {
-                return this.mReApplyRulesCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.ReApplyRules, this.CanReApplyRules));
-            }
-        }
+		/// <summary>Gets DefineRules command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand DefineRulesCommand
+		{
+			get
+			{
+				return mDefineRulesCommand
+					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+					// is not yet bound to the View, the command is instantiated in a different thread than the
+					// main thread. Prevent this by checking on the SynchronizationContext.
+					?? (mDefineRulesCommand = System.Threading.SynchronizationContext.Current == null
+					? null : new DelegateCommand(DefineRules, CanDefineRules));
+			}
+		}
 
-        /// <summary>
-        /// </summary>
-        private void ReApplyRules()
-        {
+		/// <summary>
+		/// </summary>
+		private void DefineRules()
+		{
+			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(DefineRulesView).FullName);
+		}
+
+		/// <summary>Determines whether the StartMeasurement command can be executed.
+		/// </summary>
+		private bool CanDefineRules()
+		{
+			return true;
+		}
+
+		#endregion Command DefineRulesCommand
+
+		#region Command ReApplyRulesCommand
+
+		/// <summary>Field for the ReApplyRules command.
+		/// </summary>
+		private DelegateCommand mReApplyRulesCommand;
+
+		/// <summary>Gets ReApplyRules command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand ReApplyRulesCommand
+		{
+			get
+			{
+				return mReApplyRulesCommand
+					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+					// is not yet bound to the View, the command is instantiated in a different thread than the
+					// main thread. Prevent this by checking on the SynchronizationContext.
+					?? (mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
+					? null : new DelegateCommand(ReApplyRules, CanReApplyRules));
+			}
+		}
+
+		/// <summary>
+		/// </summary>
+		private void ReApplyRules()
+		{
 			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(ReApplyRulesView).FullName);
 
 			//mTransactionDataService.ResetPeriodEntryLinks();
@@ -224,42 +246,42 @@ namespace BookKeeping.Client.ViewModels
 			//loadData();
 		}
 
-        /// <summary>Determines whether the StartMeasurement command can be executed.
-        /// </summary>
-        private bool CanReApplyRules()
-        {
-            return true;
-        }
+		/// <summary>Determines whether the StartMeasurement command can be executed.
+		/// </summary>
+		private bool CanReApplyRules()
+		{
+			return true;
+		}
 
-        #endregion Command ReApplyRulesCommand
+		#endregion Command ReApplyRulesCommand
 
-        #region INavigationAware
+		#region INavigationAware
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-        }
+		public void OnNavigatedTo(NavigationContext navigationContext)
+		{
+		}
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+		public bool IsNavigationTarget(NavigationContext navigationContext)
+		{
+			return true;
+		}
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
+		public void OnNavigatedFrom(NavigationContext navigationContext)
+		{
+		}
 
-        #endregion INavigationAware
+		#endregion INavigationAware
 
-        #region IRegionMemberLifetime
+		#region IRegionMemberLifetime
 
-        public bool KeepAlive
-        {
-            get
-            {
-                return true;
-            }
-        }
+		public bool KeepAlive
+		{
+			get
+			{
+				return true;
+			}
+		}
 
-        #endregion IRegionMemberLifetime
-    }
+		#endregion IRegionMemberLifetime
+	}
 }

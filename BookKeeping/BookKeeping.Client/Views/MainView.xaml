@@ -19,6 +19,9 @@
             </MenuItem>
             <MenuItem Header="Actions">
                 <MenuItem Header="Importeer data" HorizontalAlignment="Left" Command="{Binding JustDoItCommand}" />
+                <MenuItem Header="Exporteer data"
+                          HorizontalAlignment="Left"
+                          Command="{Binding ExportDataCommand}" />
                 <MenuItem Header="Regels opnieuw toepassen" HorizontalAlignment="Left" Command="{Binding ReApplyRulesCommand}" />
             </MenuItem>
         </Menu>
