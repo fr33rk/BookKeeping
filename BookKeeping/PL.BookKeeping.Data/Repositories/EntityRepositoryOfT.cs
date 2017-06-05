@@ -271,21 +271,16 @@ namespace PL.BookKeeping.Data.Repositories
             var paramList = new List<string>();
 
             // Create a list of @px values
-            for (int i = 0; i < parameters.Count(); i++)
+            for (var i = 0; i < parameters.Length; i++)
             {
-                paramList.Add(string.Format("@P{0}", i));
+                paramList.Add($"@P{i}");
             }
 
             string command;
 
-            if (parameters.Count() > 0)
-            {
-                command = string.Format("EXECUTE PROCEDURE {0} ({1})", procedureName, string.Join(",", paramList));
-            }
-            else
-            {
-                command = string.Format("EXECUTE PROCEDURE {0}", procedureName);
-            }
+            command = parameters.Length > 0 
+				? $"CALL {procedureName} ({string.Join(",", paramList)})" 
+				: $"CALL {procedureName}";
 
             return mContext.Database.ExecuteSqlCommand(command, parameters);            
         }

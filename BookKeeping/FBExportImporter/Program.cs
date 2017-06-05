@@ -43,6 +43,13 @@ namespace FBExportImporter
 				dataContext.ProcessingRules.Add(processingRule);
 			}
 
+			// Clear all references to other objects. The transaction need to be reprocessed after import.
+			foreach (var dataTransaction in data.Transactions)
+			{
+				dataTransaction.EntryPeriodKey = null;
+				dataContext.Transactions.Add(dataTransaction);
+			}
+
 			dataContext.SaveChanges();
 		}
 	}
