@@ -99,6 +99,7 @@
     <Compile Include="Services\DataServices\IProcessingRuleDataService.cs" />
     <Compile Include="Services\DataServices\ITransactionDataService.cs" />
     <Compile Include="Services\IAuthorizationService.cs" />
+    <Compile Include="Services\IDataExporterService.cs" />
     <Compile Include="Services\IDataImporterService.cs" />
     <Compile Include="Services\IDataProcessorService.cs" />
   </ItemGroup>
