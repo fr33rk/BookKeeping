@@ -51,7 +51,7 @@ namespace PL.BookKeeping.Business.Services.Tests
 
 			#region DataImporterService
 
-			protected override void openFileStream(string fileName)
+			protected override void OpenFileStream(string fileName)
 			{
 				mCurrentTestFile = mTestFiles.Where(t => t.Name == fileName)
 								.FirstOrDefault();
@@ -60,12 +60,12 @@ namespace PL.BookKeeping.Business.Services.Tests
 					throw new System.IO.FileNotFoundException();
 			}
 
-			protected override string readLine()
+			protected override string ReadLine()
 			{
 				return mCurrentTestFile.GetNextLine();
 			}
 
-			protected override bool isAtEndOfStream()
+			protected override bool IsAtEndOfStream()
 			{
 				return mCurrentTestFile.IsEndOfFile;
 			}

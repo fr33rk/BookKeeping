@@ -13,12 +13,16 @@ namespace FBExportImporter
 			ImportData();
 		}
 
+
 		private class DataBaseContents
 		{
+#pragma warning disable CS0649 // Because the fields are created when deserializing from JSON.
 			public IList<User> Users;
 			public IList<Entry> Entries;
 			public IList<ProcessingRule> Rules;
 			public IList<Transaction> Transactions;
+#pragma warning restore CS0649
+
 		}
 
 		private static void ImportData()

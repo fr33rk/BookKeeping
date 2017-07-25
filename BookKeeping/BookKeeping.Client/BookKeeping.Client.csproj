@@ -100,7 +100,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -227,6 +226,10 @@
     <Resource Include="money.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
+      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
+      <Name>PL.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Business\PL.BookKeeping.Business.csproj">
       <Project>{9905A1EA-A6B2-4FEA-B03D-B7DB011D4A95}</Project>
       <Name>PL.BookKeeping.Business</Name>
@@ -242,10 +245,6 @@
     <ProjectReference Include="..\PL.Common.Prism\PL.Common.Prism.csproj">
       <Project>{87f76e27-ef8d-454e-b87a-257741eb2bd2}</Project>
       <Name>PL.Common.Prism</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PL.Logger\PL.Logger.csproj">
-      <Project>{EC4D9E5B-B1A1-49EB-A7DB-49FE70E12906}</Project>
-      <Name>PL.Logger</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

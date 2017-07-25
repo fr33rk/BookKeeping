@@ -73,7 +73,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -96,6 +95,10 @@
     <Compile Include="Services\DataServices\TransactionDataService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
+      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
+      <Name>PL.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Data\PL.BookKeeping.Data.csproj">
       <Project>{3FBE891B-065F-4DEA-989A-F85BD1EC9D9A}</Project>
       <Name>PL.BookKeeping.Data</Name>
@@ -107,10 +110,6 @@
     <ProjectReference Include="..\PL.BookKeeping.Infrastructure\PL.BookKeeping.Infrastructure.csproj">
       <Project>{C25B5304-0FDE-4CE3-AEA8-6A3AD78EBDED}</Project>
       <Name>PL.BookKeeping.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PL.Logger\PL.Logger.csproj">
-      <Project>{EC4D9E5B-B1A1-49EB-A7DB-49FE70E12906}</Project>
-      <Name>PL.Logger</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

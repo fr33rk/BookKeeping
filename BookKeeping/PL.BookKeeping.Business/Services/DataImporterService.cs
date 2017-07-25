@@ -13,12 +13,12 @@ namespace PL.BookKeeping.Business.Services
 {
 	/// <summary>Import transactions from one or more csv files.
 	/// </summary>
-	public class DataImporterService : IDataImporterService
+	public class DataImporterService : IDataImporterService, IDisposable
 	{
 		#region Fields
 
-		private ITransactionDataService mTransactionDataService;
-		private ILogFile mLogFile;
+		private readonly ITransactionDataService mTransactionDataService;
+		private readonly ILogFile mLogFile;
 
 		private int mImported;
 		private int mDuplicate;
@@ -31,10 +31,18 @@ namespace PL.BookKeeping.Business.Services
 		/// <summary>Initializes a new instance of the <see cref="DataImporterService"/> class.
 		/// </summary>
 		/// <param name="transactionDataService">The transaction data service.</param>
+		/// <param name="logFile"></param>
 		public DataImporterService(ITransactionDataService transactionDataService, ILogFile logFile)
 		{
 			mTransactionDataService = transactionDataService;
 			mLogFile = logFile;
+		}
+
+		/// <summary>Finalizes an instance of the <see cref="DataImporterService"/> class.
+		/// </summary>
+		~DataImporterService()
+		{
+			Dispose(false);
 		}
 
 		#endregion Constructor(s)
@@ -53,7 +61,7 @@ namespace PL.BookKeeping.Business.Services
 
 			foreach (var file in files)
 			{
-				retValue = retValue.Concat(import(file)).ToList();
+				retValue = retValue.Concat(Import(file)).ToList();
 			}
 
 			return retValue;
@@ -66,7 +74,7 @@ namespace PL.BookKeeping.Business.Services
 		/// <summary>Occurs when a line in a imported file has been processed.</summary>
 		public event EventHandler<DataImportedEventArgs> OnDataProcessed;
 
-		private void signalDataProcessed()
+		private void SignalDataProcessed()
 		{
 			OnDataProcessed?.Invoke(this, new DataImportedEventArgs(mImported, mDuplicate));
 		}
@@ -77,41 +85,39 @@ namespace PL.BookKeeping.Business.Services
 
 		#region FileStream
 
-		virtual protected void openFileStream(string fileName)
+		protected virtual void OpenFileStream(string fileName)
 		{
 			mFileStream = new StreamReader(fileName);
 		}
 
-		virtual protected string readLine()
+		protected virtual string ReadLine()
 		{
 			return mFileStream.ReadLine();
 		}
 
-		virtual protected bool isAtEndOfStream()
+		protected virtual bool IsAtEndOfStream()
 		{
 			return mFileStream.EndOfStream;
 		}
 
 		#endregion FileStream
 
-		private IList<Transaction> import(string fileName)
+		private IEnumerable<Transaction> Import(string fileName)
 		{
 			var retValue = new List<Transaction>();
-			var sepparators = new string[] { "\",\"" };
-
-			Transaction transaction;
+			var sepparators = new[] { "\",\"" };
 
 			try
 			{
-				openFileStream(fileName);
+				OpenFileStream(fileName);
 
 				// First line is a header...
-				readLine();
+				ReadLine();
 
-				while (!isAtEndOfStream())
+				while (!IsAtEndOfStream())
 				{
-					var values = readLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
-					transaction = processLine(values);
+					var values = ReadLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
+					var transaction = ProcessLine(values);
 					if (mTransactionDataService.Add(transaction))
 					{
 						mImported++;
@@ -121,22 +127,22 @@ namespace PL.BookKeeping.Business.Services
 					{
 						mDuplicate++;
 					}
-					signalDataProcessed();
+					SignalDataProcessed();
 				}
 			}
 			catch (Exception e)
 			{
-				mLogFile.Error(string.Format("Unable to import {0}. The following exception occurred: {1}", fileName, e.Message));				
+				mLogFile.Error($"Unable to import {fileName}. The following exception occurred: {e.Message}");
 			}
 
 			return retValue;
 		}
 
-		private Transaction processLine(string[] values)
+		private static Transaction ProcessLine(IList<string> values)
 		{
 			var retValue = new Transaction();
 
-			for (int i = 0; i < values.Count(); i++)
+			for (var i = 0; i < values.Count; i++)
 			{
 				values[i] = values[i].Replace("\"", "");
 			}
@@ -144,7 +150,7 @@ namespace PL.BookKeeping.Business.Services
 			retValue.Date = DateTime.ParseExact(values[0], "yyyyMMdd", CultureInfo.InvariantCulture);
 			retValue.Name = values[1];
 			retValue.Account = values[2];
-			retValue.CounterAccount = values[3];			
+			retValue.CounterAccount = values[3];
 			retValue.Code = values[4];
 			retValue.MutationType = values[5].ToUpper() == "AF" ? MutationType.Debit : MutationType.Credit;
 			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.GetCultureInfo("nl-NL")); // CultureInfo.InvariantCulture);
@@ -160,5 +166,24 @@ namespace PL.BookKeeping.Business.Services
 		}
 
 		#endregion Helper methods
+
+		#region IDisposable
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "mFileStream")]
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				mFileStream?.Dispose();
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		#endregion IDisposable
 	}
 }

@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("BookKeeping.Client")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Pantera Leo")]
+[assembly: AssemblyCompany("PanteraLeo")]
 [assembly: AssemblyProduct("BookKeeping.Client")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]

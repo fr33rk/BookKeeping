@@ -43,6 +43,9 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
@@ -70,7 +73,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -108,13 +113,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
+      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
+      <Name>PL.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Entities\PL.BookKeeping.Entities.csproj">
       <Project>{E3EB20CA-C2F3-4113-999E-679ECCE660F1}</Project>
       <Name>PL.BookKeeping.Entities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PL.Logger\PL.Logger.csproj">
-      <Project>{EC4D9E5B-B1A1-49EB-A7DB-49FE70E12906}</Project>
-      <Name>PL.Logger</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
