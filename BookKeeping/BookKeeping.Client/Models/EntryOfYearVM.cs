@@ -6,21 +6,21 @@ using System.Linq;
 
 namespace BookKeeping.Client.Models
 {
-    public class EntryOfYearVM : ViewModelBase
+    public class EntryOfYearVm : ViewModelBase
     {
-        private class column
+        private class Column
         {
-            public column(EntryPeriod entryPeriod, decimal amount)
+            public Column(EntryPeriod entryPeriod, decimal amount)
             {
                 EntryPeriod = entryPeriod;
                 Amount = amount;
             }
 
-            public EntryPeriod EntryPeriod;
+            public readonly EntryPeriod EntryPeriod;
             public decimal Amount;
         }
 
-        public EntryOfYearVM(Entry entry)
+        public EntryOfYearVm(Entry entry)
         {
             Entry = entry;
         }
@@ -29,103 +29,31 @@ namespace BookKeeping.Client.Models
 
         #region Columns
 
-        public decimal? Jan
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Jan);
-            }
-        }
+        public decimal? Jan => GetAmountByIndex((int)ShortMonthName.Jan);
 
-        public decimal? Feb
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Feb);
-            }
-        }
+	    public decimal? Feb => GetAmountByIndex((int)ShortMonthName.Feb);
 
-        public decimal? Mar
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Mar);
-            }
-        }
+	    public decimal? Mar => GetAmountByIndex((int)ShortMonthName.Mar);
 
-        public decimal? Apr
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Apr);
-            }
-        }
+	    public decimal? Apr => GetAmountByIndex((int)ShortMonthName.Apr);
 
-        public decimal? May
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Mei);
-            }
-        }
+	    public decimal? May => GetAmountByIndex((int)ShortMonthName.Mei);
 
-        public decimal? Jun
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Jun);
-            }
-        }
+	    public decimal? Jun => GetAmountByIndex((int)ShortMonthName.Jun);
 
-        public decimal? Jul
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Jul);
-            }
-        }
+	    public decimal? Jul => GetAmountByIndex((int)ShortMonthName.Jul);
 
-        public decimal? Aug
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Aug);
-            }
-        }
+	    public decimal? Aug => GetAmountByIndex((int)ShortMonthName.Aug);
 
-        public decimal? Sep
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Sep);
-            }
-        }
+	    public decimal? Sep => GetAmountByIndex((int)ShortMonthName.Sep);
 
-        public decimal? Okt
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Okt);
-            }
-        }
+	    public decimal? Okt => GetAmountByIndex((int)ShortMonthName.Okt);
 
-        public decimal? Nov
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Nov);
-            }
-        }
+	    public decimal? Nov => GetAmountByIndex((int)ShortMonthName.Nov);
 
-        public decimal? Dec
-        {
-            get
-            {
-                return GetAmountByIndex((int)ShortMonthName.Dec);
-            }
-        }
+	    public decimal? Dec => GetAmountByIndex((int)ShortMonthName.Dec);
 
-        private decimal? GetAmountByIndex(int index)
+	    private decimal? GetAmountByIndex(int index)
         {
             if (mColumns[index] != null)
             {
@@ -136,33 +64,23 @@ namespace BookKeeping.Client.Models
 
         #endregion Columns
 
-        public decimal Total
-        {
-            get
-            {
-                if (mColumns[mColumns.Count() - 1] != null)
-                {
-                    return mColumns[mColumns.Count() - 1].Amount;
-                }
+        public decimal Total => mColumns[mColumns.Length - 1] != null 
+									? mColumns[mColumns.Length - 1].Amount 
+									: 0;
 
-                return 0;
-            }
-        }
-
-        private column[] mColumns = new column[13];
+	    private readonly Column[] mColumns = new Column[13];
 
         public void SetPeriodData(IList<EntryPeriod> entryPeriods)
         {
-            EntryPeriod entryPeriod;
-            mColumns[12] = new column(null, 0);
+	        mColumns[12] = new Column(null, 0);
 
-            for (int i = 0; i < 12; i++)
+            for (var i = 0; i < 12; i++)
             {
-                entryPeriod = entryPeriods.FirstOrDefault(e => e.Period.PeriodStart.Month == (i + 1));
+	            var entryPeriod = entryPeriods.FirstOrDefault(e => e.Period.PeriodStart.Month == (i + 1));
 
-                if (entryPeriod != null)
+	            if (entryPeriod != null)
                 {
-                    mColumns[i] = new column(entryPeriod, entryPeriod.TotalAmount);
+                    mColumns[i] = new Column(entryPeriod, entryPeriod.TotalAmount);
                     mColumns[12].Amount += entryPeriod.TotalAmount;
                 }
                 else
@@ -172,13 +90,13 @@ namespace BookKeeping.Client.Models
             }
         }
 
-        public void AddToTotals(EntryOfYearVM entryOfYear)
+        public void AddToTotals(EntryOfYearVm entryOfYear)
         {
-            for (int i = 0; i < mColumns.Count(); i++)
+            for (var i = 0; i < mColumns.Length; i++)
             {
                 if (mColumns[i] == null)
                 {
-                    mColumns[i] = new column(null, 0);
+                    mColumns[i] = new Column(null, 0);
                 }
 
                 if (entryOfYear.mColumns[i] != null)
@@ -224,7 +142,7 @@ namespace BookKeeping.Client.Models
 
         public EntryPeriod GetEntryPeriodByColumn(uint index)
         {
-            if (index < mColumns.Count())
+            if (index < mColumns.Length)
             {
                 if (mColumns[index] != null)
                 {

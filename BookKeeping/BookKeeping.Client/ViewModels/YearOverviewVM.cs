@@ -7,33 +7,29 @@ using System.Linq;
 
 namespace BookKeeping.Client.ViewModels
 {
-    public class YearOverviewVM : ViewModelBase
+    public class YearOverviewVm : ViewModelBase
     {
-        private IEntryPeriodDataService mEntryPeriodDataService;
-        private IEntryDataService mEntryDataService;
-        private ITransactionDataService mTransactionDataService;
-        private int mYear;
+        private readonly IEntryPeriodDataService mEntryPeriodDataService;
+        private readonly IEntryDataService mEntryDataService;
+        private readonly ITransactionDataService mTransactionDataService;
 
-        public YearOverviewVM(int year, IEntryPeriodDataService entryPeriodDataService, IEntryDataService entryDataService,
+	    public YearOverviewVm(int year, IEntryPeriodDataService entryPeriodDataService, IEntryDataService entryDataService,
             ITransactionDataService transactionService)
         {
-            mYear = year;
+            Year = year;
             mEntryPeriodDataService = entryPeriodDataService;
             mEntryDataService = entryDataService;
             mTransactionDataService = transactionService;
 
-            loadData();
+            LoadData();
         }
 
-        private EntryOfYearVM mSelectedEntryOfYear;
+        private EntryOfYearVm mSelectedEntryOfYear;
 
-        public EntryOfYearVM SelectedEntryOfYear
+        public EntryOfYearVm SelectedEntryOfYear
         {
-            get
-            {
-                return mSelectedEntryOfYear;
-            }
-            set
+            get => mSelectedEntryOfYear;
+	        set
             {
                 mSelectedEntryOfYear = value;
                 LoadSelectedTransactions();
@@ -44,11 +40,8 @@ namespace BookKeeping.Client.ViewModels
 
         public uint SelectedColumn
         {
-            get
-            {
-                return mSelectedColumn;
-            }
-            set
+            get => mSelectedColumn;
+	        set
             {
                 mSelectedColumn = value;
                 LoadSelectedTransactions();
@@ -67,33 +60,30 @@ namespace BookKeeping.Client.ViewModels
 
         public IEnumerable<Transaction> SelectedTransactions
         {
-            get
-            {
-                return mSelectedTransactions;
-            }
-            set
+            get => mSelectedTransactions;
+	        set
             {
                 mSelectedTransactions = value;
                 NotifyPropertyChanged();
             }
         }
 
-        private void loadData()
+        private void LoadData()
         {
-            mEntriesOfYear = new List<EntryOfYearVM>();
+            EntriesOfYear = new List<EntryOfYearVm>();
 
             // First flatten the list of entries
             var rootList = mEntryDataService.GetRootEntries();
             foreach (var rootEntry in rootList)
             {
-                flatten(rootEntry);
+                Flatten(rootEntry);
             }
 
             // Then get all entries and periods of the selected year.
-            var entryPeriods = mEntryPeriodDataService.GetByYear(mYear);
+            var entryPeriods = mEntryPeriodDataService.GetByYear(Year);
 
             // Then fill the entry periods.
-            foreach (var entryOfYear in mEntriesOfYear)
+            foreach (var entryOfYear in EntriesOfYear)
             {
                 var entryPeriodsOfentry = entryPeriods.Where(ep => ep.EntryKey == entryOfYear.Entry.Key).ToList();
 
@@ -101,46 +91,32 @@ namespace BookKeeping.Client.ViewModels
             }
 
             // Add the totals..
-            var totalOut = new EntryOfYearVM(new Entry() { Description = "Total" });
+            var totalOut = new EntryOfYearVm(new Entry() { Description = "Total" });
 
             foreach (var rootEntry in rootList)
             {
-                var entryOfYear = mEntriesOfYear.First(eoy => eoy.Entry.Key == rootEntry.Key);
+                var entryOfYear = EntriesOfYear.First(eoy => eoy.Entry.Key == rootEntry.Key);
                 totalOut.AddToTotals(entryOfYear);
             }
 
-            mEntriesOfYear.Add(totalOut);
+            EntriesOfYear.Add(totalOut);
         }
 
-        private void flatten(Entry entry)
+        private void Flatten(Entry entry)
         {
-            mEntriesOfYear.Add(new EntryOfYearVM(entry));
+            EntriesOfYear.Add(new EntryOfYearVm(entry));
 
             if (entry.ChildEntries != null)
             {
                 foreach (var childEntry in entry.ChildEntries.OrderBy(e => e.Description))
                 {
-                    flatten(childEntry);
+                    Flatten(childEntry);
                 }
             }
         }
 
-        private IList<EntryOfYearVM> mEntriesOfYear;
+	    public IList<EntryOfYearVm> EntriesOfYear { get; private set; }
 
-        public IList<EntryOfYearVM> EntriesOfYear
-        {
-            get
-            {
-                return mEntriesOfYear;
-            }
-        }
-
-        public int Year
-        {
-            get
-            {
-                return mYear;
-            }
-        }
+	    public int Year { get; }
     }
 }

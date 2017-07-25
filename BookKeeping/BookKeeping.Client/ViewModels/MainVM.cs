@@ -50,12 +50,12 @@ namespace BookKeeping.Client.ViewModels
 
 		private void loadData()
 		{
-			AvailableYears = new ObservableCollection<YearOverviewVM>();
+			AvailableYears = new ObservableCollection<YearOverviewVm>();
 
 			var availableYears = mPeriodDataService.GetAvailableYears();
 			foreach (var year in availableYears)
 			{
-				mAvailableYears.Add(mContainer.Resolve<YearOverviewVM>(new ResolverOverride[]
+				mAvailableYears.Add(mContainer.Resolve<YearOverviewVm>(new ResolverOverride[]
 																	   {
 																		   new ParameterOverride("year", year),
 																	   })
@@ -63,9 +63,9 @@ namespace BookKeeping.Client.ViewModels
 			}
 		}
 
-		private ObservableCollection<YearOverviewVM> mAvailableYears;
+		private ObservableCollection<YearOverviewVm> mAvailableYears;
 
-		public ObservableCollection<YearOverviewVM> AvailableYears
+		public ObservableCollection<YearOverviewVm> AvailableYears
 		{
 			get
 			{
