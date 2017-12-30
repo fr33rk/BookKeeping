@@ -27,7 +27,7 @@
             </MenuItem>
         </Menu>
 
-        <TabControl Grid.Row="1" TabStripPlacement="Bottom" ItemsSource="{Binding AvailableYears}">
+        <TabControl Grid.Row="1" TabStripPlacement="Bottom" ItemsSource="{Binding AvailableYears}" SelectedItem="{Binding SelectedYear}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Year}" />

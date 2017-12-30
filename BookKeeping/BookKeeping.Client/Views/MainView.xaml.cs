@@ -9,7 +9,7 @@ namespace BookKeeping.Client.Views
     /// </summary>
     public partial class MainView : UserControl
     {
-        public MainView(MainVM viewModel)
+        public MainView(MainVm viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;

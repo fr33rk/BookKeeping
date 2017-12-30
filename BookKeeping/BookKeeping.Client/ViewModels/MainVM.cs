@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using BookKeeping.Client.Views;
 using Microsoft.Practices.Unity;
 using PL.BookKeeping.Infrastructure;
@@ -12,71 +13,97 @@ using Prism.Regions;
 
 namespace BookKeeping.Client.ViewModels
 {
-	public class MainVM : ViewModelBase, INavigationAware, IRegionMemberLifetime
+	public class MainVm : ViewModelBase, INavigationAware, IRegionMemberLifetime
 	{
-		private IRegionManager mRegionManager;
-		private IPeriodDataService mPeriodDataService;
-		private IEventAggregator mEventAggregator;
-		private IUnityContainer mContainer;
-		private IDataProcessorService mDataProcessorService;
-		private ITransactionDataService mTransactionDataService;
-		private IDataExporterService mDataExporterService;
+		#region Fields
 
-		public MainVM(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
-			IUnityContainer unityContainer, IDataProcessorService dataProcessorService, ITransactionDataService transactionDataService,
-			IDataExporterService dataExporterService)
+		private readonly IRegionManager mRegionManager;
+		private readonly IPeriodDataService mPeriodDataService;
+		private readonly IUnityContainer mContainer;
+		private readonly IDataExporterService mDataExporterService;
+
+		#endregion Fields
+
+		#region Constructor(s)
+
+		public MainVm(IRegionManager regionManager, IPeriodDataService periodDataService, IEventAggregator eventAggregator,
+			IUnityContainer unityContainer, IDataExporterService dataExporterService)
 		{
 			mRegionManager = regionManager;
 			mPeriodDataService = periodDataService;
-			mEventAggregator = eventAggregator;
+			var localEventAggregator = eventAggregator;
 			mContainer = unityContainer;
-			mDataProcessorService = dataProcessorService;
-			mTransactionDataService = transactionDataService;
 			mDataExporterService = dataExporterService;
 
-			mEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
-			mEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
+			localEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
+			localEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
 		}
+
+		#endregion Constructor(s)
+
+		#region Helper methods
 
 		private void DataChangedAction(DataChangedEventArgs obj)
 		{
-			loadData();
+			LoadData();
 		}
 
 		private void InitializationDoneAction(bool value)
 		{
-			loadData();
+			LoadData();
 		}
 
-		private void loadData()
+		private void LoadData()
 		{
 			AvailableYears = new ObservableCollection<YearOverviewVm>();
 
 			var availableYears = mPeriodDataService.GetAvailableYears();
 			foreach (var year in availableYears)
 			{
-				mAvailableYears.Add(mContainer.Resolve<YearOverviewVm>(new ResolverOverride[]
-																	   {
-																		   new ParameterOverride("year", year),
-																	   })
-								   );
+				mAvailableYears.Add(mContainer.Resolve<YearOverviewVm>(new ParameterOverride("year", year)));
 			}
+
+			SelectLatestYear();
 		}
+
+		private void SelectLatestYear()
+		{
+			SelectedYear = mAvailableYears.Last();
+		}
+
+		#endregion Helper methods
+
+		#region Property AvailableYears
 
 		private ObservableCollection<YearOverviewVm> mAvailableYears;
 
 		public ObservableCollection<YearOverviewVm> AvailableYears
 		{
-			get
-			{
-				return mAvailableYears;
-			}
+			get => mAvailableYears;
 			set
 			{
 				mAvailableYears = value;
 				NotifyPropertyChanged();
 			}
 		}
+
+		#endregion Property AvailableYears
+
+		#region Property SelectedYear
+
+		private YearOverviewVm mSelectedYear;
+
+		public YearOverviewVm SelectedYear
+		{
+			get => mSelectedYear;
+			set
+			{
+				mSelectedYear = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		#endregion Property SelectedYear
 
 		#region Command JustDoItCommand
 
@@ -87,18 +114,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets StartMeasurement command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand JustDoItCommand
-		{
-			get
-			{
-				return mJustDoItCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (mJustDoItCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(JustDoIt, CanStartJustDoIt));
-			}
-		}
+		public DelegateCommand JustDoItCommand => mJustDoItCommand
+												  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												  // is not yet bound to the View, the command is instantiated in a different thread than the
+												  // main thread. Prevent this by checking on the SynchronizationContext.
+												  ?? (mJustDoItCommand = System.Threading.SynchronizationContext.Current == null
+													  ? null : new DelegateCommand(JustDoIt, CanStartJustDoIt));
 
 		/// <summary>Starts the measurement of a sample.
 		/// </summary>
@@ -127,7 +148,7 @@ namespace BookKeeping.Client.ViewModels
 													// main thread. Prevent this by checking on the SynchronizationContext.
 													?? (mExportDataCommand = System.Threading.SynchronizationContext.Current == null
 														? null
-														: new DelegateCommand(this.ExportData, this.CanExportData));
+														: new DelegateCommand(ExportData, CanExportData));
 
 		private void ExportData()
 		{
@@ -182,18 +203,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets DefineRules command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand DefineRulesCommand
-		{
-			get
-			{
-				return mDefineRulesCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (mDefineRulesCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(DefineRules, CanDefineRules));
-			}
-		}
+		public DelegateCommand DefineRulesCommand => mDefineRulesCommand
+													 // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													 // is not yet bound to the View, the command is instantiated in a different thread than the
+													 // main thread. Prevent this by checking on the SynchronizationContext.
+													 ?? (mDefineRulesCommand = System.Threading.SynchronizationContext.Current == null
+														 ? null : new DelegateCommand(DefineRules, CanDefineRules));
 
 		/// <summary>
 		/// </summary>
@@ -220,18 +235,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets ReApplyRules command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand ReApplyRulesCommand
-		{
-			get
-			{
-				return mReApplyRulesCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(ReApplyRules, CanReApplyRules));
-			}
-		}
+		public DelegateCommand ReApplyRulesCommand => mReApplyRulesCommand
+													  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													  // is not yet bound to the View, the command is instantiated in a different thread than the
+													  // main thread. Prevent this by checking on the SynchronizationContext.
+													  ?? (mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
+														  ? null : new DelegateCommand(ReApplyRules, CanReApplyRules));
 
 		/// <summary>
 		/// </summary>
@@ -306,13 +315,7 @@ namespace BookKeeping.Client.ViewModels
 
 		#region IRegionMemberLifetime
 
-		public bool KeepAlive
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public bool KeepAlive => true;
 
 		#endregion IRegionMemberLifetime
 	}
