@@ -255,6 +255,38 @@ namespace BookKeeping.Client.ViewModels
 
 		#endregion Command ReApplyRulesCommand
 
+		#region Command SearchCommand
+
+		/// <summary>Field for the Search command.
+		/// </summary>
+		private DelegateCommand mSearchCommand;
+
+		/// <summary>Gets Search command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand SearchCommand => mSearchCommand
+												// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												// is not yet bound to the View, the command is instantiated in a different thread than the
+												// main thread. Prevent this by checking on the SynchronizationContext.
+												?? (mSearchCommand = System.Threading.SynchronizationContext.Current == null
+													? null : new DelegateCommand(Search, CanSearch));
+
+		/// <summary>
+		/// </summary>
+		private void Search()
+		{
+			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(GlobalSearchView).FullName);
+		}
+
+		/// <summary>Determines whether the Search command can be executed.
+		/// </summary>
+		private bool CanSearch()
+		{
+			return true;
+		}
+
+		#endregion Command SearchCommand
+
 		#region INavigationAware
 
 		public void OnNavigatedTo(NavigationContext navigationContext)

@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="BookKeeping.Client.Views.GlobalSearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:BookKeeping.Client.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="1024">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Zoeken" FontSize="32" HorizontalAlignment="Center"></TextBlock>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Naamregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="1" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.NameRule}"
+                     IsEnabled="{Binding IsEditing}" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="Rekeningregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="2" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.AccountRule}"
+                     IsEnabled="{Binding IsEditing}" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Tegenrekeningregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="3" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.CounterAccountRule}"
+                     IsEnabled="{Binding IsEditing}" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Code-regel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="4" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.CodeRule}"
+                     IsEnabled="{Binding IsEditing}" />
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="Bedragregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="5" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.AmountRule, Mode=TwoWay}"
+                     IsEnabled="{Binding IsEditing}" />
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="Mutatiesoortregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="6" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.MutationKindRule}"
+                     IsEnabled="{Binding IsEditing}" />
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="Opmerkingregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="7" Grid.Column="2" Margin="4"
+                     Text="{Binding SelectedRule.RemarksRule}"
+                     IsEnabled="{Binding IsEditing}" />
+
+            <StackPanel Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Style="{StaticResource MediumSquareButtonStyle}"
+                        Command="{Binding ClearCommand}">
+                    <Image Source="{StaticResource imgRefresh}" />
+                </Button>
+
+                <Button Style="{StaticResource MediumSquareButtonStyle}"
+                        Command="{Binding SearchCommand}">
+                    <Image Source="{StaticResource imgSearch}" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <DataGrid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10"
+                  ItemsSource="{Binding MatchingTransactions}" AlternatingRowBackground="#FFD3E69F" />
+
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource MediumSquareButtonStyle}"
+                    Command="{Binding NavigateBackCommand}">
+                <Image Source="{StaticResource imgReturn}" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

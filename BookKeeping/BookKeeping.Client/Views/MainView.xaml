@@ -23,6 +23,7 @@
                           HorizontalAlignment="Left"
                           Command="{Binding ExportDataCommand}" />
                 <MenuItem Header="Regels opnieuw toepassen" HorizontalAlignment="Left" Command="{Binding ReApplyRulesCommand}" />
+                <MenuItem Header="Zoeken" HorizontalAlignment="Left" Command="{Binding SearchCommand}"/>
             </MenuItem>
         </Menu>
 

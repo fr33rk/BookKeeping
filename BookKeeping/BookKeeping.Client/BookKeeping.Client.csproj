@@ -124,6 +124,7 @@
     <Compile Include="Models\ProcessingRuleVM.cs" />
     <Compile Include="ViewModels\DefineEntriesVM.cs" />
     <Compile Include="ViewModels\DefineRulesVM.cs" />
+    <Compile Include="ViewModels\GlobalSearchVM.cs" />
     <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ExampleVM.cs" />
@@ -134,6 +135,9 @@
     </Compile>
     <Compile Include="Views\DefineRulesView.xaml.cs">
       <DependentUpon>DefineRulesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GlobalSearchView.xaml.cs">
+      <DependentUpon>GlobalSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImportDataView.xaml.cs">
       <DependentUpon>ImportDataView.xaml</DependentUpon>
@@ -174,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DefineRulesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GlobalSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

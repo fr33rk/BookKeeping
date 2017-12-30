@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookKeeping.Client.Models;
+using BookKeeping.Client.ViewModels;
 using BookKeeping.Client.Views;
 using Microsoft.Practices.Unity;
 using PL.BookKeeping.Entities;
@@ -31,7 +32,8 @@ namespace BookKeeping.Client
             mContainer.RegisterType<object, DefineEntriesView>(typeof(DefineEntriesView).FullName);
             mContainer.RegisterType<object, DefineRulesView>(typeof(DefineRulesView).FullName);
 			mContainer.RegisterType<object, ReApplyRulesView>(typeof(ReApplyRulesView).FullName);
-
+	        mContainer.RegisterType<object, GlobalSearchView>(typeof(GlobalSearchView).FullName);
+		        
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 
             Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
@@ -39,6 +41,8 @@ namespace BookKeeping.Client
             Mapper.CreateMap<EntryVM, Entry>();
             Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
             Mapper.CreateMap<ProcessingRuleVM, ProcessingRule>();
+	        Mapper.CreateMap<GlobalSearchView, GlobalSearchVM>();
+	        Mapper.CreateMap<GlobalSearchVM, GlobalSearchView>();
         }
     }
 }
