@@ -9,7 +9,7 @@ namespace BookKeeping.Client.Views
 	/// </summary>
 	public partial class GlobalSearchView : UserControl
 	{
-		public GlobalSearchView(GlobalSearchVM viewModel)
+		public GlobalSearchView(GlobalSearchVm viewModel)
 		{
 			InitializeComponent();
 

@@ -1,11 +1,32 @@
-﻿using PL.Common.Prism;
+﻿using System.Collections.ObjectModel;
+using BookKeeping.Client.Models;
+using PL.BookKeeping.Entities;
+using PL.BookKeeping.Infrastructure.Services.DataServices;
+using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
 
 namespace BookKeeping.Client.ViewModels
 {
-	public class GlobalSearchVM : ViewModelBase, INavigationAware
+	public class GlobalSearchVm : ViewModelBase, INavigationAware
 	{
+		#region Fields
+
+		private readonly ITransactionDataService mTransactionDataService;
+
+		#endregion Fields
+
+		#region Constructor(s)
+
+		public GlobalSearchVm(ITransactionDataService transactionDataService)
+		{
+			mTransactionDataService = transactionDataService;
+			MatchingTransactions = new ObservableCollection<Transaction>();
+			SelectedRule = new ProcessingRuleVM();
+		}
+
+		#endregion Constructor(s)
+
 		#region INavigationAware
 
 		private IRegionNavigationService mNavigationService;
@@ -25,6 +46,31 @@ namespace BookKeeping.Client.ViewModels
 		}
 
 		#endregion INavigationAware
+
+		#region SelectedRule
+
+		private ProcessingRuleVM mSelectedRule;
+
+		public ProcessingRuleVM SelectedRule
+		{
+			get => mSelectedRule;
+			private set
+			{
+				mSelectedRule = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		#endregion SelectedRule
+
+		#region Property Matching Transactions
+
+		public ObservableCollection<Transaction> MatchingTransactions
+		{
+			get; private set;
+		}
+
+		#endregion Property Matching Transactions
 
 		#region Command NavigateBackCommand
 
@@ -60,5 +106,78 @@ namespace BookKeeping.Client.ViewModels
 		}
 
 		#endregion Command NavigateBackCommand
+
+		#region Command ClearCommand
+
+		/// <summary>Field for the Clear command.
+		/// </summary>
+		private DelegateCommand mClearCommand;
+
+		/// <summary>Gets Clear command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand ClearCommand => mClearCommand
+												// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												// is not yet bound to the View, the command is instantiated in a different thread than the
+												// main thread. Prevent this by checking on the SynchronizationContext.
+												?? (mClearCommand = System.Threading.SynchronizationContext.Current == null
+													? null : new DelegateCommand(Clear, CanClear));
+
+		/// <summary>
+		/// </summary>
+		private void Clear()
+		{
+			SelectedRule = new ProcessingRuleVM();
+		}
+
+		/// <summary>Determines whether the Clear command can be executed.
+		/// </summary>
+		private bool CanClear()
+		{
+			return true;
+		}
+
+		#endregion Command ClearCommand
+
+		#region Command SearchCommand
+
+		/// <summary>Field for the Search command.
+		/// </summary>
+		private DelegateCommand mSearchCommand;
+
+		/// <summary>Gets Search command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand SearchCommand => mSearchCommand
+												// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												// is not yet bound to the View, the command is instantiated in a different thread than the
+												// main thread. Prevent this by checking on the SynchronizationContext.
+												?? (mSearchCommand = System.Threading.SynchronizationContext.Current == null
+													? null : new DelegateCommand(Search, CanSearch));
+
+		/// <summary>
+		/// </summary>
+		private void Search()
+		{
+			MatchingTransactions.Clear();
+
+			if (mSelectedRule != null)
+			{
+				var transactions = mTransactionDataService.GetAll();
+
+				var result = mSelectedRule.FilterList(ref transactions, null);
+
+				MatchingTransactions.AddRange(result);
+			}
+		}
+
+		/// <summary>Determines whether the Search command can be executed.
+		/// </summary>
+		private bool CanSearch()
+		{
+			return true;
+		}
+
+		#endregion Command SearchCommand
 	}
 }

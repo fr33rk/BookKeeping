@@ -41,8 +41,8 @@ namespace BookKeeping.Client
             Mapper.CreateMap<EntryVM, Entry>();
             Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
             Mapper.CreateMap<ProcessingRuleVM, ProcessingRule>();
-	        Mapper.CreateMap<GlobalSearchView, GlobalSearchVM>();
-	        Mapper.CreateMap<GlobalSearchVM, GlobalSearchView>();
+	        Mapper.CreateMap<GlobalSearchView, GlobalSearchVm>();
+	        Mapper.CreateMap<GlobalSearchVm, GlobalSearchView>();
         }
     }
 }
