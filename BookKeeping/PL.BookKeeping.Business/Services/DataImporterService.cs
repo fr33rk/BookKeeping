@@ -153,7 +153,7 @@ namespace PL.BookKeeping.Business.Services
 			retValue.CounterAccount = values[3];
 			retValue.Code = values[4];
 			retValue.MutationType = values[5].ToUpper() == "AF" ? MutationType.Debit : MutationType.Credit;
-			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.GetCultureInfo("nl-NL")); // CultureInfo.InvariantCulture);
+			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.GetCultureInfo("nl-NL")); // ING exports using a comma as decimal sepparator.
 			retValue.MutationKind = values[7];
 			retValue.Remarks = values[8];
 

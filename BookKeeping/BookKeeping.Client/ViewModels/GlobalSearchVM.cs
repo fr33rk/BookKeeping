@@ -67,7 +67,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public ObservableCollection<Transaction> MatchingTransactions
 		{
-			get; private set;
+			get;
 		}
 
 		#endregion Property Matching Transactions
