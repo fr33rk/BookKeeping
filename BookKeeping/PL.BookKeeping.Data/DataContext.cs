@@ -14,7 +14,7 @@ namespace PL.BookKeeping.Data
 		public User CurrentUser { get; set; }
 
 		public DataContext()
-			: base(new MySqlConnection(@"Server=Helium;Database=Bookkeeping;Uid=Bookkeeper;Password=books"), true)
+			: base(new MySqlConnection(@"Server=192.168.5.7;Database=Bookkeeping;Uid=Bookkeeper;Password=books"), true)
 		{
 			this.Configuration.LazyLoadingEnabled = false;
 		}
