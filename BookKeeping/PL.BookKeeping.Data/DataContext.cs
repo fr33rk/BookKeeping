@@ -1,5 +1,4 @@
-﻿using FirebirdSql.Data.FirebirdClient;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using System.Data.Entity;
 using MySql.Data.MySqlClient;
 using MySql.Data.Entity;
