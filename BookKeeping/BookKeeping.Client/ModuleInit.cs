@@ -36,13 +36,17 @@ namespace BookKeeping.Client
 		        
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 
-            Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
-            Mapper.CreateMap<Entry, EntryVM>();
-            Mapper.CreateMap<EntryVM, Entry>();
-            Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
-            Mapper.CreateMap<ProcessingRuleVM, ProcessingRule>();
-	        Mapper.CreateMap<GlobalSearchView, GlobalSearchVm>();
-	        Mapper.CreateMap<GlobalSearchVm, GlobalSearchView>();
+	        Mapper.Initialize(config => {
+		        config.CreateMap<ProcessingRule, ProcessingRuleVM>();
+		        config.CreateMap<Entry, EntryVM>();
+		        config.CreateMap<EntryVM, Entry>();
+		        config.CreateMap<ProcessingRule, ProcessingRuleVM>();
+		        config.CreateMap<ProcessingRuleVM, ProcessingRule>();
+		        config.CreateMap<GlobalSearchView, GlobalSearchVm>();
+				config.CreateMap<GlobalSearchVm, GlobalSearchView>();
+	        });
+
+
         }
     }
 }
