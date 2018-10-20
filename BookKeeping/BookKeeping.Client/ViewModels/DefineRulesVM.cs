@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using Stateless.Graph;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -58,7 +59,7 @@ namespace BookKeeping.Client.ViewModels
 
 			InitializeStateMachine();
 
-			mLogFile.Debug(string.Format("DefineRulesVM.MainStm: {0}", mMainStm.ToDotGraph()));
+			mLogFile.Debug(string.Format("DefineRulesVM.MainStm: {0}", UmlDotGraph.Format(mMainStm.GetInfo())));
 		}
 
 		#endregion Constructor(s)
