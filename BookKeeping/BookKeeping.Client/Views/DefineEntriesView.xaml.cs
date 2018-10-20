@@ -11,8 +11,8 @@ namespace BookKeeping.Client.Views
     public partial class DefineEntriesView : UserControl
     {
         public static readonly DependencyProperty SelectedEntry =
-            DependencyProperty.Register("SelectedEntry", typeof(EntryVM),
-            typeof(DefineEntriesView), new PropertyMetadata(default(EntryVM)));
+            DependencyProperty.Register("SelectedEntry", typeof(EntryVm),
+            typeof(DefineEntriesView), new PropertyMetadata(default(EntryVm)));
 
         public DefineEntriesView(DefineEntriesVM vm)
         {

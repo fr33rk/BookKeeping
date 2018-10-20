@@ -112,8 +112,8 @@
     </ApplicationDefinition>
     <Compile Include="Models\BaseTracableObjectVMOfT.cs" />
     <Compile Include="Models\EntryOfYearVM.cs" />
-    <Compile Include="Models\EntryVM.cs" />
-    <Compile Include="Models\ProcessingRuleVM.cs" />
+    <Compile Include="Models\EntryVm.cs" />
+    <Compile Include="Models\ProcessingRuleVm.cs" />
     <Compile Include="ViewModels\DefineEntriesVM.cs" />
     <Compile Include="ViewModels\DefineRulesVM.cs" />
     <Compile Include="ViewModels\GlobalSearchVM.cs" />

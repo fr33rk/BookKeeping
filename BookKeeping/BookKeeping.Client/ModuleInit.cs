@@ -37,11 +37,11 @@ namespace BookKeeping.Client
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 
 	        Mapper.Initialize(config => {
-		        config.CreateMap<ProcessingRule, ProcessingRuleVM>();
-		        config.CreateMap<Entry, EntryVM>();
-		        config.CreateMap<EntryVM, Entry>();
-		        config.CreateMap<ProcessingRule, ProcessingRuleVM>();
-		        config.CreateMap<ProcessingRuleVM, ProcessingRule>();
+		        config.CreateMap<ProcessingRule, ProcessingRuleVm>();
+		        config.CreateMap<Entry, EntryVm>();
+		        config.CreateMap<EntryVm, Entry>();
+		        config.CreateMap<ProcessingRule, ProcessingRuleVm>();
+		        config.CreateMap<ProcessingRuleVm, ProcessingRule>();
 		        config.CreateMap<GlobalSearchView, GlobalSearchVm>();
 				config.CreateMap<GlobalSearchVm, GlobalSearchView>();
 	        });

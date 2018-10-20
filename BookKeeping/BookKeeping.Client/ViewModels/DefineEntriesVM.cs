@@ -128,7 +128,7 @@ namespace BookKeeping.Client.ViewModels
 
 			mEntryDataService.Add(newEntry);
 
-			SelectedEntry.ChildEntryVms.Add(Mapper.Map<EntryVM>(newEntry));
+			SelectedEntry.ChildEntryVms.Add(Mapper.Map<EntryVm>(newEntry));
 
 			mEntriesHaveChanged = true;
 		}
@@ -202,15 +202,15 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property Entries
 
-		public ObservableCollection<EntryVM> Entries { get; set; }
+		public ObservableCollection<EntryVm> Entries { get; set; }
 
 		#endregion Property Entries
 
 		#region Property SelectedEntry
 
-		private EntryVM mSelectedEntry;
+		private EntryVm mSelectedEntry;
 
-		public EntryVM SelectedEntry
+		public EntryVm SelectedEntry
 		{
 			get => mSelectedEntry;
 			set
@@ -248,7 +248,7 @@ namespace BookKeeping.Client.ViewModels
 
 				mEntryDataService.Update(entry);
 
-				var entryVm = EntryVM.FromEntity(entry);
+				var entryVm = EntryVm.FromEntity(entry);
 
 				var rootInList = GetRootEntryOf(entryVm);
 
@@ -265,7 +265,7 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property AttachedRules
 
-		public ObservableCollection<ProcessingRuleVM> AttachedProcessingRules { get; private set; } = new ObservableCollection<ProcessingRuleVM>();
+		public ObservableCollection<ProcessingRuleVm> AttachedProcessingRules { get; private set; } = new ObservableCollection<ProcessingRuleVm>();
 
 		#endregion Property AttachedRules
 
@@ -279,22 +279,22 @@ namespace BookKeeping.Client.ViewModels
 
 				foreach (var rule in mProcessingRuleDataService.GetByEntry(mSelectedEntry.ToEntity()))
 				{
-					AttachedProcessingRules.Add(ProcessingRuleVM.FromEntity(rule));
+					AttachedProcessingRules.Add(ProcessingRuleVm.FromEntity(rule));
 				}
 			}
 		}
 
 		private void LoadData()
 		{
-			Entries = new ObservableCollection<EntryVM>();
+			Entries = new ObservableCollection<EntryVm>();
 
 			foreach (var rootEntry in mEntryDataService.GetRootEntries())
 			{
-				Entries.Add(Mapper.Map<EntryVM>(rootEntry));
+				Entries.Add(Mapper.Map<EntryVm>(rootEntry));
 			}
 		}
 
-		private EntryVM GetRootEntryOf(EntryVM child)
+		private EntryVm GetRootEntryOf(EntryVm child)
 		{
 			foreach (var entryVm in Entries)
 			{

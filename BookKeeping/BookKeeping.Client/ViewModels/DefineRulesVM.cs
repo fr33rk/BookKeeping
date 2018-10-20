@@ -40,7 +40,7 @@ namespace BookKeeping.Client.ViewModels
 		private readonly IPeriodDataService mPeriodDataService;
 		private readonly ITransactionDataService mTransactionDataService;
 		private readonly ILogFile mLogFile;
-		private ProcessingRuleVM mSavedProcessingRuleVM;
+		private ProcessingRuleVm mSavedProcessingRuleVM;
 
 		#endregion Fields
 
@@ -394,9 +394,9 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property DefinedRules
 
-		private ObservableCollection<ProcessingRuleVM> mDefinedRules;
+		private ObservableCollection<ProcessingRuleVm> mDefinedRules;
 
-		public ObservableCollection<ProcessingRuleVM> DefinedRules
+		public ObservableCollection<ProcessingRuleVm> DefinedRules
 		{
 			get => mDefinedRules;
 			private set
@@ -410,9 +410,9 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property SelectedRule
 
-		private ProcessingRuleVM mSelectedRule;
+		private ProcessingRuleVm mSelectedRule;
 
-		public ProcessingRuleVM SelectedRule
+		public ProcessingRuleVm SelectedRule
 		{
 			get => mSelectedRule;
 			set
@@ -443,7 +443,7 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property AvailableEntries
 
-		public ObservableCollection<EntryVM> AvailableEntries
+		public ObservableCollection<EntryVm> AvailableEntries
 		{
 			get; private set;
 		}
@@ -452,9 +452,9 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property SeletedEntry
 
-		private EntryVM mSelectedEntry;
+		private EntryVm mSelectedEntry;
 
-		public EntryVM SelectedEntry
+		public EntryVm SelectedEntry
 		{
 			get => mSelectedEntry;
 			set
@@ -526,24 +526,24 @@ namespace BookKeeping.Client.ViewModels
 		private void loadData()
 		{
 			mSelectedRule = null;
-			DefinedRules = new ObservableCollection<ProcessingRuleVM>();
+			DefinedRules = new ObservableCollection<ProcessingRuleVm>();
 
 			foreach (var rule in mProcessingRuleDataService.GetAllSorted())
 			{
-				DefinedRules.Add(Mapper.Map<ProcessingRuleVM>(rule));
+				DefinedRules.Add(Mapper.Map<ProcessingRuleVm>(rule));
 			}
 
-			var unsortedAvailableEntries = new List<EntryVM>();
+			var unsortedAvailableEntries = new List<EntryVm>();
 
 			// Available entries.
 			foreach (var entry in mEntryDataService.Get3rdLevelEntries())
 			{
-				unsortedAvailableEntries.Add(Mapper.Map<EntryVM>(entry));
+				unsortedAvailableEntries.Add(Mapper.Map<EntryVm>(entry));
 			}
 
-			AvailableEntries = new ObservableCollection<EntryVM>(unsortedAvailableEntries.OrderBy(e => e.RouteString));
+			AvailableEntries = new ObservableCollection<EntryVm>(unsortedAvailableEntries.OrderBy(e => e.RouteString));
 
-			AvailableEntries.Insert(0, new EntryVM() { Key = cIgnoreKey, Description = "Negeren" });
+			AvailableEntries.Insert(0, new EntryVm() { Key = cIgnoreKey, Description = "Negeren" });
 
 			// Available periods
 			var availableYears = mPeriodDataService.GetAvailableYears();
@@ -566,7 +566,7 @@ namespace BookKeeping.Client.ViewModels
 		{
 			mSavedProcessingRuleVM = mSelectedRule;
 
-			var newRule = new ProcessingRuleVM();
+			var newRule = new ProcessingRuleVm();
 			var index = DefinedRules.IndexOf(SelectedRule);
 			newRule.Priority = index + 1;
 			DefinedRules.Insert(index, newRule);
@@ -579,7 +579,7 @@ namespace BookKeeping.Client.ViewModels
 
 			// Reload the rule from the database so that it is managed by EF.
 			//SelectedRule = SelectedRule.Clone();
-			SelectedRule = ProcessingRuleVM.FromEntity(mProcessingRuleDataService.GetByKey(SelectedRule.Key, true));
+			SelectedRule = ProcessingRuleVm.FromEntity(mProcessingRuleDataService.GetByKey(SelectedRule.Key, true));
 		}
 
 		private void saveRule()
@@ -588,7 +588,7 @@ namespace BookKeeping.Client.ViewModels
 
 			// nullify empty strings
 			var ruleToSave = SelectedRule.NullifyEmptyStrings().ToEntity();
-			ProcessingRuleVM ruleToReplace = null;
+			ProcessingRuleVm ruleToReplace = null;
 
 			if (SelectedRule.Key == 0)
 			{
@@ -612,9 +612,9 @@ namespace BookKeeping.Client.ViewModels
 			if (saved)
 			{
 				// Replace the element in the DefinedRules to update the list in the view.
-				var savedRuleVM = ProcessingRuleVM.FromEntity(ruleToSave);
+				var savedRuleVM = ProcessingRuleVm.FromEntity(ruleToSave);
 				DefinedRules.Replace(ruleToReplace, savedRuleVM);
-				SelectedRule = ProcessingRuleVM.FromEntity(ruleToSave);
+				SelectedRule = ProcessingRuleVm.FromEntity(ruleToSave);
 				mMainStm.Fire(Trigger.SaveDone);
 			}
 			else
@@ -657,7 +657,7 @@ namespace BookKeeping.Client.ViewModels
 			mMainStm.Fire(Trigger.DeleteDone);
 		}
 
-		private void swap(ProcessingRuleVM swapThisVM, ProcessingRuleVM withThatVM)
+		private void swap(ProcessingRuleVm swapThisVM, ProcessingRuleVm withThatVM)
 		{
 			var swapThis = SelectedRule.ToEntity();
 			var withThat = withThatVM.ToEntity();
@@ -665,8 +665,8 @@ namespace BookKeeping.Client.ViewModels
 			// Update the database.
 			mProcessingRuleDataService.SwapByPriority(swapThis, withThat);
 
-			var newSwapThisVM = ProcessingRuleVM.FromEntity(swapThis);
-			var newWithThatVM = ProcessingRuleVM.FromEntity(withThat);
+			var newSwapThisVM = ProcessingRuleVm.FromEntity(swapThis);
+			var newWithThatVM = ProcessingRuleVm.FromEntity(withThat);
 
 			// Replace the VM's
 			DefinedRules.Replace(swapThisVM, newSwapThisVM);
