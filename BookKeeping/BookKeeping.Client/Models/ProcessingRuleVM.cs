@@ -116,7 +116,7 @@ namespace BookKeeping.Client.Models
 
 			var retValue = transactions.Where(t =>
 			{
-				bool isMatch = true;
+				var isMatch = true;
 
 				if (year.HasValue)
 				{

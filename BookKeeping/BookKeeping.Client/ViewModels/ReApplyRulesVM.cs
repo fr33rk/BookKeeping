@@ -19,9 +19,9 @@ namespace BookKeeping.Client.ViewModels
 		#region Fields
 
 		private IRegionNavigationService mNavigationService;
-		private ITransactionDataService mTransactionDataService;
-		private IDataProcessorService mDataProcessorService;
-		private IEntryPeriodDataService mEntryPeriodDataService;
+		private readonly ITransactionDataService mTransactionDataService;
+		private readonly IDataProcessorService mDataProcessorService;
+		private readonly IEntryPeriodDataService mEntryPeriodDataService;
 		private IPeriodDataService mPeriodDataService;
 		private IList<Transaction> mSelectedTransactions;
 
@@ -84,13 +84,7 @@ namespace BookKeeping.Client.ViewModels
 
 		#region IDateErrorInfor
 
-		public string Error
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public string Error => null;
 
 		public string this[string columnName]
 		{
@@ -120,19 +114,13 @@ namespace BookKeeping.Client.ViewModels
 
 		/// <summary>Gets NavigateBack command.
 		/// </summary>
-		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand NavigateBackCommand
-		{
-			get
-			{
-				return this.mNavigateBackCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.NavigateBack, this.CanNavigateBack));
-			}
-		}
+		[Browsable(false)]
+		public DelegateCommand NavigateBackCommand => mNavigateBackCommand
+		                                              // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                              // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                              // main thread. Prevent this by checking on the SynchronizationContext.
+		                                              ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+			                                              ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
 
 		/// <summary>
 		/// </summary>
@@ -161,19 +149,13 @@ namespace BookKeeping.Client.ViewModels
 
 		/// <summary>Gets ReApplyRules command.
 		/// </summary>
-		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand ReApplyRulesCommand
-		{
-			get
-			{
-				return this.mReApplyRulesCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.ReApplyRules, this.CanReApplyRules));
-			}
-		}
+		[Browsable(false)]
+		public DelegateCommand ReApplyRulesCommand => mReApplyRulesCommand
+		                                              // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                              // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                              // main thread. Prevent this by checking on the SynchronizationContext.
+		                                              ?? (mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
+			                                              ? null : new DelegateCommand(ReApplyRules, CanReApplyRules));
 
 		/// <summary>
 		/// </summary>
@@ -198,10 +180,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public bool ReApplyToAll
 		{
-			get
-			{
-				return mReApplyToAll;
-			}
+			get => mReApplyToAll;
 			set
 			{
 				if (mReApplyToAll != value)
@@ -220,10 +199,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public DateTime StartDate
 		{
-			get
-			{
-				return mStartDate;
-			}
+			get => mStartDate;
 			set
 			{
 				if (mStartDate != value)
@@ -242,10 +218,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public DateTime EndDate
 		{
-			get
-			{
-				return mEndDate;
-			}
+			get => mEndDate;
 			set
 			{
 				if (mEndDate != value)
@@ -265,10 +238,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public int TransactionCount
 		{
-			get
-			{
-				return mTransactionCount;
-			}
+			get => mTransactionCount;
 			set
 			{
 				if (mTransactionCount != value)
@@ -287,10 +257,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public int ProcessedCount
 		{
-			get
-			{
-				return mProcessedCount;
-			}
+			get => mProcessedCount;
 			set
 			{
 				mProcessedCount = value;
@@ -306,10 +273,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public int IgnoredCount
 		{
-			get
-			{
-				return mIgnoredCount;
-			}
+			get => mIgnoredCount;
 			set
 			{
 				mIgnoredCount = value;

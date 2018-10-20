@@ -10,8 +10,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
 {
     public class EntryDataService : BaseTraceableObjectDataServiceOfT<Entry>, IEntryDataService
     {
-        private Lazy<IPeriodDataService> mPeriodDataService;
-        private IEntryPeriodDataService mEntryPeriodDataService;
+        private readonly Lazy<IPeriodDataService> mPeriodDataService;
+        private readonly IEntryPeriodDataService mEntryPeriodDataService;
 
         #region Constructor(s)
 
@@ -27,7 +27,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         public IList<Entry> GetRootEntries()
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var root = GetAll().Where(e => e.ParentEntry == null);
 
@@ -77,7 +77,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         public IList<Entry> Get3rdLevelEntries()
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var root = GetAll()
                     .Join(GetAll(), e => e.ParentEntryKey, e2 => e2.Key, (e, e2) => new { Entry = e, Entry2 = e2 })

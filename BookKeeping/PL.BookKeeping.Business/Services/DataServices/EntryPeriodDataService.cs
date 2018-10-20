@@ -50,7 +50,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<EntryPeriod> GetByEntryAndYear(Entry entry, int year)
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var repository = unitOfWork.GetRepository<EntryPeriod>();
 				var qry = repository.GetQuery()
@@ -64,7 +64,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<EntryPeriod> GetByYear(int year)
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var repository = unitOfWork.GetRepository<EntryPeriod>();
 				var qry = repository.GetQuery()

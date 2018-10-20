@@ -30,11 +30,8 @@ namespace PL.BookKeeping.Entities
 
         public string AmountRule
         {
-            get
-            {
-                return mAmountRule?.ToString();
-            }
-            set
+            get => mAmountRule?.ToString();
+	        set
             {
                 if (value != null)
                 {
@@ -45,7 +42,7 @@ namespace PL.BookKeeping.Entities
 
                     if (!mAmountRule.FromString(value))
                     {
-                        throw new ArgumentException(string.Format("Invalid amount rule: {0}", value));
+                        throw new ArgumentException($"Invalid amount rule: {value}");
                     }
                 }
             }
@@ -62,7 +59,7 @@ namespace PL.BookKeeping.Entities
         /// <returns>True, when the rule applies.</returns>
         public bool AppliesTo(Transaction transaction)
         {
-            bool retValue = true;
+            var retValue = true;
 
             if (NameRule != null)
                 retValue &= Regex.IsMatch(transaction.Name, NameRule);

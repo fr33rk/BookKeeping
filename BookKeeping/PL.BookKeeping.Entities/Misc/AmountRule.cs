@@ -33,15 +33,13 @@ namespace PL.BookKeeping.Entities.Misc
 			{
 				if (mMinOperator == Operator.Unspecified)
 				{
-					return string.Format("x {0} {1}", operatorToString(mMaxOperator), mMaxValue.Value.ToString("0.00", CultureInfo.InvariantCulture));
+					return
+						$"x {operatorToString(mMaxOperator)} {mMaxValue.Value.ToString("0.00", CultureInfo.InvariantCulture)}";
 				}
 				else
 				{
-					return String.Format("{0} {1} x {2} {3}",
-						mMinValue.Value.ToString("0.00", CultureInfo.InvariantCulture),
-						operatorToString(mMinOperator),
-						operatorToString(mMaxOperator),
-						mMaxValue.Value.ToString("0.00", CultureInfo.InvariantCulture));
+					return
+						$"{mMinValue.Value.ToString("0.00", CultureInfo.InvariantCulture)} {operatorToString(mMinOperator)} x {operatorToString(mMaxOperator)} {mMaxValue.Value.ToString("0.00", CultureInfo.InvariantCulture)}";
 				}
 			}
 
@@ -50,7 +48,7 @@ namespace PL.BookKeeping.Entities.Misc
 
 		public bool FromString(string expression)
 		{
-			bool retValue = false;
+			var retValue = false;
 
 			if (expression != null)
 			{
@@ -98,7 +96,7 @@ namespace PL.BookKeeping.Entities.Misc
 
 		public bool IsMatch(decimal value)
 		{
-			bool retValue = false;
+			var retValue = false;
 
 			if (isValid())
 			{

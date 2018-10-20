@@ -5,7 +5,7 @@ namespace PL.BookKeeping.Data.Migrations
 	using System;
 	using System.Data.Entity.Migrations;
 
-	internal sealed class Configuration : DbMigrationsConfiguration<PL.BookKeeping.Data.DataContext>
+	internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
 	{
 		public Configuration()
 		{
@@ -13,7 +13,7 @@ namespace PL.BookKeeping.Data.Migrations
 			ContextKey = "PL.BookKeeping.Data.DataContext";
 		}
 
-		protected override void Seed(PL.BookKeeping.Data.DataContext context)
+		protected override void Seed(DataContext context)
 		{
 			//  This method will be called after migrating to the latest version.
 

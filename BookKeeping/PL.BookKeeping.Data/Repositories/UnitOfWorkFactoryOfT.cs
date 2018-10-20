@@ -11,7 +11,7 @@ namespace PL.BookKeeping.Data.Repositories
     public class UnitOfWorkFactoryOfT<TContext> : IUnitOfWorkFactory
         where TContext : DbContext
     {
-        private ILogFile mLogFile;
+        private readonly ILogFile mLogFile;
 
         public UnitOfWorkFactoryOfT(ILogFile logFile)
         {
@@ -31,7 +31,7 @@ namespace PL.BookKeeping.Data.Repositories
         /// <returns>The unit of work.</returns>
         public virtual IUnitOfWork Create()
         {
-            TContext context = Activator.CreateInstance<TContext>();
+            var context = Activator.CreateInstance<TContext>();
             var uow = new UnitOfWork(context, mLogFile);
 
             //Set the current user.

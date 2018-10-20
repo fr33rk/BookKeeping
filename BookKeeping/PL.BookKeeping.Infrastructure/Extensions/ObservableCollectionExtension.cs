@@ -11,7 +11,7 @@ namespace PL.BookKeeping.Infrastructure.Extensions
     {
         public static bool Replace<T>(this ObservableCollection<T> observableCollection, T replace, T withThis)
         {
-            int index = observableCollection.IndexOf(replace);
+            var index = observableCollection.IndexOf(replace);
 
             if (index >= 0)
             {
@@ -27,8 +27,8 @@ namespace PL.BookKeeping.Infrastructure.Extensions
         {
             if ((swapThis != null) && (withThat != null))
             {
-                int swapThisIndex = observableCollection.IndexOf(swapThis);
-                int withThatIndex = observableCollection.IndexOf(withThat);
+                var swapThisIndex = observableCollection.IndexOf(swapThis);
+                var withThatIndex = observableCollection.IndexOf(withThat);
                 if ((swapThisIndex > -1) && (withThatIndex > -1))
                 {
                     observableCollection[withThatIndex] = swapThis;
@@ -37,7 +37,7 @@ namespace PL.BookKeeping.Infrastructure.Extensions
                 }
             }
 
-            throw new InvalidOperationException(string.Format("Unable to swap {0} and {1}", swapThis.ToString(), withThat.ToString()));
+            throw new InvalidOperationException($"Unable to swap {swapThis.ToString()} and {withThat.ToString()}");
         }
     }
 }

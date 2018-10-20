@@ -18,7 +18,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// </summary>
         protected IUnitOfWorkFactory mUOWFactory;
 
-        private IAuthorizationService mAuthorizationService;
+        private readonly IAuthorizationService mAuthorizationService;
 
         #endregion Definitions
 
@@ -29,8 +29,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <param name="authorizationService">The authorization service.</param>
         public BaseTraceableObjectDataServiceOfT(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService)
         {
-            this.mUOWFactory = uowFactory;
-            this.mAuthorizationService = authorizationService;
+            mUOWFactory = uowFactory;
+            mAuthorizationService = authorizationService;
         }
 
         #endregion Constructor(s)
@@ -44,7 +44,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         {
             entity = Mark(entity);
 
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
 
@@ -60,7 +60,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <param name="entity">The entity that needs to be updated.</param>
         public virtual bool Update(TEntity entity)
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
 
@@ -77,7 +77,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <exception cref="System.NotImplementedException"></exception>
         public bool Delete(TEntity entity)
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
 
@@ -94,7 +94,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <returns></returns>
         public TEntity GetByKey(int key, bool complete = false)
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
 
@@ -118,7 +118,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// <returns></returns>
         public IList<TEntity> GetAll(bool complete = false)
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<TEntity>();
                 if (!complete)

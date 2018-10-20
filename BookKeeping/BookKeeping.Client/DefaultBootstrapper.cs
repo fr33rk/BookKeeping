@@ -18,8 +18,8 @@ namespace BookKeeping.Client
         {
             base.InitializeShell();
 
-            App.Current.MainWindow = (Window)Shell;
-            App.Current.MainWindow.Show();
+            Application.Current.MainWindow = (Window)Shell;
+            Application.Current.MainWindow.Show();
         }
 
         protected override DependencyObject CreateShell()
@@ -40,8 +40,8 @@ namespace BookKeeping.Client
             // Load business unit first, because the services are used in other modules.
             //AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), this.ModuleCatalog);
 
-            AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), this.ModuleCatalog);
-            AddModuleToCatalog(typeof(BookKeeping.Client.ModuleInit), this.ModuleCatalog);
+            AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), ModuleCatalog);
+            AddModuleToCatalog(typeof(ModuleInit), ModuleCatalog);
         }
 
         /// <summary>Adds the module to catalog with an unique name (AssemblyQualifiedName).</summary>
@@ -50,7 +50,7 @@ namespace BookKeeping.Client
         /// Otherwise ModuleInit has to be named differently in each module.
         private void AddModuleToCatalog(Type moduleType, IModuleCatalog catalog)
         {
-            ModuleInfo NewModuleInfo = new ModuleInfo();
+            var NewModuleInfo = new ModuleInfo();
             NewModuleInfo.ModuleName = moduleType.AssemblyQualifiedName;
             NewModuleInfo.ModuleType = moduleType.AssemblyQualifiedName;
             NewModuleInfo.InitializationMode = InitializationMode.WhenAvailable;

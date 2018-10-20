@@ -27,7 +27,7 @@ namespace BookKeeping.Client.Views
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding binding = new Binding("SelectedEntry");
+            var binding = new Binding("SelectedEntry");
             binding.Mode = BindingMode.OneWayToSource;
             SetBinding(SelectedEntry, binding);
         }

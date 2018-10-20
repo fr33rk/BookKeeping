@@ -9,9 +9,9 @@ namespace BookKeeping.Client
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
-        private DefaultBootstrapper mBootStrapper;
+        private DefaultBootstrapper mBootstrapper;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -26,22 +26,19 @@ namespace BookKeeping.Client
 
             // Set the current user interface culture to the specific culture Russian
             System.Threading.Thread.CurrentThread.CurrentUICulture =
-                new System.Globalization.CultureInfo("en");
+                new CultureInfo("en");
 
             // Configure Bootstrapper
-            mBootStrapper = new DefaultBootstrapper();
-            mBootStrapper.Run();
+            mBootstrapper = new DefaultBootstrapper();
+            mBootstrapper.Run();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            var logFile = mBootStrapper.Container.TryResolve<ILogFile>();
-            if (logFile != null)
-            {
-                logFile.WriteLogEnd();
-            }
+            var logFile = mBootstrapper.Container.TryResolve<ILogFile>();
+	        logFile?.WriteLogEnd();
 
-            base.OnExit(e);
+	        base.OnExit(e);
         }
     }
 }

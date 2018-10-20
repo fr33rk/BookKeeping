@@ -21,7 +21,7 @@ namespace PL.BookKeeping.Business
 		/// <param name="regionManager">The region manager.</param>
 		public ModuleInit(IUnityContainer container)
 		{
-			this.mContainer = container;
+			mContainer = container;
 		}
 
 		public void Initialize()

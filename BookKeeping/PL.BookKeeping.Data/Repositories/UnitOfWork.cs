@@ -14,10 +14,10 @@ namespace PL.BookKeeping.Data.Repositories
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private DbContext _dbContext;
-        private Dictionary<Type, object> _repositories;
+        private readonly DbContext _dbContext;
+        private readonly Dictionary<Type, object> _repositories;
         private bool _disposed;
-        private ILogFile mLogFile;
+        private readonly ILogFile mLogFile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork" /> class.
@@ -29,8 +29,8 @@ namespace PL.BookKeeping.Data.Repositories
             if (dbContext == null)
                 throw new ArgumentNullException("dbContext");
 
-            this._dbContext = dbContext;
-            this._repositories = new Dictionary<Type, object>();
+            _dbContext = dbContext;
+            _repositories = new Dictionary<Type, object>();
             mLogFile = logFile;
         }
 
@@ -38,7 +38,7 @@ namespace PL.BookKeeping.Data.Repositories
         /// <param name="currentUser">The current user.</param>
         public void SetCurrentUser(User currentUser)
         {
-            ((DataContext)this._dbContext).CurrentUser = currentUser;
+            ((DataContext)_dbContext).CurrentUser = currentUser;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace PL.BookKeeping.Data.Repositories
         {
             try
             {
-                this._dbContext.SaveChanges();
+                _dbContext.SaveChanges();
 				return true;
             }
             catch (DbEntityValidationException e)
@@ -58,15 +58,14 @@ namespace PL.BookKeeping.Data.Repositories
 
                 foreach (var eve in e.EntityValidationErrors)
                 {
-                    message = string.Format("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    message =
+	                    $"Entity of type \"{eve.Entry.Entity.GetType().Name}\" in state \"{eve.Entry.State}\" has the following validation errors:";
                     mLogFile.Error(message);
                     Console.WriteLine(message);
 
                     foreach (var ve in eve.ValidationErrors)
                     {
-                        validationError = String.Format("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
+                        validationError = $"- Property: \"{ve.PropertyName}\", Error: \"{ve.ErrorMessage}\"";
                         mLogFile.Error(validationError);
                         Console.WriteLine(validationError);
                     }
@@ -79,8 +78,8 @@ namespace PL.BookKeeping.Data.Repositories
 
                 foreach (var entry in e.Entries)
                 {
-                    message = String.Format("Entity of type \"{0}\" could not be saved due to the following error: {1} \r\nInner exception: {2}",
-                        entry.Entity.GetType().Name, e.Message, e.InnerException.ToString());
+                    message =
+	                    $"Entity of type \"{entry.Entity.GetType().Name}\" could not be saved due to the following error: {e.Message} \r\nInner exception: {e.InnerException}";
                     mLogFile.Error(message);
                     Console.WriteLine(message);
                 }
@@ -98,16 +97,16 @@ namespace PL.BookKeeping.Data.Repositories
         public IEntityRepositoryOfT<TEntity> GetRepository<TEntity>() where TEntity : class, new()
         {
             IEntityRepositoryOfT<TEntity> repository = null;
-            if (this._repositories.ContainsKey(typeof(TEntity)))
+            if (_repositories.ContainsKey(typeof(TEntity)))
             {
-                repository = this._repositories[typeof(TEntity)] as IEntityRepositoryOfT<TEntity>;
+                repository = _repositories[typeof(TEntity)] as IEntityRepositoryOfT<TEntity>;
             }
 
             if (repository == null)
             {
-                repository = new EntityRepositoryOfT<TEntity>(this._dbContext);
+                repository = new EntityRepositoryOfT<TEntity>(_dbContext);
 
-                this._repositories[typeof(TEntity)] = repository;
+                _repositories[typeof(TEntity)] = repository;
             }
 
             return repository;
@@ -138,7 +137,7 @@ namespace PL.BookKeeping.Data.Repositories
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
@@ -148,7 +147,7 @@ namespace PL.BookKeeping.Data.Repositories
                     }
                 }
 
-                this._disposed = true;
+                _disposed = true;
             }
         }
 

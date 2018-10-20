@@ -26,7 +26,7 @@ namespace PL.Common.Prism
 
         private void UpdateCommandCanExecute()
         {
-            foreach (var command in this.GetType()
+            foreach (var command in GetType()
                 .GetProperties()
                 .Where(pi => pi.PropertyType == typeof(DelegateCommand))
                 .Select(pi => pi.GetValue(this))

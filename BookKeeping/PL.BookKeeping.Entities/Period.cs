@@ -37,7 +37,7 @@ namespace PL.BookKeeping.Entities
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", Name, PeriodStart.Year);
+            return $"{Name} {PeriodStart.Year}";
         }
 
         #endregion Helper methods

@@ -21,7 +21,7 @@ namespace BookKeeping.Client.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding binding = new Binding("SelectedColumn");
+            var binding = new Binding("SelectedColumn");
             binding.Mode = BindingMode.OneWayToSource;
             SetBinding(SelectedColumn, binding);
         }

@@ -11,7 +11,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 {
 	public class TransactionDataService : BaseTraceableObjectDataServiceOfT<Transaction>, ITransactionDataService
 	{
-		private ILogFile mLogFile;
+		private readonly ILogFile mLogFile;
 
 		public TransactionDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService, ILogFile logFile)
 			: base(uowFactory, authorizationService)
@@ -19,12 +19,12 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			mLogFile = logFile;
 		}
 
-		new public bool Add(Transaction entity)
+		public new bool Add(Transaction entity)
 		{
-			bool add = true;
+			var add = true;
 
 			// Check if the transaction is already in the database.
-			var currentTransaction = GetByFingerpint(entity.FingerPrint);
+			var currentTransaction = GetByFingerprint(entity.FingerPrint);
 
 			foreach (var transaction in currentTransaction)
 			{
@@ -41,7 +41,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			}
 			else
 			{
-				mLogFile.Info(string.Format("Found duplicate transaction: {0}", entity.ToString()));
+				mLogFile.Info($"Found duplicate transaction: {entity}");
 			}
 
 			return add;
@@ -61,7 +61,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 		{
 			if (entryPeriod != null)
 			{
-				using (var unitOfWork = this.mUOWFactory.Create())
+				using (var unitOfWork = mUOWFactory.Create())
 				{
 					var repository = unitOfWork.GetRepository<Transaction>();
 					var retValue = repository.GetQuery()
@@ -74,9 +74,9 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			return null;
 		}
 
-		public IList<Transaction> GetByFingerpint(int fingerPrint)
+		public IList<Transaction> GetByFingerprint(int fingerPrint)
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var qry = unitOfWork.GetRepository<Transaction>().GetQuery()
 					.Where(t => t.FingerPrint == fingerPrint);
@@ -89,9 +89,9 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public void ResetPeriodEntryLinks()
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
-				unitOfWork.GetRepository<Transaction>().ExecuteProcedure("RESET_TRANSACTIONS", new object[0]);
+				unitOfWork.GetRepository<Transaction>().ExecuteProcedure("RESET_TRANSACTIONS");
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<Transaction> GetOfPeriod(DateTime startDate, DateTime endDate)
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var qry = unitOfWork.GetRepository<Transaction>().GetQuery()
 					.Where(t => (t.Date >= startDate) && (t.Date <= endDate));

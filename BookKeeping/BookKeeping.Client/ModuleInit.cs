@@ -21,8 +21,8 @@ namespace BookKeeping.Client
         /// <param name="regionManager">The region manager.</param>
         public ModuleInit(IUnityContainer container, IRegionManager regionManager)
         {
-            this.mContainer = container;
-            this.mRegionManager = regionManager;
+            mContainer = container;
+            mRegionManager = regionManager;
         }
 
         public void Initialize()

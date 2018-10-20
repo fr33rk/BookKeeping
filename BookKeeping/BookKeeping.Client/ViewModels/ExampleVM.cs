@@ -28,20 +28,14 @@ namespace BookKeeping.Client.ViewModels
         /// <summary>Gets StartMeasurement command.
         /// </summary>
         [System.ComponentModel.Browsable(false)]
-        public DelegateCommand StartMeasurementCommand
-        {
-            get
-            {
-                return this.ExampleCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.ExampleCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.StartExample, this.CanStartExample));
-            }
-        }
+        public DelegateCommand StartMeasurementCommand => ExampleCommand
+                                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                                                          // is not yet bound to the View, the command is instantiated in a different thread than the
+                                                          // main thread. Prevent this by checking on the SynchronizationContext.
+                                                          ?? (ExampleCommand = System.Threading.SynchronizationContext.Current == null
+	                                                          ? null : new DelegateCommand(StartExample, CanStartExample));
 
-        /// <summary>Starts the measurement of a sample.
+	    /// <summary>Starts the measurement of a sample.
         /// </summary>
         private void StartExample()
         {

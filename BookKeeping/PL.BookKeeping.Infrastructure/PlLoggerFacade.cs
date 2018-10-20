@@ -5,7 +5,7 @@ namespace PL.BookKeeping.Infrastructure
 {
     public class PlLoggerFacade : ILoggerFacade
     {
-        private ILogFile mLogFile;
+        private readonly ILogFile mLogFile;
 
         public PlLoggerFacade(ILogFile logFile)
         {

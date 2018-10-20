@@ -15,7 +15,7 @@ namespace PL.BookKeeping.Data
 		public DataContext()
 			: base(new MySqlConnection(@"Server=192.168.5.7;Database=Bookkeeping;Uid=Bookkeeper;Password=books"), true)
 		{
-			this.Configuration.LazyLoadingEnabled = false;
+			Configuration.LazyLoadingEnabled = false;
 		}
 
 		public DbSet<User> Users { get; set; }

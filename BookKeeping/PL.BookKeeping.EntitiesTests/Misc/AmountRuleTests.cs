@@ -10,13 +10,13 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 		[Test, TestCaseSource("IsMatchTestCases")]
 		public void IsMatchTest(string ruleDef, decimal value, bool expectedResult)
 		{
-			AmountRule rule = new AmountRule();
+			var rule = new AmountRule();
 			rule.FromString(ruleDef);
 
 			Assert.AreEqual(expectedResult, rule.IsMatch(value));
 		}
 
-		private static object[] IsMatchTestCases =
+		private static readonly object[] IsMatchTestCases =
 		{
 			// A) Test the single equation
 			new object[] { "x = 1.05"  , 1.05m, true  },
@@ -59,12 +59,12 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 		[Test, TestCaseSource("IsValidTestSet")]
 		public void IsValidTest(string input, bool expectedResult)
 		{
-			AmountRule rule = new AmountRule();
+			var rule = new AmountRule();
 
 			Assert.AreEqual(expectedResult, rule.FromString(input));
 		}
 
-		private static object[] IsValidTestSet =
+		private static readonly object[] IsValidTestSet =
 		{
 			// A) Single expressions
 			// A.1) Operators
@@ -127,7 +127,7 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 		[Test, TestCaseSource("IsValidTestSet")]
 		public void FromStringTest(string input, bool expectedResult)
 		{
-			AmountRule rule = new AmountRule();
+			var rule = new AmountRule();
 
 			Assert.AreEqual(expectedResult, rule.FromString(input));
 		}
@@ -139,13 +139,13 @@ namespace PL.BookKeeping.Entities.Misc.Tests
 		[Test, TestCaseSource("ToStringTestSet")]
 		public void ToStringTest(string input, string output)
 		{
-			AmountRule rule = new AmountRule();
+			var rule = new AmountRule();
 			rule.FromString(input);
 
 			Assert.AreEqual(output, rule.ToString());
 		}
 
-		private static object[] ToStringTestSet =
+		private static readonly object[] ToStringTestSet =
 		{
 			// A) Spaces
 			new object[] {"x<1", "x < 1.00"},

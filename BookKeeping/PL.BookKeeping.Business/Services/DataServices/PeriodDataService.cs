@@ -10,7 +10,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 {
     public class PeriodDataService : BaseTraceableObjectDataServiceOfT<Period>, IPeriodDataService
     {
-        private static Dictionary<int, string> mMonthNames = new Dictionary<int, string>()
+        private static readonly Dictionary<int, string> mMonthNames = new Dictionary<int, string>()
         {
             { 1, "Jan"},
             { 2, "Feb"},
@@ -26,8 +26,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
             { 12, "Dec"},
         };
 
-        private IEntryDataService mEntryDataService;
-        private IEntryPeriodDataService mEntryPeriodDataService;
+        private readonly IEntryDataService mEntryDataService;
+        private readonly IEntryPeriodDataService mEntryPeriodDataService;
 
         public PeriodDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService, IEntryDataService entryDataService,
             IEntryPeriodDataService entryPeriodDataService)
@@ -68,7 +68,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
         public IList<int> GetAvailableYears()
         {
-            using (var unitOfWork = this.mUOWFactory.Create())
+            using (var unitOfWork = mUOWFactory.Create())
             {
                 var repository = unitOfWork.GetRepository<Period>();
                 var retValue = repository.GetQuery()

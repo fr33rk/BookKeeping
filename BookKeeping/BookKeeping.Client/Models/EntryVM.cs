@@ -48,7 +48,7 @@ namespace BookKeeping.Client.Models
 
         #region Property RouteString
 
-        public string mRouteString;
+        private string mRouteString;
 
         public string RouteString
         {
@@ -124,7 +124,7 @@ namespace BookKeeping.Client.Models
 
         internal bool HasChildNode(EntryVM child)
         {
-            var foundChild = ChildEntryVms.Where(c => c.Key == child.Key).FirstOrDefault();
+            var foundChild = ChildEntryVms.FirstOrDefault(c => c.Key == child.Key);
             if (foundChild != null)
             {
                 return true;
