@@ -75,6 +75,7 @@
       <DependentUpon>201704031849094_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="MySqlConnectionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EntityRepositoryOfT.cs" />
     <Compile Include="Repositories\UnitOfWork.cs" />

@@ -3,6 +3,7 @@ using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
 using PL.BookKeeping.Data.Repositories;
+using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
@@ -26,6 +27,8 @@ namespace PL.BookKeeping.Business
 
 		public void Initialize()
 		{
+			mContainer.RegisterType<ISettingsService<Settings>, SettingsService>(new ContainerControlledLifetimeManager());
+			mContainer.RegisterType<IDbConnectionFactory, MySqlConnectionFactory>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IUnitOfWorkFactory, UnitOfWorkFactoryOfT<DataContext>>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IAuthorizationService, AuthorizationService>(new ContainerControlledLifetimeManager());
 

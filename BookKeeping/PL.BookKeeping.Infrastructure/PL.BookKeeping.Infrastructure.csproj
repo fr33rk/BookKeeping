@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\IDbConnectionFactory.cs" />
     <Compile Include="Data\IEntityRepositoryOfT.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\IUnitOfWorkFactory.cs" />
@@ -104,6 +105,8 @@
     <Compile Include="Services\IDataExporterService.cs" />
     <Compile Include="Services\IDataImporterService.cs" />
     <Compile Include="Services\IDataProcessorService.cs" />
+    <Compile Include="Services\ISettingService.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

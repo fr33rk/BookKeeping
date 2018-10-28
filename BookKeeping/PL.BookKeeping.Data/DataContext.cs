@@ -1,7 +1,7 @@
-﻿using PL.BookKeeping.Entities;
+﻿using System.Data.Common;
 using System.Data.Entity;
-using MySql.Data.MySqlClient;
 using MySql.Data.Entity;
+using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Data
 {
@@ -12,8 +12,8 @@ namespace PL.BookKeeping.Data
 		/// <value>The current user.</value>
 		public User CurrentUser { get; set; }
 
-		public DataContext()
-			: base(new MySqlConnection(@"Server=192.168.5.7;Database=Bookkeeping;Uid=Bookkeeper;Password=books"), true)
+		public DataContext(DbConnection connection)
+			: base(connection, true)
 		{
 			Configuration.LazyLoadingEnabled = false;
 		}
