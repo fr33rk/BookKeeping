@@ -41,6 +41,15 @@ namespace PL.BookKeeping.Business
 			mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataExporterService, DataExporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
+
+			LoadSettings();
+		}
+
+		private void LoadSettings()
+		{
+			var settingService = mContainer.Resolve<ISettingsService<Settings>>();
+
+			settingService.LoadSettings();
 		}
 	}
 }
