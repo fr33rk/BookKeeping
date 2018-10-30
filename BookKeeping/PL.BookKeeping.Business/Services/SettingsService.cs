@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.Logger;
+using Prism.Events;
 
 namespace PL.BookKeeping.Business.Services
 {
@@ -12,11 +14,13 @@ namespace PL.BookKeeping.Business.Services
 	{
 		protected internal string mFileName;
 		private readonly ILogFile mLogFile;
+		private IEventAggregator mEventAggregator;
 
-		public SettingsService(ILogFile logFile)
+		public SettingsService(ILogFile logFile, IEventAggregator eventAggregator)
 		{
 			DetermineFileName();
 			mLogFile = logFile;
+			mEventAggregator = eventAggregator;
 		}
 
 		private void DetermineFileName()
@@ -79,6 +83,7 @@ namespace PL.BookKeeping.Business.Services
 					var serializer = new JsonSerializer();
 					serializer.Serialize(file, Settings);
 				}
+				mEventAggregator.GetEvent<OptionsChangedEvent>().Publish(Settings);
 			}
 			catch (Exception e)
 			{

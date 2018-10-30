@@ -37,6 +37,7 @@ namespace BookKeeping.Client.ViewModels
 
 			localEventAggregator.GetEvent<ModuleInitializationDoneEvent>().Subscribe(InitializationDoneAction);
 			localEventAggregator.GetEvent<DataChangedEvent>().Subscribe(DataChangedAction, ThreadOption.UIThread);
+			localEventAggregator.GetEvent<OptionsChangedEvent>().Subscribe(OptionsChangedAction, ThreadOption.UIThread);
 		}
 
 		#endregion Constructor(s)
@@ -49,6 +50,11 @@ namespace BookKeeping.Client.ViewModels
 		}
 
 		private void InitializationDoneAction(bool value)
+		{
+			LoadData();
+		}
+
+		private void OptionsChangedAction(Settings newSettings)
 		{
 			LoadData();
 		}
@@ -296,7 +302,6 @@ namespace BookKeeping.Client.ViewModels
 
 		#endregion Command SearchCommand
 
-
 		#region Command EditOptionsCommand
 
 		/// <summary>Field for the EditOptions command.
@@ -328,7 +333,6 @@ namespace BookKeeping.Client.ViewModels
 		}
 
 		#endregion Command EditOptionsCommand
-
 
 		#region INavigationAware
 
