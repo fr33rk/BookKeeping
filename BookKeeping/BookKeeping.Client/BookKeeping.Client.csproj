@@ -113,9 +113,11 @@
     <Compile Include="Models\BaseTracableObjectVMOfT.cs" />
     <Compile Include="Models\EntryOfYearVM.cs" />
     <Compile Include="Models\EntryVm.cs" />
+    <Compile Include="Models\OptionsVm.cs" />
     <Compile Include="Models\ProcessingRuleVm.cs" />
     <Compile Include="ViewModels\DefineEntriesVM.cs" />
     <Compile Include="ViewModels\DefineRulesVM.cs" />
+    <Compile Include="ViewModels\EditOptionsVm.cs" />
     <Compile Include="ViewModels\GlobalSearchVM.cs" />
     <Compile Include="ViewModels\ImportDataVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
@@ -139,6 +141,9 @@
     </Compile>
     <Compile Include="Views\ReApplyRulesView.xaml.cs">
       <DependentUpon>ReApplyRulesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditOptionsView.xaml.cs">
+      <DependentUpon>EditOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\YearOverviewView.xaml.cs">
       <DependentUpon>YearOverviewView.xaml</DependentUpon>
@@ -186,6 +191,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ReApplyRulesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditOptionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -18,7 +18,7 @@ namespace PL.BookKeeping.Data
 		public DbConnection Create()
 		{
 			var settings = mSettingsService.Settings;
-			return new MySqlConnection($@"Server={settings.Sever};Database={settings.Name};Uid={settings.UserId};Password={settings.Password}");
+			return new MySqlConnection($@"Server={settings.ServerName};Database={settings.DatabaseName};Uid={settings.UserId};Password={settings.Password}");
 		}
 	}
 }

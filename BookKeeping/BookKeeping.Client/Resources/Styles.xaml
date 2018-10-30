@@ -32,4 +32,22 @@
         <Setter Property="Margin" Value="4" />
         <Setter Property="Background" Value="White" />
     </Style>
+
+    <Style x:Key="HeaderTextBlock"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="4"/>
+    </Style>
+
+    <Style x:Key="RightAlignedCentralTextBlock"
+           TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Margin" Value="4"/>
+    </Style>
+
+    <Style x:Key="GeneralTextBox"
+           TargetType="TextBox">
+        <Setter Property="Margin" Value="4"/>
+    </Style>
 </ResourceDictionary>

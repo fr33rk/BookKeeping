@@ -296,6 +296,40 @@ namespace BookKeeping.Client.ViewModels
 
 		#endregion Command SearchCommand
 
+
+		#region Command EditOptionsCommand
+
+		/// <summary>Field for the EditOptions command.
+		/// </summary>
+		private DelegateCommand mEditOptionsCommand;
+
+		/// <summary>Gets EditOptions command.
+		/// </summary>
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand EditOptionsCommand => mEditOptionsCommand
+												// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												// is not yet bound to the View, the command is instantiated in a different thread than the
+												// main thread. Prevent this by checking on the SynchronizationContext.
+												?? (mEditOptionsCommand = System.Threading.SynchronizationContext.Current == null
+													? null : new DelegateCommand(EditOptions, CanEditOptions));
+
+		/// <summary>
+		/// </summary>
+		private void EditOptions()
+		{
+			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(EditOptionsView).FullName);
+		}
+
+		/// <summary>Determines whether the EditOptions command can be executed.
+		/// </summary>
+		private bool CanEditOptions()
+		{
+			return true;
+		}
+
+		#endregion Command EditOptionsCommand
+
+
 		#region INavigationAware
 
 		public void OnNavigatedTo(NavigationContext navigationContext)

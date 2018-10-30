@@ -33,6 +33,7 @@ namespace BookKeeping.Client
             mContainer.RegisterType<object, DefineRulesView>(typeof(DefineRulesView).FullName);
 			mContainer.RegisterType<object, ReApplyRulesView>(typeof(ReApplyRulesView).FullName);
 	        mContainer.RegisterType<object, GlobalSearchView>(typeof(GlobalSearchView).FullName);
+	        mContainer.RegisterType<object, EditOptionsView>(typeof(EditOptionsView).FullName);
 		        
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 
@@ -44,6 +45,7 @@ namespace BookKeeping.Client
 		        config.CreateMap<ProcessingRuleVm, ProcessingRule>();
 		        config.CreateMap<GlobalSearchView, GlobalSearchVm>();
 				config.CreateMap<GlobalSearchVm, GlobalSearchView>();
+		        config.CreateMap<Settings, OptionsVm>();
 	        });
 
 
