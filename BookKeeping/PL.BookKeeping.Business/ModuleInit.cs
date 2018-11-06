@@ -1,7 +1,9 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Data.Entity;
+using Microsoft.Practices.Unity;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
+using PL.BookKeeping.Data.Migrations;
 using PL.BookKeeping.Data.Repositories;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
@@ -41,6 +43,8 @@ namespace PL.BookKeeping.Business
 			mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataExporterService, DataExporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
+
+			Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>(true));
 
 			LoadSettings();
 		}

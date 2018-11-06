@@ -19,7 +19,7 @@ namespace BookKeeping.Client
             base.InitializeShell();
 
             Application.Current.MainWindow = (Window)Shell;
-            Application.Current.MainWindow.Show();
+            Application.Current.MainWindow?.Show();
         }
 
         protected override DependencyObject CreateShell()
@@ -30,15 +30,12 @@ namespace BookKeeping.Client
         protected override void ConfigureContainer()
         {
             base.ConfigureContainer();
-            Container.RegisterInstance<ILogFile>(mLogFile);
+            Container.RegisterInstance(mLogFile);
         }
 
         protected override void ConfigureModuleCatalog()
         {
             base.ConfigureModuleCatalog();
-
-            // Load business unit first, because the services are used in other modules.
-            //AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), this.ModuleCatalog);
 
             AddModuleToCatalog(typeof(PL.BookKeeping.Business.ModuleInit), ModuleCatalog);
             AddModuleToCatalog(typeof(ModuleInit), ModuleCatalog);
@@ -50,11 +47,13 @@ namespace BookKeeping.Client
         /// Otherwise ModuleInit has to be named differently in each module.
         private void AddModuleToCatalog(Type moduleType, IModuleCatalog catalog)
         {
-            var NewModuleInfo = new ModuleInfo();
-            NewModuleInfo.ModuleName = moduleType.AssemblyQualifiedName;
-            NewModuleInfo.ModuleType = moduleType.AssemblyQualifiedName;
-            NewModuleInfo.InitializationMode = InitializationMode.WhenAvailable;
-            catalog.AddModule(NewModuleInfo);
+			var newModuleInfo = new ModuleInfo
+			{
+				ModuleName = moduleType.AssemblyQualifiedName,
+				ModuleType = moduleType.AssemblyQualifiedName,
+				InitializationMode = InitializationMode.WhenAvailable
+			};
+			catalog.AddModule(newModuleInfo);
         }
 
         private ILogFile mLogFile;

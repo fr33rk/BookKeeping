@@ -5,7 +5,7 @@ namespace PL.BookKeeping.Data.Migrations
 	using System;
 	using System.Data.Entity.Migrations;
 
-	internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
+	public sealed class Configuration : DbMigrationsConfiguration<DataContext>
 	{
 		public Configuration()
 		{

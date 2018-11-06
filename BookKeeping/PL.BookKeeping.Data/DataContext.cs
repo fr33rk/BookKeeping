@@ -12,6 +12,15 @@ namespace PL.BookKeeping.Data
 		/// <value>The current user.</value>
 		public User CurrentUser { get; set; }
 
+		/// <inheritdoc />
+		/// <summary>The default constructor is required for database migrations. Should not
+		/// be used in any other case.
+		/// </summary>
+		public DataContext()
+		{
+		}
+
+		/// <inheritdoc />
 		public DataContext(DbConnection connection)
 			: base(connection, true)
 		{
