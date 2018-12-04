@@ -11,5 +11,7 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
 		IList<EntryPeriod> GetByYear(int year);
 
 		void ReCalculateTotalAmounts(DateTime periodStart, DateTime periodEnd);
+
+		void Delete(Entry ofEntry, int afterYear);
 	}
 }
