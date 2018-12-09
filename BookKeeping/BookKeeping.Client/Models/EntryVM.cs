@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using PL.BookKeeping.Entities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,10 @@ namespace BookKeeping.Client.Models
         public Entry ParentEntry { get; set; }
 
         public ICollection<Entry> ChildEntries { get; set; }
+
+		public DateTime ActiveFrom { get; set; }
+
+		public DateTime? ActiveUntil { get; set; }
 
         #endregion Entry
 

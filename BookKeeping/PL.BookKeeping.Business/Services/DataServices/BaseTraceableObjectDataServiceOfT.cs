@@ -75,7 +75,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public bool Delete(TEntity entity)
+        public virtual bool Delete(TEntity entity)
         {
             using (var unitOfWork = mUOWFactory.Create())
             {

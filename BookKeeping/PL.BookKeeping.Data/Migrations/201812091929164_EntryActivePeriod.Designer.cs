@@ -7,13 +7,13 @@ namespace PL.BookKeeping.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class ObsoleteEntry : IMigrationMetadata
+    public sealed partial class EntryActivePeriod : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ObsoleteEntry));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(EntryActivePeriod));
         
         string IMigrationMetadata.Id
         {
-            get { return "201810312105240_ObsoleteEntry"; }
+            get { return "201812091929164_EntryActivePeriod"; }
         }
         
         string IMigrationMetadata.Source

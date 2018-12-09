@@ -14,27 +14,77 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		private readonly Lazy<IPeriodDataService> mPeriodDataService;
 		private readonly IEntryPeriodDataService mEntryPeriodDataService;
+		private readonly IProcessingRuleDataService mProcessingRuleDataService;
 
 		#endregion Fields
 
 		#region Constructor(s)
 
 		public EntryDataService(IUnitOfWorkFactory uowFactory, IAuthorizationService authorizationService,
-			Lazy<IPeriodDataService> periodDataService, IEntryPeriodDataService entryPeriodDataService)
+			Lazy<IPeriodDataService> periodDataService, IEntryPeriodDataService entryPeriodDataService,
+			IProcessingRuleDataService processingRuleDataService)
 			: base(uowFactory, authorizationService)
 		{
 			mPeriodDataService = periodDataService;
 			mEntryPeriodDataService = entryPeriodDataService;
+			mProcessingRuleDataService = processingRuleDataService;
 		}
 
 		#endregion Constructor(s)
+
+		public IList<Entry> GetRootEntriesOfYear(int year)
+		{
+			using (var unitOfWork = mUOWFactory.Create())
+			{
+				//var allActiveInYear = unitOfWork.GetRepository<Entry>()
+				//	.GetQuery(true)
+				//	.Join(unitOfWork.GetRepository<EntryPeriod>().GetAll(),
+				//		e => e.Key,
+				//		ep => ep.EntryKey,
+				//		(e, ep) => new { entry = e, entryPeriod = ep })
+				//	.Join(unitOfWork.GetRepository<Period>().GetAll(),
+				//		ep => ep.entryPeriod.PeriodKey,
+				//		p => p.Key,
+				//		(ep, p) => new { period = p, EntryPeriod = ep.entryPeriod })
+				//	.Where(e => e.period.Year == year)
+				//	.Select(e => e.EntryPeriod.Entry)
+				//	.Distinct()
+				//	.ToList();
+
+				//var rootEntries = allActiveInYear.Where(e => e.ParentEntryKey == null);
+
+				var allActiveInYear = unitOfWork.GetRepository<Entry>()
+					.GetQuery()
+					.Where(e => (e.ActiveFrom.Year <= year) &&
+					            (e.ActiveUntil == null || e.ActiveUntil.Value.Year >= year))
+					.ToList();
+					
+
+				var rootEntries = allActiveInYear.Where(e => e.ParentEntryKey == null).ToList();
+				foreach (var rootEntry in rootEntries)
+				{
+					foreach (var secondLevelEntry in allActiveInYear.Where(e => e.ParentEntryKey == rootEntry.Key))
+					{
+						rootEntry.ChildEntries.Add(secondLevelEntry);
+
+						foreach (var thirdLevEntry in allActiveInYear.Where(e => e.ParentEntryKey == secondLevelEntry.Key))
+						{
+							secondLevelEntry.ChildEntries.Add(thirdLevEntry);
+						}
+					}
+				}
+
+
+				return rootEntries;
+			}
+		}
 
 		public IList<Entry> GetRootEntries()
 		{
 			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var root = GetAll()
-					.Where(e => e.IsActive && e.ParentEntry == null);
+					.Where(e =>  e.ParentEntry == null);
 
 				return root.ToList();
 			}
@@ -67,25 +117,22 @@ namespace PL.BookKeeping.Business.Services.DataServices
 		public override bool Add(Entry entity)
 		{
 			// First add the entry to the database.
+			entity.ActiveFrom = new DateTime(DateTime.Now.Year, 1, 1);
 			var result = base.Add(entity);
 
 			// Then create a EntryPeriod for each period in the database.
 			var periods = mPeriodDataService.Value.GetAll();
 
-			EntryPeriod newEntryPeriod;
-
 			foreach (var period in periods)
 			{
-				newEntryPeriod = new EntryPeriod();
-				newEntryPeriod.Entry = entity;
-				newEntryPeriod.Period = period;
+				var newEntryPeriod = new EntryPeriod { Entry = entity, Period = period };
 				mEntryPeriodDataService.Add(newEntryPeriod);
 			}
 
 			return result;
 		}
 
-		public bool Delete(Entry entity)
+		public override bool Delete(Entry entity)
 		{
 			var lastYearTheEntryWasUsed = GetLastYearTheEntryWasUsed(entity);
 			// Never? Just delete the entry
@@ -93,13 +140,16 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			{
 				return base.Delete(entity);
 			}
-			
+
 			// Otherwise mark it inactive
-			entity.IsActive = false;
+			entity.ActiveUntil = new DateTime(lastYearTheEntryWasUsed.Value + 1, 1, 1).AddTicks(-1);
 			Update(entity);
 
 			// Remove the entry from all years after the last year it was used.
 			mEntryPeriodDataService.Delete(entity, lastYearTheEntryWasUsed.Value);
+
+			// Remove linked processing rules
+			mProcessingRuleDataService.DeleteByEntry(entity);
 
 			return true;
 		}
@@ -108,7 +158,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 		{
 			using (var uow = mUOWFactory.Create())
 			{
-				return uow.GetRepository<Entry>()
+				var result = uow.GetRepository<Entry>()
 					.GetQuery(true)
 					.Where(e => e.Key == entity.Key)
 					.Join(uow.GetRepository<EntryPeriod>().GetAll(), e => e.Key, ep => ep.EntryKey,
@@ -118,6 +168,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
 					.Join(uow.GetRepository<Transaction>().GetAll(), pep => pep.entityPeriod.Key, t => t.EntryPeriodKey,
 						(pep, t) => new { period = pep.period })
 					.Max(p => p.period.Year);
+
+				return result;
 			}
 		}
 	}

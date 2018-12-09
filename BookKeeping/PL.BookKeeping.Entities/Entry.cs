@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,7 +20,8 @@ namespace PL.BookKeeping.Entities
         [InverseProperty("ParentEntry")]
         public ICollection<Entry> ChildEntries { get; set; }
 
-		[DefaultValue(true)]
-		public bool IsActive { get; set; }
+		public DateTime ActiveFrom { get; set; }
+
+	    public DateTime? ActiveUntil { get; set; }
     }
 }

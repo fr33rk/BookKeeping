@@ -74,9 +74,9 @@
     <Compile Include="Migrations\201704031849094_InitialCreate.Designer.cs">
       <DependentUpon>201704031849094_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810312105240_ObsoleteEntry.cs" />
-    <Compile Include="Migrations\201810312105240_ObsoleteEntry.Designer.cs">
-      <DependentUpon>201810312105240_ObsoleteEntry.cs</DependentUpon>
+    <Compile Include="Migrations\201812091929164_EntryActivePeriod.cs" />
+    <Compile Include="Migrations\201812091929164_EntryActivePeriod.Designer.cs">
+      <DependentUpon>201812091929164_EntryActivePeriod.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MySqlConnectionFactory.cs" />
@@ -109,8 +109,8 @@
     <EmbeddedResource Include="Migrations\201704031849094_InitialCreate.resx">
       <DependentUpon>201704031849094_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810312105240_ObsoleteEntry.resx">
-      <DependentUpon>201810312105240_ObsoleteEntry.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812091929164_EntryActivePeriod.resx">
+      <DependentUpon>201812091929164_EntryActivePeriod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

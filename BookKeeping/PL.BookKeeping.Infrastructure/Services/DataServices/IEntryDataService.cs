@@ -8,5 +8,6 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
         IList<Entry> GetRootEntries();
 
         IList<Entry> Get3rdLevelEntries();
+	    IList<Entry> GetRootEntriesOfYear(int year);
     }
 }

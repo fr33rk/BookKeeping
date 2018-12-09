@@ -72,9 +72,10 @@ namespace BookKeeping.Client.ViewModels
         {
             EntriesOfYear = new List<EntryOfYearVm>();
 
-            // First flatten the list of entries
-            var rootList = mEntryDataService.GetRootEntries();
-            foreach (var rootEntry in rootList)
+			// First flatten the list of entries
+			var rootList = mEntryDataService.GetRootEntriesOfYear(Year);
+
+			foreach (var rootEntry in rootList)
             {
                 Flatten(rootEntry);
             }
@@ -85,9 +86,9 @@ namespace BookKeeping.Client.ViewModels
             // Then fill the entry periods.
             foreach (var entryOfYear in EntriesOfYear)
             {
-                var entryPeriodsOfentry = entryPeriods.Where(ep => ep.EntryKey == entryOfYear.Entry.Key).ToList();
+                var entryPeriodsEntries = entryPeriods.Where(ep => ep.EntryKey == entryOfYear.Entry.Key).ToList();
 
-                entryOfYear.SetPeriodData(entryPeriodsOfentry);
+                entryOfYear.SetPeriodData(entryPeriodsEntries);
             }
 
             // Add the totals..

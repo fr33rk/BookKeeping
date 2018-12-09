@@ -102,5 +102,17 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			swapWithThat.Priority = priority;
 			Update(swapWithThat);
 		}
+
+		public void DeleteByEntry(Entry entry)
+		{
+			using (var unitOfWork = mUOWFactory.Create())
+			{
+				var repository = unitOfWork.GetRepository<ProcessingRule>();
+
+				repository.Delete(e => e.EntryKey == entry.Key);
+
+				unitOfWork.SaveChanges();
+			}
+		}
 	}
 }
