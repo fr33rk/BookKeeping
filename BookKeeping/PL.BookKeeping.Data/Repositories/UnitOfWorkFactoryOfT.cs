@@ -1,7 +1,7 @@
-﻿using System;
-using System.Data.Entity;
-using PL.BookKeeping.Infrastructure.Data;
+﻿using PL.BookKeeping.Infrastructure.Data;
 using PL.Logger;
+using System;
+using System.Data.Entity;
 
 namespace PL.BookKeeping.Data.Repositories
 {

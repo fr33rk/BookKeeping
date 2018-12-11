@@ -3,43 +3,43 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PL.BookKeeping.Entities
 {
-    public class Period : BaseTraceableObject
-    {
-        #region Property Name
+	public class Period : BaseTraceableObject
+	{
+		#region Property Name
 
-        [Required, StringLength(10)]
-        public string Name { get; set; }
+		[Required, StringLength(10)]
+		public string Name { get; set; }
 
-        #endregion Property Name
+		#endregion Property Name
 
-        #region Property PeriodStart
+		#region Property PeriodStart
 
-        [Required]
-        public DateTime PeriodStart { get; set; }
+		[Required]
+		public DateTime PeriodStart { get; set; }
 
-        #endregion Property PeriodStart
+		#endregion Property PeriodStart
 
-        #region Property PeriodEnd
+		#region Property PeriodEnd
 
-        [Required]
-        public DateTime PeriodEnd { get; set; }
+		[Required]
+		public DateTime PeriodEnd { get; set; }
 
-        #endregion Property PeriodEnd
+		#endregion Property PeriodEnd
 
-        #region Property Year
+		#region Property Year
 
-        [Required]
-        public int Year { get; set; }
+		[Required]
+		public int Year { get; set; }
 
-        #endregion Property Year
+		#endregion Property Year
 
-        #region Helper methods
+		#region Helper methods
 
-        public override string ToString()
-        {
-            return $"{Name} {PeriodStart.Year}";
-        }
+		public override string ToString()
+		{
+			return $"{Name} {PeriodStart.Year}";
+		}
 
-        #endregion Helper methods
-    }
+		#endregion Helper methods
+	}
 }

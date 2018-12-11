@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Linq;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
 using Stateless;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -22,7 +22,7 @@ namespace BookKeeping.Client.ViewModels
 		private readonly ITransactionDataService mTransactionDataService;
 		private readonly IDataProcessorService mDataProcessorService;
 		private readonly IEntryPeriodDataService mEntryPeriodDataService;
-		private IPeriodDataService mPeriodDataService;
+		private readonly IPeriodDataService mPeriodDataService;
 		private IList<Transaction> mSelectedTransactions;
 
 		#endregion Fields
@@ -116,11 +116,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[Browsable(false)]
 		public DelegateCommand NavigateBackCommand => mNavigateBackCommand
-		                                              // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                              // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                              // main thread. Prevent this by checking on the SynchronizationContext.
-		                                              ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
-			                                              ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
+													  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													  // is not yet bound to the View, the command is instantiated in a different thread than the
+													  // main thread. Prevent this by checking on the SynchronizationContext.
+													  ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+														  ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
 
 		/// <summary>
 		/// </summary>
@@ -151,11 +151,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[Browsable(false)]
 		public DelegateCommand ReApplyRulesCommand => mReApplyRulesCommand
-		                                              // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                              // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                              // main thread. Prevent this by checking on the SynchronizationContext.
-		                                              ?? (mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
-			                                              ? null : new DelegateCommand(ReApplyRules, CanReApplyRules));
+													  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													  // is not yet bound to the View, the command is instantiated in a different thread than the
+													  // main thread. Prevent this by checking on the SynchronizationContext.
+													  ?? (mReApplyRulesCommand = System.Threading.SynchronizationContext.Current == null
+														  ? null : new DelegateCommand(ReApplyRules, CanReApplyRules));
 
 		/// <summary>
 		/// </summary>
@@ -346,14 +346,14 @@ namespace BookKeeping.Client.ViewModels
 					var startDate = mSelectedTransactions.Min(t => t.Date);
 					var endDate = mSelectedTransactions.Max(t => t.Date);
 
-					mEntryPeriodDataService.ReCalculateTotalAmounts(startDate, endDate);					
+					mEntryPeriodDataService.ReCalculateTotalAmounts(startDate, endDate);
 				}
 				else
 				{
 					mEntryPeriodDataService.ReCalculateTotalAmounts(StartDate, EndDate);
 				}
 
-				mVMStateMachine.Fire(VMTrigger.ReApplyingDone);				
+				mVMStateMachine.Fire(VMTrigger.ReApplyingDone);
 			});
 		}
 

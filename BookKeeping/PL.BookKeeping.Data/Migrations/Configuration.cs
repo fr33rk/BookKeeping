@@ -1,5 +1,5 @@
-using System.Linq;
 using PL.BookKeeping.Entities;
+using System.Linq;
 
 namespace PL.BookKeeping.Data.Migrations
 {

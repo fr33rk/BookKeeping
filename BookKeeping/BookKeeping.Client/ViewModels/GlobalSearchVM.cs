@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using BookKeeping.Client.Models;
+﻿using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
+using System.Collections.ObjectModel;
 
 namespace BookKeeping.Client.ViewModels
 {

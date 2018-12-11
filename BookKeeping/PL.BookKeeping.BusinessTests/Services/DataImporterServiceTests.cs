@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using NSubstitute;
+﻿using NSubstitute;
 using NUnit.Framework;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PL.BookKeeping.Business.Tests.Services
 {
@@ -58,7 +58,9 @@ namespace PL.BookKeeping.Business.Tests.Services
 				mCurrentTestFile = mTestFiles.FirstOrDefault(t => t.Name == fileName);
 
 				if (mCurrentTestFile == null)
+				{
 					throw new System.IO.FileNotFoundException();
+				}
 			}
 
 			protected override string ReadLine()

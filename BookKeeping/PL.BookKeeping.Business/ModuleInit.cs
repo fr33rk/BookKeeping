@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
@@ -10,6 +9,7 @@ using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using Prism.Modularity;
+using System.Data.Entity;
 
 namespace PL.BookKeeping.Business
 {

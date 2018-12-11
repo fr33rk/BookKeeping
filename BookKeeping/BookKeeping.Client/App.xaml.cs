@@ -1,8 +1,8 @@
-﻿using System.Globalization;
+﻿using PL.Logger;
+using Prism.Unity;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Markup;
-using PL.Logger;
-using Prism.Unity;
 
 namespace BookKeeping.Client
 {

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.Logger;
 using Prism.Events;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace PL.BookKeeping.Business.Services
 {

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -56,9 +56,8 @@ namespace PL.BookKeeping.Business.Services.DataServices
 				var allActiveInYear = unitOfWork.GetRepository<Entry>()
 					.GetQuery()
 					.Where(e => (e.ActiveFrom.Year <= year) &&
-					            (e.ActiveUntil == null || e.ActiveUntil.Value.Year >= year))
+								(e.ActiveUntil == null || e.ActiveUntil.Value.Year >= year))
 					.ToList();
-					
 
 				var rootEntries = allActiveInYear.Where(e => e.ParentEntryKey == null).ToList();
 				foreach (var rootEntry in rootEntries)
@@ -74,7 +73,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
 					}
 				}
 
-
 				return rootEntries;
 			}
 		}
@@ -84,7 +82,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			using (mUOWFactory.Create())
 			{
 				var root = GetAll()
-					.Where(e =>  e.ParentEntry == null);
+					.Where(e => e.ParentEntry == null);
 
 				return root.ToList();
 			}

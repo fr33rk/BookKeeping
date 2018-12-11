@@ -16,9 +16,8 @@
             <MenuItem Header="Definities">
                 <MenuItem Header="Post definities" HorizontalAlignment="Left" Command="{Binding DefineEntriesCommand}" />
                 <MenuItem Header="Regel definities" HorizontalAlignment="Left" Command="{Binding DefineRulesCommand}" />
-                <Separator HorizontalAlignment="Left"/>
-                <MenuItem Header="Opties" HorizontalAlignment="Left" Command="{Binding EditOptionsCommand}"/>
-
+                <Separator HorizontalAlignment="Left" />
+                <MenuItem Header="Opties" HorizontalAlignment="Left" Command="{Binding EditOptionsCommand}" />
             </MenuItem>
             <MenuItem Header="Acties">
                 <MenuItem Header="Importeer data" HorizontalAlignment="Left" Command="{Binding JustDoItCommand}" />
@@ -26,7 +25,7 @@
                           HorizontalAlignment="Left"
                           Command="{Binding ExportDataCommand}" />
                 <MenuItem Header="Regels opnieuw toepassen" HorizontalAlignment="Left" Command="{Binding ReApplyRulesCommand}" />
-                <MenuItem Header="Zoeken" HorizontalAlignment="Left" Command="{Binding SearchCommand}"/>
+                <MenuItem Header="Zoeken" HorizontalAlignment="Left" Command="{Binding SearchCommand}" />
             </MenuItem>
         </Menu>
 

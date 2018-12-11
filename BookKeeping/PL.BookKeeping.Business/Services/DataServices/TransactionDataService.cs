@@ -3,9 +3,9 @@ using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -110,9 +110,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			}
 		}
 
-
 		#endregion ITransactionDataService
-
-
 	}
 }
