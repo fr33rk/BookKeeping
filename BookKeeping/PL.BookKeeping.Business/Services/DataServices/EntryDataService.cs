@@ -81,7 +81,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<Entry> GetRootEntries()
 		{
-			using (var unitOfWork = mUOWFactory.Create())
+			using (mUOWFactory.Create())
 			{
 				var root = GetAll()
 					.Where(e =>  e.ParentEntry == null);
@@ -92,11 +92,11 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<Entry> Get3rdLevelEntries()
 		{
-			using (var unitOfWork = mUOWFactory.Create())
+			using (mUOWFactory.Create())
 			{
 				var root = GetAll()
 					.Join(GetAll(), e => e.ParentEntryKey, e2 => e2.Key, (e, e2) => new { Entry = e, Entry2 = e2 })
-					.Join(GetAll(), e => e.Entry2.ParentEntryKey, e3 => e3.Key, (e, e3) => new { Entry = e.Entry })
+					.Join(GetAll(), e => e.Entry2.ParentEntryKey, e3 => e3.Key, (e, e3) => new { e.Entry })
 					.Select(e => e.Entry);
 
 				return root.ToList();
@@ -164,10 +164,10 @@ namespace PL.BookKeeping.Business.Services.DataServices
 					.Join(uow.GetRepository<EntryPeriod>().GetAll(), e => e.Key, ep => ep.EntryKey,
 						((e, ep) => new { entity = e, entityPeriod = ep }))
 					.Join(uow.GetRepository<Period>().GetAll(), ep => ep.entityPeriod.PeriodKey, p => p.Key,
-						(ep, p) => new { period = p, entityPeriod = ep.entityPeriod })
+						(ep, p) => new { period = p, ep.entityPeriod })
 					.Join(uow.GetRepository<Transaction>().GetAll(), pep => pep.entityPeriod.Key, t => t.EntryPeriodKey,
-						(pep, t) => new { period = pep.period })
-					.Max(p => p.period.Year);
+						(pep, t) => new { pep.period })
+					.Max(p => (int?)p.period.Year);
 
 				return result;
 			}
