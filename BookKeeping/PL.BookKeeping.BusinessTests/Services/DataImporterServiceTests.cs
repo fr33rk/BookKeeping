@@ -121,7 +121,7 @@ namespace PL.BookKeeping.Business.Tests.Services
 
 		#region ImportFilesTest_ErrorOpeningTheFile
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void InitializeTests()
 		{
 			const string header = "DATE,NAME,ACCOUNT,COUNTERACCOUNT,CODE,KIND,AMOUNT,KIND,REMARKS";

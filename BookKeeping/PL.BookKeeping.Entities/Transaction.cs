@@ -54,10 +54,7 @@ namespace PL.BookKeeping.Entities
 
                 return mFingerPrint;
             }
-            set
-            {
-                mFingerPrint = value;
-            }
+            set => mFingerPrint = value;
         }
 
         #endregion Property Fingerprint
@@ -73,7 +70,7 @@ namespace PL.BookKeeping.Entities
 
         public override string ToString()
         {
-            return string.Format("{0}, {1}, {2}", Date.ToString(), Name, Amount);
+            return $"{Date.ToString()}, {Name}, {Amount}";
         }
     }
 }

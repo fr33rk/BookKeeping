@@ -1,3 +1,4 @@
+using System.Linq;
 using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Data.Migrations
@@ -5,7 +6,7 @@ namespace PL.BookKeeping.Data.Migrations
 	using System;
 	using System.Data.Entity.Migrations;
 
-	internal sealed class Configuration : DbMigrationsConfiguration<PL.BookKeeping.Data.DataContext>
+	public sealed class Configuration : DbMigrationsConfiguration<DataContext>
 	{
 		public Configuration()
 		{
@@ -13,7 +14,7 @@ namespace PL.BookKeeping.Data.Migrations
 			ContextKey = "PL.BookKeeping.Data.DataContext";
 		}
 
-		protected override void Seed(PL.BookKeeping.Data.DataContext context)
+		protected override void Seed(DataContext context)
 		{
 			//  This method will be called after migrating to the latest version.
 
@@ -30,14 +31,20 @@ namespace PL.BookKeeping.Data.Migrations
 
 			var mSystemUser = new User() { CreationDT = DateTime.Now, Name = "System user" };
 
-			context.Users.AddOrUpdate(
-				mSystemUser
-			);
-
-			context.Entries.AddOrUpdate(
-				new Entry() { CreationDT = DateTime.Now, Creator = mSystemUser, Description = "Uitgaven" },
-				new Entry() { CreationDT = DateTime.Now, Creator = mSystemUser, Description = "Inkomsten" }
+			if (!context.Users.Any())
+			{
+				context.Users.AddOrUpdate(
+					mSystemUser
 				);
+			}
+
+			if (!context.Entries.Any())
+			{
+				context.Entries.AddOrUpdate(
+					new Entry() { CreationDT = DateTime.Now, Creator = mSystemUser, Description = "Uitgaven" },
+					new Entry() { CreationDT = DateTime.Now, Creator = mSystemUser, Description = "Inkomsten" }
+				);
+			}
 		}
 	}
 }

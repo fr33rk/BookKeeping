@@ -21,8 +21,8 @@ namespace BookKeeping.Client
         /// <param name="regionManager">The region manager.</param>
         public ModuleInit(IUnityContainer container, IRegionManager regionManager)
         {
-            this.mContainer = container;
-            this.mRegionManager = regionManager;
+            mContainer = container;
+            mRegionManager = regionManager;
         }
 
         public void Initialize()
@@ -33,16 +33,22 @@ namespace BookKeeping.Client
             mContainer.RegisterType<object, DefineRulesView>(typeof(DefineRulesView).FullName);
 			mContainer.RegisterType<object, ReApplyRulesView>(typeof(ReApplyRulesView).FullName);
 	        mContainer.RegisterType<object, GlobalSearchView>(typeof(GlobalSearchView).FullName);
+	        mContainer.RegisterType<object, EditOptionsView>(typeof(EditOptionsView).FullName);
 		        
             mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 
-            Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
-            Mapper.CreateMap<Entry, EntryVM>();
-            Mapper.CreateMap<EntryVM, Entry>();
-            Mapper.CreateMap<ProcessingRule, ProcessingRuleVM>();
-            Mapper.CreateMap<ProcessingRuleVM, ProcessingRule>();
-	        Mapper.CreateMap<GlobalSearchView, GlobalSearchVm>();
-	        Mapper.CreateMap<GlobalSearchVm, GlobalSearchView>();
+	        Mapper.Initialize(config => {
+		        config.CreateMap<ProcessingRule, ProcessingRuleVm>();
+		        config.CreateMap<Entry, EntryVm>();
+		        config.CreateMap<EntryVm, Entry>();
+		        config.CreateMap<ProcessingRule, ProcessingRuleVm>();
+		        config.CreateMap<ProcessingRuleVm, ProcessingRule>();
+		        config.CreateMap<GlobalSearchView, GlobalSearchVm>();
+				config.CreateMap<GlobalSearchVm, GlobalSearchView>();
+		        config.CreateMap<Settings, OptionsVm>();
+	        });
+
+
         }
     }
 }

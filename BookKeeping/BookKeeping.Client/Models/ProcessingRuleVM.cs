@@ -6,10 +6,10 @@ using PL.BookKeeping.Entities.Misc;
 
 namespace BookKeeping.Client.Models
 {
-	/// <summary>Wrapper class around  the ProcessingRule entity.
-	///
-	/// </summary>
-	public class ProcessingRuleVM : BaseTracableObjectVMOfT<ProcessingRule, ProcessingRuleVM>
+	/// <inheritdoc />
+	///  <summary>Wrapper class around  the ProcessingRule entity.
+	///  </summary>
+	public class ProcessingRuleVm : BaseTracableObjectVMOfT<ProcessingRule, ProcessingRuleVm>
 	{
 		#region Fields
 
@@ -19,7 +19,7 @@ namespace BookKeeping.Client.Models
 
 		#region Constructor(s)
 
-		public ProcessingRuleVM()
+		public ProcessingRuleVm()
 		{
 			mAmountRule = new AmountRule();
 		}
@@ -116,7 +116,7 @@ namespace BookKeeping.Client.Models
 
 			var retValue = transactions.Where(t =>
 			{
-				bool isMatch = true;
+				var isMatch = true;
 
 				if (year.HasValue)
 				{
@@ -151,14 +151,14 @@ namespace BookKeeping.Client.Models
 
 		#region Clone
 
-		public ProcessingRuleVM Clone()
+		public ProcessingRuleVm Clone()
 		{
-			return (ProcessingRuleVM)MemberwiseClone();
+			return (ProcessingRuleVm)MemberwiseClone();
 		}
 
 		#endregion Clone
 
-		internal ProcessingRuleVM NullifyEmptyStrings()
+		internal ProcessingRuleVm NullifyEmptyStrings()
 		{
 			if (string.IsNullOrEmpty(NameRule)) NameRule = null;
 			if (string.IsNullOrEmpty(AccountRule)) AccountRule = null;

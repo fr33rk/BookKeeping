@@ -7,7 +7,7 @@ namespace PL.BookKeeping.Business
 {
     public class AuthorizationService : IAuthorizationService
     {
-        private IUnitOfWorkFactory mUOWFactory;
+        private readonly IUnitOfWorkFactory mUOWFactory;
 
         public AuthorizationService(IUnitOfWorkFactory uowFactory)
         {
@@ -22,7 +22,7 @@ namespace PL.BookKeeping.Business
             {
                 if (mCurrentuser == null)
                 {
-                    using (var unitOfWork = this.mUOWFactory.Create())
+                    using (var unitOfWork = mUOWFactory.Create())
                     {
                         var repository = unitOfWork.GetRepository<User>();
 
@@ -33,10 +33,7 @@ namespace PL.BookKeeping.Business
                 return mCurrentuser;
             }
 
-            set
-            {
-                throw new NotImplementedException();
-            }
+            set => throw new NotImplementedException();
         }
     }
 }

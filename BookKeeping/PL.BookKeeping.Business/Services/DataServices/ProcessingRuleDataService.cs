@@ -18,7 +18,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<ProcessingRule> GetAllSorted()
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var repository = unitOfWork.GetRepository<ProcessingRule>();
 				return CompleteQry(repository.GetQuery(true))
@@ -34,7 +34,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<ProcessingRule> GetByEntry(Entry entry)
 		{
-			using (var unitOfWork = this.mUOWFactory.Create())
+			using (var unitOfWork = mUOWFactory.Create())
 			{
 				var repository = unitOfWork.GetRepository<ProcessingRule>();
 				return CompleteQry(repository.GetQuery(true))
@@ -88,7 +88,7 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public void SwapByPriority(ProcessingRule swapThis, ProcessingRule swapWithThat)
 		{
-			int priority = swapThis.Priority;
+			var priority = swapThis.Priority;
 
 			swapThis.Priority = swapWithThat.Priority;
 
@@ -101,6 +101,18 @@ namespace PL.BookKeeping.Business.Services.DataServices
 			// Give the final priority
 			swapWithThat.Priority = priority;
 			Update(swapWithThat);
+		}
+
+		public void DeleteByEntry(Entry entry)
+		{
+			using (var unitOfWork = mUOWFactory.Create())
+			{
+				var repository = unitOfWork.GetRepository<ProcessingRule>();
+
+				repository.Delete(e => e.EntryKey == entry.Key);
+
+				unitOfWork.SaveChanges();
+			}
 		}
 	}
 }

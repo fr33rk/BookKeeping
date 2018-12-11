@@ -11,8 +11,8 @@ namespace BookKeeping.Client.Views
     public partial class DefineEntriesView : UserControl
     {
         public static readonly DependencyProperty SelectedEntry =
-            DependencyProperty.Register("SelectedEntry", typeof(EntryVM),
-            typeof(DefineEntriesView), new PropertyMetadata(default(EntryVM)));
+            DependencyProperty.Register("SelectedEntry", typeof(EntryVm),
+            typeof(DefineEntriesView), new PropertyMetadata(default(EntryVm)));
 
         public DefineEntriesView(DefineEntriesVM vm)
         {
@@ -27,7 +27,7 @@ namespace BookKeeping.Client.Views
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding binding = new Binding("SelectedEntry");
+            var binding = new Binding("SelectedEntry");
             binding.Mode = BindingMode.OneWayToSource;
             SetBinding(SelectedEntry, binding);
         }

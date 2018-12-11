@@ -15,8 +15,8 @@ namespace PL.BookKeeping.Data.Repositories
     public class EntityRepositoryOfT<TEntity> : IEntityRepositoryOfT<TEntity>
         where TEntity : class, new()
     {
-        private DbSet<TEntity> mDbSet;
-        private DbContext mContext;
+        private readonly DbSet<TEntity> mDbSet;
+        private readonly DbContext mContext;
 
         /// <summary>Initializes a new instance of the <see cref="EntityRepository{TEntity}"/> class.</summary>
         /// <param name="context">The context.</param>
@@ -29,14 +29,14 @@ namespace PL.BookKeeping.Data.Repositories
                 throw new ArgumentNullException("context");
             }
 
-            this.mDbSet = context.Set<TEntity>();
+            mDbSet = context.Set<TEntity>();
 
             if (mDbSet == null)
             {
                 throw new NotSupportedException();
             }
 
-            this.mContext = context;
+            mContext = context;
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace PL.BookKeeping.Data.Repositories
         public virtual IQueryable<TEntity> GetQuery(bool readOnly = false)
         {
             if (readOnly)
-                return this.mDbSet.AsNoTracking();
+                return mDbSet.AsNoTracking();
             else
-                return this.mDbSet;
+                return mDbSet;
         }
 
         /// <summary>
@@ -62,11 +62,11 @@ namespace PL.BookKeeping.Data.Repositories
         {
             if (predicate != null)
             {
-                return this.GetQuery().FirstOrDefault(predicate);
+                return GetQuery().FirstOrDefault(predicate);
             }
             else
             {
-                return this.GetQuery().FirstOrDefault();
+                return GetQuery().FirstOrDefault();
             }
         }
 
@@ -82,11 +82,11 @@ namespace PL.BookKeeping.Data.Repositories
         {
             if (predicate != null)
             {
-                return this.GetQuery().SingleOrDefault(predicate);
+                return GetQuery().SingleOrDefault(predicate);
             }
             else
             {
-                return this.GetQuery().SingleOrDefault();
+                return GetQuery().SingleOrDefault();
             }
         }
 
@@ -100,7 +100,7 @@ namespace PL.BookKeeping.Data.Repositories
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            this.mDbSet.Add(entity);
+            mDbSet.Add(entity);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace PL.BookKeeping.Data.Repositories
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            this.mDbSet.Attach(entity);
+            mDbSet.Attach(entity);
         }
 
         /// <summary>
@@ -125,8 +125,8 @@ namespace PL.BookKeeping.Data.Repositories
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
-            this.mDbSet.Attach(entity);
-            this.mDbSet.Remove(entity);
+            mDbSet.Attach(entity);
+            mDbSet.Remove(entity);
         }
 
         /// <summary>
@@ -141,11 +141,11 @@ namespace PL.BookKeeping.Data.Repositories
             if (predicate == null)
                 throw new ArgumentNullException("predicate");
 
-            var entities = this.mDbSet.Where(predicate);
+            var entities = mDbSet.Where(predicate);
 
             foreach (var entity in entities)
             {
-                this.Delete(entity);
+                Delete(entity);
             }
         }
 
@@ -160,16 +160,16 @@ namespace PL.BookKeeping.Data.Repositories
                 throw new ArgumentNullException("entity");
             }
 
-            var entry = this.mContext.Entry<TEntity>(updated);
+            var entry = mContext.Entry<TEntity>(updated);
 
             if (entry.State == EntityState.Detached)
             {
                 // Need the key to find the entity when detached.
-                TEntity attachedEntity = this.mDbSet.Find(getKey(updated));
+                var attachedEntity = mDbSet.Find(getKey(updated));
 
                 if (attachedEntity != null)
                 {
-                    var attachedEntry = this.mContext.Entry(attachedEntity);
+                    var attachedEntry = mContext.Entry(attachedEntity);
                     // Copy values from updated entry to existing entity.
                     attachedEntry.CurrentValues.SetValues(updated);
                 }
@@ -193,16 +193,16 @@ namespace PL.BookKeeping.Data.Repositories
                 throw new ArgumentNullException("entity");
             }
 
-            var entry = this.mContext.Entry<TEntity>(updated);
+            var entry = mContext.Entry<TEntity>(updated);
 
             if (entry.State == EntityState.Detached)
             {
                 // Need the key to find the entity when detached.
-                TEntity attachedEntity = this.mDbSet.Find(getKey(updated));
+                var attachedEntity = mDbSet.Find(getKey(updated));
 
                 if (attachedEntity != null)
                 {
-                    var attachedEntry = this.mContext.Entry(attachedEntity);
+                    var attachedEntry = mContext.Entry(attachedEntity);
                     // Copy values from updated entry to existing entity.
                     //attachedEntry.CurrentValues.SetValues(updated);
                     mContext.UpdateGraph(updated, mapping);
@@ -226,7 +226,7 @@ namespace PL.BookKeeping.Data.Repositories
             if (predicate == null)
                 throw new ArgumentNullException("predicate");
 
-            return this.GetQuery().Where(predicate);
+            return GetQuery().Where(predicate);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace PL.BookKeeping.Data.Repositories
         /// <returns>Enumerable of all entities.</returns>
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return this.GetQuery().AsQueryable();
+            return GetQuery().AsQueryable();
         }
 
         /// <summary>
@@ -251,11 +251,11 @@ namespace PL.BookKeeping.Data.Repositories
         {
             if (predicate != null)
             {
-                return this.GetQuery().Count(predicate);
+                return GetQuery().Count(predicate);
             }
             else
             {
-                return this.GetQuery().Count();
+                return GetQuery().Count();
             }
         }
 
@@ -297,12 +297,12 @@ namespace PL.BookKeeping.Data.Repositories
             var paramList = new List<string>();
 
             // Create a list of @px values
-            for (int i = 0; i < parameters.Count(); i++)
+            for (var i = 0; i < parameters.Count(); i++)
             {
-                paramList.Add(string.Format("@P{0}", i));
+                paramList.Add($"@P{i}");
             }
 
-            string command = string.Format("EXECUTE PROCEDURE {0} ({1})", procedureName, string.Join(",", paramList));
+            var command = $"EXECUTE PROCEDURE {procedureName} ({string.Join(",", paramList)})";
 
             return mContext.Database.SqlQuery<TEntity>(command, parameters);
         }

@@ -22,7 +22,7 @@ namespace BookKeeping.Client.ViewModels
 		{
 			mTransactionDataService = transactionDataService;
 			MatchingTransactions = new ObservableCollection<Transaction>();
-			SelectedRule = new ProcessingRuleVM();
+			SelectedRule = new ProcessingRuleVm();
 		}
 
 		#endregion Constructor(s)
@@ -49,9 +49,9 @@ namespace BookKeeping.Client.ViewModels
 
 		#region SelectedRule
 
-		private ProcessingRuleVM mSelectedRule;
+		private ProcessingRuleVm mSelectedRule;
 
-		public ProcessingRuleVM SelectedRule
+		public ProcessingRuleVm SelectedRule
 		{
 			get => mSelectedRule;
 			private set
@@ -127,7 +127,7 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		private void Clear()
 		{
-			SelectedRule = new ProcessingRuleVM();
+			SelectedRule = new ProcessingRuleVm();
 		}
 
 		/// <summary>Determines whether the Clear command can be executed.

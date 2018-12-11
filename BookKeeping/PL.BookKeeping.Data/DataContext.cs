@@ -1,8 +1,7 @@
-﻿using FirebirdSql.Data.FirebirdClient;
-using PL.BookKeeping.Entities;
+﻿using System.Data.Common;
 using System.Data.Entity;
-using MySql.Data.MySqlClient;
 using MySql.Data.Entity;
+using PL.BookKeeping.Entities;
 
 namespace PL.BookKeeping.Data
 {
@@ -13,10 +12,19 @@ namespace PL.BookKeeping.Data
 		/// <value>The current user.</value>
 		public User CurrentUser { get; set; }
 
+		/// <inheritdoc />
+		/// <summary>The default constructor is required for database migrations. Should not
+		/// be used in any other case.
+		/// </summary>
 		public DataContext()
-			: base(new MySqlConnection(@"Server=192.168.5.7;Database=Bookkeeping;Uid=Bookkeeper;Password=books"), true)
 		{
-			this.Configuration.LazyLoadingEnabled = false;
+		}
+
+		/// <inheritdoc />
+		public DataContext(DbConnection connection)
+			: base(connection, true)
+		{
+			Configuration.LazyLoadingEnabled = false;
 		}
 
 		public DbSet<User> Users { get; set; }

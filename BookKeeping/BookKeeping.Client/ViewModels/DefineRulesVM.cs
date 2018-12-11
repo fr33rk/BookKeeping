@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using Stateless.Graph;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -34,12 +35,12 @@ namespace BookKeeping.Client.ViewModels
 
 		private const int cIgnoreKey = -1;
 		private IRegionNavigationService mNavigationService;
-		private IProcessingRuleDataService mProcessingRuleDataService;
-		private IEntryDataService mEntryDataService;
-		private IPeriodDataService mPeriodDataService;
-		private ITransactionDataService mTransactionDataService;
-		private ILogFile mLogFile;
-		private ProcessingRuleVM mSavedProcessingRuleVM;
+		private readonly IProcessingRuleDataService mProcessingRuleDataService;
+		private readonly IEntryDataService mEntryDataService;
+		private readonly IPeriodDataService mPeriodDataService;
+		private readonly ITransactionDataService mTransactionDataService;
+		private readonly ILogFile mLogFile;
+		private ProcessingRuleVm mSavedProcessingRuleVM;
 
 		#endregion Fields
 
@@ -58,7 +59,7 @@ namespace BookKeeping.Client.ViewModels
 
 			InitializeStateMachine();
 
-			mLogFile.Debug(string.Format("DefineRulesVM.MainStm: {0}", mMainStm.ToDotGraph()));
+			mLogFile.Debug($"DefineRulesVM.MainStm: {UmlDotGraph.Format(mMainStm.GetInfo())}");
 		}
 
 		#endregion Constructor(s)
@@ -92,18 +93,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets AddRule command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand AddRuleCommand
-		{
-			get
-			{
-				return this.mAddRuleCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mAddRuleCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.AddRule, this.CanAddRule));
-			}
-		}
+		public DelegateCommand AddRuleCommand => mAddRuleCommand
+		                                         // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                         // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                         // main thread. Prevent this by checking on the SynchronizationContext.
+		                                         ?? (mAddRuleCommand = System.Threading.SynchronizationContext.Current == null
+			                                         ? null : new DelegateCommand(AddRule, CanAddRule));
 
 		/// <summary>
 		/// </summary>
@@ -130,18 +125,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets DeleteRule command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand DeleteRuleCommand
-		{
-			get
-			{
-				return this.mDeleteRuleCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mDeleteRuleCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.DeleteRule, this.CanDeleteRule));
-			}
-		}
+		public DelegateCommand DeleteRuleCommand => mDeleteRuleCommand
+		                                            // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                            // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                            // main thread. Prevent this by checking on the SynchronizationContext.
+		                                            ?? (mDeleteRuleCommand = System.Threading.SynchronizationContext.Current == null
+			                                            ? null : new DelegateCommand(DeleteRule, CanDeleteRule));
 
 		/// <summary>
 		/// </summary>
@@ -168,18 +157,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets EditRule command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand EditRuleCommand
-		{
-			get
-			{
-				return this.mEditRuleCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mEditRuleCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.EditRule, this.CanEditRule));
-			}
-		}
+		public DelegateCommand EditRuleCommand => mEditRuleCommand
+		                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                          // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                          // main thread. Prevent this by checking on the SynchronizationContext.
+		                                          ?? (mEditRuleCommand = System.Threading.SynchronizationContext.Current == null
+			                                          ? null : new DelegateCommand(EditRule, CanEditRule));
 
 		/// <summary>
 		/// </summary>
@@ -206,18 +189,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets NavigateBack command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand NavigateBackCommand
-		{
-			get
-			{
-				return this.mNavigateBackCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.NavigateBack, this.CanNavigateBack));
-			}
-		}
+		public DelegateCommand NavigateBackCommand => mNavigateBackCommand
+		                                              // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                              // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                              // main thread. Prevent this by checking on the SynchronizationContext.
+		                                              ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+			                                              ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
 
 		/// <summary>
 		/// </summary>
@@ -247,18 +224,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets ShowPreview command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand ShowPreviewCommand
-		{
-			get
-			{
-				return this.mShowPreviewCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mShowPreviewCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.ShowPreview, this.CanShowPreview));
-			}
-		}
+		public DelegateCommand ShowPreviewCommand => mShowPreviewCommand
+		                                             // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                             // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                             // main thread. Prevent this by checking on the SynchronizationContext.
+		                                             ?? (mShowPreviewCommand = System.Threading.SynchronizationContext.Current == null
+			                                             ? null : new DelegateCommand(ShowPreview, CanShowPreview));
 
 		/// <summary>
 		/// </summary>
@@ -293,18 +264,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets MoveUp command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand MoveUpCommand
-		{
-			get
-			{
-				return this.mMoveUpCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mMoveUpCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.MoveUp, this.CanMoveUp));
-			}
-		}
+		public DelegateCommand MoveUpCommand => mMoveUpCommand
+		                                        // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                        // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                        // main thread. Prevent this by checking on the SynchronizationContext.
+		                                        ?? (mMoveUpCommand = System.Threading.SynchronizationContext.Current == null
+			                                        ? null : new DelegateCommand(MoveUp, CanMoveUp));
 
 		/// <summary>
 		/// </summary>
@@ -336,18 +301,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets MoveDown command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand MoveDownCommand
-		{
-			get
-			{
-				return this.mMoveDownCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mMoveDownCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.MoveDown, this.CanMoveDown));
-			}
-		}
+		public DelegateCommand MoveDownCommand => mMoveDownCommand
+		                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                          // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                          // main thread. Prevent this by checking on the SynchronizationContext.
+		                                          ?? (mMoveDownCommand = System.Threading.SynchronizationContext.Current == null
+			                                          ? null : new DelegateCommand(MoveDown, CanMoveDown));
 
 		/// <summary>
 		/// </summary>
@@ -378,18 +337,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets CancelAddEdit command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand CancelAddEditCommand
-		{
-			get
-			{
-				return this.mCancelAddEditCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mCancelAddEditCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.CancelAddEdit, this.CanCancelAddEdit));
-			}
-		}
+		public DelegateCommand CancelAddEditCommand => mCancelAddEditCommand
+		                                               // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                               // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                               // main thread. Prevent this by checking on the SynchronizationContext.
+		                                               ?? (mCancelAddEditCommand = System.Threading.SynchronizationContext.Current == null
+			                                               ? null : new DelegateCommand(CancelAddEdit, CanCancelAddEdit));
 
 		/// <summary>
 		/// </summary>
@@ -416,18 +369,12 @@ namespace BookKeeping.Client.ViewModels
 		/// <summary>Gets SaveRule command.
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
-		public DelegateCommand SaveRuleCommand
-		{
-			get
-			{
-				return this.mSaveRuleCommand
-					// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-					// is not yet bound to the View, the command is instantiated in a different thread than the
-					// main thread. Prevent this by checking on the SynchronizationContext.
-					?? (this.mSaveRuleCommand = System.Threading.SynchronizationContext.Current == null
-					? null : new DelegateCommand(this.SaveRule, this.CanSaveRule));
-			}
-		}
+		public DelegateCommand SaveRuleCommand => mSaveRuleCommand
+		                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+		                                          // is not yet bound to the View, the command is instantiated in a different thread than the
+		                                          // main thread. Prevent this by checking on the SynchronizationContext.
+		                                          ?? (mSaveRuleCommand = System.Threading.SynchronizationContext.Current == null
+			                                          ? null : new DelegateCommand(SaveRule, CanSaveRule));
 
 		/// <summary>
 		/// </summary>
@@ -447,14 +394,11 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property DefinedRules
 
-		private ObservableCollection<ProcessingRuleVM> mDefinedRules;
+		private ObservableCollection<ProcessingRuleVm> mDefinedRules;
 
-		public ObservableCollection<ProcessingRuleVM> DefinedRules
+		public ObservableCollection<ProcessingRuleVm> DefinedRules
 		{
-			get
-			{
-				return mDefinedRules;
-			}
+			get => mDefinedRules;
 			private set
 			{
 				mDefinedRules = value;
@@ -466,14 +410,11 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property SelectedRule
 
-		private ProcessingRuleVM mSelectedRule;
+		private ProcessingRuleVm mSelectedRule;
 
-		public ProcessingRuleVM SelectedRule
+		public ProcessingRuleVm SelectedRule
 		{
-			get
-			{
-				return mSelectedRule;
-			}
+			get => mSelectedRule;
 			set
 			{
 				mSelectedRule = value;
@@ -502,7 +443,7 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property AvailableEntries
 
-		public ObservableCollection<EntryVM> AvailableEntries
+		public ObservableCollection<EntryVm> AvailableEntries
 		{
 			get; private set;
 		}
@@ -511,14 +452,11 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property SeletedEntry
 
-		private EntryVM mSelectedEntry;
+		private EntryVm mSelectedEntry;
 
-		public EntryVM SelectedEntry
+		public EntryVm SelectedEntry
 		{
-			get
-			{
-				return mSelectedEntry;
-			}
+			get => mSelectedEntry;
 			set
 			{
 				mSelectedEntry = value;
@@ -546,10 +484,7 @@ namespace BookKeeping.Client.ViewModels
 
 		public PeriodSelectionVM SelectedPeriod
 		{
-			get
-			{
-				return mSelectedPeriod;
-			}
+			get => mSelectedPeriod;
 			set
 			{
 				mSelectedPeriod = value;
@@ -576,25 +511,13 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Property IsSelectionChangeAllowed
 
-		public bool IsSelectionChangeAllowed
-		{
-			get
-			{
-				return mMainStm.IsInState(State.DoSomething);
-			}
-		}
+		public bool IsSelectionChangeAllowed => mMainStm.IsInState(State.DoSomething);
 
 		#endregion Property IsSelectionChangeAllowed
 
 		#region Property IsEditing
 
-		public bool IsEditing
-		{
-			get
-			{
-				return mMainStm.IsInState(State.AddEditRule);
-			}
-		}
+		public bool IsEditing => mMainStm.IsInState(State.AddEditRule);
 
 		#endregion Property IsEditing
 
@@ -603,24 +526,24 @@ namespace BookKeeping.Client.ViewModels
 		private void loadData()
 		{
 			mSelectedRule = null;
-			DefinedRules = new ObservableCollection<ProcessingRuleVM>();
+			DefinedRules = new ObservableCollection<ProcessingRuleVm>();
 
 			foreach (var rule in mProcessingRuleDataService.GetAllSorted())
 			{
-				DefinedRules.Add(Mapper.Map<ProcessingRuleVM>(rule));
+				DefinedRules.Add(Mapper.Map<ProcessingRuleVm>(rule));
 			}
 
-			var unsortedAvailableEntries = new List<EntryVM>();
+			var unsortedAvailableEntries = new List<EntryVm>();
 
 			// Available entries.
 			foreach (var entry in mEntryDataService.Get3rdLevelEntries())
 			{
-				unsortedAvailableEntries.Add(Mapper.Map<EntryVM>(entry));
+				unsortedAvailableEntries.Add(Mapper.Map<EntryVm>(entry));
 			}
 
-			AvailableEntries = new ObservableCollection<EntryVM>(unsortedAvailableEntries.OrderBy(e => e.RouteString));
+			AvailableEntries = new ObservableCollection<EntryVm>(unsortedAvailableEntries.OrderBy(e => e.RouteString));
 
-			AvailableEntries.Insert(0, new EntryVM() { Key = cIgnoreKey, Description = "Negeren" });
+			AvailableEntries.Insert(0, new EntryVm() { Key = cIgnoreKey, Description = "Negeren" });
 
 			// Available periods
 			var availableYears = mPeriodDataService.GetAvailableYears();
@@ -643,7 +566,7 @@ namespace BookKeeping.Client.ViewModels
 		{
 			mSavedProcessingRuleVM = mSelectedRule;
 
-			var newRule = new ProcessingRuleVM();
+			var newRule = new ProcessingRuleVm();
 			var index = DefinedRules.IndexOf(SelectedRule);
 			newRule.Priority = index + 1;
 			DefinedRules.Insert(index, newRule);
@@ -656,16 +579,16 @@ namespace BookKeeping.Client.ViewModels
 
 			// Reload the rule from the database so that it is managed by EF.
 			//SelectedRule = SelectedRule.Clone();
-			SelectedRule = ProcessingRuleVM.FromEntity(mProcessingRuleDataService.GetByKey(SelectedRule.Key, true));
+			SelectedRule = ProcessingRuleVm.FromEntity(mProcessingRuleDataService.GetByKey(SelectedRule.Key, true));
 		}
 
 		private void saveRule()
 		{
-			bool saved = false;
+			var saved = false;
 
 			// nullify empty strings
 			var ruleToSave = SelectedRule.NullifyEmptyStrings().ToEntity();
-			ProcessingRuleVM ruleToReplace = null;
+			ProcessingRuleVm ruleToReplace = null;
 
 			if (SelectedRule.Key == 0)
 			{
@@ -689,9 +612,9 @@ namespace BookKeeping.Client.ViewModels
 			if (saved)
 			{
 				// Replace the element in the DefinedRules to update the list in the view.
-				var savedRuleVM = ProcessingRuleVM.FromEntity(ruleToSave);
+				var savedRuleVM = ProcessingRuleVm.FromEntity(ruleToSave);
 				DefinedRules.Replace(ruleToReplace, savedRuleVM);
-				SelectedRule = ProcessingRuleVM.FromEntity(ruleToSave);
+				SelectedRule = ProcessingRuleVm.FromEntity(ruleToSave);
 				mMainStm.Fire(Trigger.SaveDone);
 			}
 			else
@@ -734,7 +657,7 @@ namespace BookKeeping.Client.ViewModels
 			mMainStm.Fire(Trigger.DeleteDone);
 		}
 
-		private void swap(ProcessingRuleVM swapThisVM, ProcessingRuleVM withThatVM)
+		private void swap(ProcessingRuleVm swapThisVM, ProcessingRuleVm withThatVM)
 		{
 			var swapThis = SelectedRule.ToEntity();
 			var withThat = withThatVM.ToEntity();
@@ -742,8 +665,8 @@ namespace BookKeeping.Client.ViewModels
 			// Update the database.
 			mProcessingRuleDataService.SwapByPriority(swapThis, withThat);
 
-			var newSwapThisVM = ProcessingRuleVM.FromEntity(swapThis);
-			var newWithThatVM = ProcessingRuleVM.FromEntity(withThat);
+			var newSwapThisVM = ProcessingRuleVm.FromEntity(swapThis);
+			var newWithThatVM = ProcessingRuleVm.FromEntity(withThat);
 
 			// Replace the VM's
 			DefinedRules.Replace(swapThisVM, newSwapThisVM);
@@ -799,7 +722,7 @@ namespace BookKeeping.Client.ViewModels
 
 			mMainStm.OnTransitioned((t) =>
 				{
-					mLogFile.Debug(string.Format("PeriodSelectionVM - VMStateMachine, changed state to {0}", t.Destination));
+					mLogFile.Debug($"PeriodSelectionVM - VMStateMachine, changed state to {t.Destination}");
 					NotifyPropertyChanged();
 					NotifyPropertyChanged("IsSelectionChangeAllowed");
 					NotifyPropertyChanged("IsEditing");

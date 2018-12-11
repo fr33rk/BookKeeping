@@ -1,8 +1,11 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Data.Entity;
+using Microsoft.Practices.Unity;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
+using PL.BookKeeping.Data.Migrations;
 using PL.BookKeeping.Data.Repositories;
+using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
@@ -21,11 +24,13 @@ namespace PL.BookKeeping.Business
 		/// <param name="regionManager">The region manager.</param>
 		public ModuleInit(IUnityContainer container)
 		{
-			this.mContainer = container;
+			mContainer = container;
 		}
 
 		public void Initialize()
 		{
+			mContainer.RegisterType<ISettingsService<Settings>, SettingsService>(new ContainerControlledLifetimeManager());
+			mContainer.RegisterType<IDbConnectionFactory, MySqlConnectionFactory>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IUnitOfWorkFactory, UnitOfWorkFactoryOfT<DataContext>>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IAuthorizationService, AuthorizationService>(new ContainerControlledLifetimeManager());
 
@@ -38,6 +43,17 @@ namespace PL.BookKeeping.Business
 			mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataExporterService, DataExporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
+
+			Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>(true));
+
+			LoadSettings();
+		}
+
+		private void LoadSettings()
+		{
+			var settingService = mContainer.Resolve<ISettingsService<Settings>>();
+
+			settingService.LoadSettings();
 		}
 	}
 }

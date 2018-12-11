@@ -13,14 +13,14 @@ namespace PL.BookKeeping.Business.Services
 {
     internal class DataProcessorService : IDataProcessorService
     {
-        private ILogFile mLogFile;
-        private IEntryPeriodDataService mEntryPeriodDataService;
-        private IProcessingRuleDataService mProcessingRulesDataService;
-        private IPeriodDataService mPeriodDataService;
-        private ITransactionDataService mTransactionDataService;
+        private readonly ILogFile mLogFile;
+        private readonly IEntryPeriodDataService mEntryPeriodDataService;
+        private readonly IProcessingRuleDataService mProcessingRulesDataService;
+        private readonly IPeriodDataService mPeriodDataService;
+        private readonly ITransactionDataService mTransactionDataService;
         private IList<ProcessingRule> mProcessingRules;
         private IList<EntryPeriod> mEntryPeriods;
-        private IEventAggregator mEventAggregator;
+        private readonly IEventAggregator mEventAggregator;
 
         private int mTransactionProcessedCount;
         private int mTransactionsIgnoredCount;
@@ -82,7 +82,8 @@ namespace PL.BookKeeping.Business.Services
                                 updateParentTotals(entryPeriod, transaction.Amount);
 
                                 // We're done.
-                                mLogFile.Info(string.Format("Transaction: {0} is added to entry {1}, period {2}, due to rule {3}", transaction.ToString(), entryPeriod.Entry.Description, entryPeriod.Period.ToString(), rule.Priority.ToString()));
+                                mLogFile.Info(
+	                                $"Transaction: {transaction} is added to entry {entryPeriod.Entry.Description}, period {entryPeriod.Period}, due to rule {rule.Priority.ToString()}");
 
                                 mTransactionProcessedCount++;
                             }
@@ -107,7 +108,7 @@ namespace PL.BookKeeping.Business.Services
                     }
                     else
                     {
-                        mLogFile.Warning(string.Format("There is no rule to process transaction: {0}", transaction.ToString()));
+                        mLogFile.Warning($"There is no rule to process transaction: {transaction}");
                     }
                 }
                 mEventAggregator.GetEvent<DataChangedEvent>().Publish(new DataChangedEventArgs(changedYears));
@@ -151,7 +152,7 @@ namespace PL.BookKeeping.Business.Services
                 }
                 else
                 {
-                    throw new Exception(string.Format("Parent entry period of {0} does not exist", entryPeriod.Key));
+                    throw new Exception($"Parent entry period of {entryPeriod.Key} does not exist");
                 }
             }
         }

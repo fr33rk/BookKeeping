@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using PL.BookKeeping.Entities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +7,7 @@ using System.Linq;
 
 namespace BookKeeping.Client.Models
 {
-    public class EntryVM : BaseTracableObjectVMOfT<Entry, EntryVM>
+    public class EntryVm : BaseTracableObjectVMOfT<Entry, EntryVm>
     {
         #region Entry
 
@@ -18,24 +19,28 @@ namespace BookKeeping.Client.Models
 
         public ICollection<Entry> ChildEntries { get; set; }
 
+		public DateTime ActiveFrom { get; set; }
+
+		public DateTime? ActiveUntil { get; set; }
+
         #endregion Entry
 
         #region Property ChildEntryVms
 
-        private ObservableCollection<EntryVM> mChildEntryVms;
+        private ObservableCollection<EntryVm> mChildEntryVms;
 
-        public ObservableCollection<EntryVM> ChildEntryVms
+        public ObservableCollection<EntryVm> ChildEntryVms
         {
             get
             {
                 if (mChildEntryVms == null)
                 {
-                    mChildEntryVms = new ObservableCollection<EntryVM>();
+                    mChildEntryVms = new ObservableCollection<EntryVm>();
                     if (ChildEntries != null)
                     {
                         foreach (var childEntry in ChildEntries.OrderBy(e => e.Description))
                         {
-                            mChildEntryVms.Add(Mapper.Map<EntryVM>(childEntry));
+                            mChildEntryVms.Add(Mapper.Map<EntryVm>(childEntry));
                         }
                     }
                 }
@@ -48,7 +53,7 @@ namespace BookKeeping.Client.Models
 
         #region Property RouteString
 
-        public string mRouteString;
+        private string mRouteString;
 
         public string RouteString
         {
@@ -58,7 +63,7 @@ namespace BookKeeping.Client.Models
                 {
                     if (ParentEntry != null)
                     {
-                        mRouteString = Mapper.Map<EntryVM>(ParentEntry).RouteString;
+                        mRouteString = Mapper.Map<EntryVm>(ParentEntry).RouteString;
                         mRouteString += " > ";
                     }
 
@@ -73,7 +78,7 @@ namespace BookKeeping.Client.Models
 
         #region Child mutations
 
-        public bool UpdateChild(EntryVM newChild)
+        public bool UpdateChild(EntryVm newChild)
         {
             var childEntry = ChildEntryVms.FirstOrDefault(e => e.Key == newChild.Key);
             if (childEntry != null)
@@ -100,7 +105,7 @@ namespace BookKeeping.Client.Models
             return false;
         }
 
-        public bool DeleteChild(EntryVM obsoleteChild)
+        public bool DeleteChild(EntryVm obsoleteChild)
         {
             var childEntry = ChildEntryVms.FirstOrDefault(e => e.Key == obsoleteChild.Key);
             if (childEntry != null)
@@ -122,9 +127,9 @@ namespace BookKeeping.Client.Models
             return false;
         }
 
-        internal bool HasChildNode(EntryVM child)
+        internal bool HasChildNode(EntryVm child)
         {
-            var foundChild = ChildEntryVms.Where(c => c.Key == child.Key).FirstOrDefault();
+            var foundChild = ChildEntryVms.FirstOrDefault(c => c.Key == child.Key);
             if (foundChild != null)
             {
                 return true;

@@ -18,11 +18,11 @@ namespace BookKeeping.Client.ViewModels
     {
         #region Fields
 
-        private IDataImporterService mDataImportService;
-        private IDataProcessorService mDataProcessorService;
-        private ILogFile mLogFile;
-        private BackgroundWorker mImportWorker;
-        private BackgroundWorker mProcessorWorker;
+        private readonly IDataImporterService mDataImportService;
+        private readonly IDataProcessorService mDataProcessorService;
+        private readonly ILogFile mLogFile;
+        private readonly BackgroundWorker mImportWorker;
+        private readonly BackgroundWorker mProcessorWorker;
         private IList<Transaction> mImportedTransactions;
 
         #endregion Fields
@@ -110,11 +110,8 @@ namespace BookKeeping.Client.ViewModels
 
         public int TransactionsImported
         {
-            get
-            {
-                return mTransactionsImported;
-            }
-            set
+            get => mTransactionsImported;
+	        set
             {
                 mTransactionsImported = value;
                 NotifyPropertyChanged();
@@ -129,11 +126,8 @@ namespace BookKeeping.Client.ViewModels
 
         public int DuplicateTransactions
         {
-            get
-            {
-                return mDuplicateTransactions;
-            }
-            set
+            get => mDuplicateTransactions;
+	        set
             {
                 mDuplicateTransactions = value;
                 NotifyPropertyChanged();
@@ -148,11 +142,8 @@ namespace BookKeeping.Client.ViewModels
 
         public int ProcessedTransactions
         {
-            get
-            {
-                return mProccesedTransactions;
-            }
-            set
+            get => mProccesedTransactions;
+	        set
             {
                 mProccesedTransactions = value;
                 NotifyPropertyChanged();
@@ -167,11 +158,8 @@ namespace BookKeeping.Client.ViewModels
 
         public int IgnoredTransactions
         {
-            get
-            {
-                return mIgnoredTransactions;
-            }
-            set
+            get => mIgnoredTransactions;
+	        set
             {
                 mIgnoredTransactions = value;
                 NotifyPropertyChanged();
@@ -194,21 +182,15 @@ namespace BookKeeping.Client.ViewModels
 
         /// <summary>Gets StartMeasurement command.
         /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand SelectFilesCommand
-        {
-            get
-            {
-                return this.mSelectFilesCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mSelectFilesCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.SelectFiles, this.CanSelectFiles));
-            }
-        }
+        [Browsable(false)]
+        public DelegateCommand SelectFilesCommand => mSelectFilesCommand
+                                                     // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                                                     // is not yet bound to the View, the command is instantiated in a different thread than the
+                                                     // main thread. Prevent this by checking on the SynchronizationContext.
+                                                     ?? (mSelectFilesCommand = System.Threading.SynchronizationContext.Current == null
+	                                                     ? null : new DelegateCommand(SelectFiles, CanSelectFiles));
 
-        /// <summary>Starts the measurement of a sample.
+	    /// <summary>Starts the measurement of a sample.
         /// </summary>
         private void SelectFiles()
         {
@@ -224,7 +206,7 @@ namespace BookKeeping.Client.ViewModels
                 foreach (var fileName in dialog.FileNames)
                 {
                     SelectedFiles.Add(fileName);
-                    mLogFile.Info(string.Format("Selected file for import: {0}", fileName));
+                    mLogFile.Info($"Selected file for import: {fileName}");
                 }
                 mVMStateMachine.Fire(VMTrigger.FilesSelected);
             }
@@ -248,21 +230,15 @@ namespace BookKeeping.Client.ViewModels
 
         /// <summary>Gets StartMeasurement command.
         /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand ImportFilesCommand
-        {
-            get
-            {
-                return this.mImportFilesCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mImportFilesCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.ImportFiles, this.CanImportFiles));
-            }
-        }
+        [Browsable(false)]
+        public DelegateCommand ImportFilesCommand => mImportFilesCommand
+                                                     // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                                                     // is not yet bound to the View, the command is instantiated in a different thread than the
+                                                     // main thread. Prevent this by checking on the SynchronizationContext.
+                                                     ?? (mImportFilesCommand = System.Threading.SynchronizationContext.Current == null
+	                                                     ? null : new DelegateCommand(ImportFiles, CanImportFiles));
 
-        /// <summary>Starts the measurement of a sample.
+	    /// <summary>Starts the measurement of a sample.
         /// </summary>
         private void ImportFiles()
         {
@@ -306,7 +282,7 @@ namespace BookKeeping.Client.ViewModels
 
             mVMStateMachine.OnTransitioned((t) =>
             {
-                mLogFile.Debug(string.Format("ImportDataVM - VMStateMachine, changed state to {0}", t.Destination));
+                mLogFile.Debug($"ImportDataVM - VMStateMachine, changed state to {t.Destination}");
                 SelectFilesCommand.RaiseCanExecuteChanged();
                 ImportFilesCommand.RaiseCanExecuteChanged();
             });
@@ -348,21 +324,15 @@ namespace BookKeeping.Client.ViewModels
 
         /// <summary>Gets NavigateBack command.
         /// </summary>
-        [System.ComponentModel.Browsable(false)]
-        public DelegateCommand NavigateBackCommand
-        {
-            get
-            {
-                return this.mNavigateBackCommand
-                    // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-                    // is not yet bound to the View, the command is instantiated in a different thread than the
-                    // main thread. Prevent this by checking on the SynchronizationContext.
-                    ?? (this.mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
-                    ? null : new DelegateCommand(this.NavigateBack, this.CanNavigateBack));
-            }
-        }
+        [Browsable(false)]
+        public DelegateCommand NavigateBackCommand => mNavigateBackCommand
+                                                      // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+                                                      // is not yet bound to the View, the command is instantiated in a different thread than the
+                                                      // main thread. Prevent this by checking on the SynchronizationContext.
+                                                      ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+	                                                      ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
 
-        /// <summary>
+	    /// <summary>
         /// </summary>
         private void NavigateBack()
         {
@@ -443,7 +413,7 @@ namespace BookKeeping.Client.ViewModels
             }
             catch (ObjectDisposedException e)
             {
-                mLogFile.Error(string.Format("~ImportDataVM raised exception: {0}", e.ToString()));
+                mLogFile.Error($"~ImportDataVM raised exception: {e}");
             }
         }
 
