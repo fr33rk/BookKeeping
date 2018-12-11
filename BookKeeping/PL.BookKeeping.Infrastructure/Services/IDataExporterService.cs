@@ -1,7 +1,7 @@
 ﻿namespace PL.BookKeeping.Infrastructure.Services
 {
 	/// <summary>Interface for data exporter services.
-	/// 
+	///
 	/// </summary>
 	public interface IDataExporterService
 	{

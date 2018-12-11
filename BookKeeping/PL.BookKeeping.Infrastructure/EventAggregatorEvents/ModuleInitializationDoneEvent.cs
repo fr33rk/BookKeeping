@@ -2,7 +2,7 @@
 
 namespace PL.BookKeeping.Infrastructure.EventAggregatorEvents
 {
-    public class ModuleInitializationDoneEvent : PubSubEvent<bool>
-    {
-    }
+	public class ModuleInitializationDoneEvent : PubSubEvent<bool>
+	{
+	}
 }

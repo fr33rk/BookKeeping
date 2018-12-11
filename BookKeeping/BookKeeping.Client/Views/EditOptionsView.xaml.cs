@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls;
-using BookKeeping.Client.ViewModels;
+﻿using BookKeeping.Client.ViewModels;
+using System.Windows.Controls;
 
 namespace BookKeeping.Client.Views
 {

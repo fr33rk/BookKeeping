@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using PL.BookKeeping.Entities;
+using PL.BookKeeping.Entities.Misc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using PL.BookKeeping.Entities;
-using PL.BookKeeping.Entities.Misc;
 
 namespace BookKeeping.Client.Models
 {
@@ -160,12 +160,35 @@ namespace BookKeeping.Client.Models
 
 		internal ProcessingRuleVm NullifyEmptyStrings()
 		{
-			if (string.IsNullOrEmpty(NameRule)) NameRule = null;
-			if (string.IsNullOrEmpty(AccountRule)) AccountRule = null;
-			if (string.IsNullOrEmpty(CounterAccountRule)) CounterAccountRule = null;
-			if (string.IsNullOrEmpty(CodeRule)) CodeRule = null;
-			if (string.IsNullOrEmpty(MutationKindRule)) MutationKindRule = null;
-			if (string.IsNullOrEmpty(RemarksRule)) RemarksRule = null;
+			if (string.IsNullOrEmpty(NameRule))
+			{
+				NameRule = null;
+			}
+
+			if (string.IsNullOrEmpty(AccountRule))
+			{
+				AccountRule = null;
+			}
+
+			if (string.IsNullOrEmpty(CounterAccountRule))
+			{
+				CounterAccountRule = null;
+			}
+
+			if (string.IsNullOrEmpty(CodeRule))
+			{
+				CodeRule = null;
+			}
+
+			if (string.IsNullOrEmpty(MutationKindRule))
+			{
+				MutationKindRule = null;
+			}
+
+			if (string.IsNullOrEmpty(RemarksRule))
+			{
+				RemarksRule = null;
+			}
 
 			return this;
 		}

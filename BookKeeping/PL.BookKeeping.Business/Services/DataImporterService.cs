@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using PL.BookKeeping.Entities;
+﻿using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace PL.BookKeeping.Business.Services
 {

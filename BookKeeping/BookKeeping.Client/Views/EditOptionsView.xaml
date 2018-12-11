@@ -29,32 +29,32 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="Database"
-                       Style="{StaticResource HeaderTextBlock}"/>
+                       Style="{StaticResource HeaderTextBlock}" />
 
-            <TextBlock Grid.Row="2" Grid.Column="1"  Text="Server" 
-                       Style="{StaticResource RightAlignedCentralTextBlock}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1"  Text="Server"
+                       Style="{StaticResource RightAlignedCentralTextBlock}" />
             <TextBox Grid.Row="2" Grid.Column="2" Style="{StaticResource GeneralTextBox}"
-                     Text="{Binding WrappedModel.ServerName}"/>
+                     Text="{Binding WrappedModel.ServerName}" />
 
-            <TextBlock Grid.Row="3" Grid.Column="1"  Text="Database naam" 
+            <TextBlock Grid.Row="3" Grid.Column="1"  Text="Database naam"
                        Style="{StaticResource RightAlignedCentralTextBlock}" />
             <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource GeneralTextBox}"
-                     Text="{Binding WrappedModel.DatabaseName}"/>
+                     Text="{Binding WrappedModel.DatabaseName}" />
 
-            <TextBlock Grid.Row="4" Grid.Column="1"  Text="Gebruiker" 
+            <TextBlock Grid.Row="4" Grid.Column="1"  Text="Gebruiker"
                        Style="{StaticResource RightAlignedCentralTextBlock}" />
             <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource GeneralTextBox}"
-                     Text="{Binding WrappedModel.UserId}"/>
+                     Text="{Binding WrappedModel.UserId}" />
 
             <TextBlock Grid.Row="5" Grid.Column="1"  Text="Wachtwoord"
                        Style="{StaticResource RightAlignedCentralTextBlock}" />
             <TextBox Grid.Row="5" Grid.Column="2" Style="{StaticResource GeneralTextBox}"
-                     Text="{Binding WrappedModel.Password}"/>
+                     Text="{Binding WrappedModel.Password}" />
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource MediumSquareButtonStyle}"
                     Command="{Binding CancelCommand}">
-                <Image Source="{StaticResource imgCancel}"/>
+                <Image Source="{StaticResource imgCancel}" />
             </Button>
             <Button Style="{StaticResource MediumSquareButtonStyle}"
                     Command="{Binding NavigateBackCommand}">

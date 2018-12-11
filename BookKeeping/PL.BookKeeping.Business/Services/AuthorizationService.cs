@@ -5,35 +5,35 @@ using System;
 
 namespace PL.BookKeeping.Business
 {
-    public class AuthorizationService : IAuthorizationService
-    {
-        private readonly IUnitOfWorkFactory mUOWFactory;
+	public class AuthorizationService : IAuthorizationService
+	{
+		private readonly IUnitOfWorkFactory mUOWFactory;
 
-        public AuthorizationService(IUnitOfWorkFactory uowFactory)
-        {
-            mUOWFactory = uowFactory;
-        }
+		public AuthorizationService(IUnitOfWorkFactory uowFactory)
+		{
+			mUOWFactory = uowFactory;
+		}
 
-        private User mCurrentuser;
+		private User mCurrentuser;
 
-        public User CurrentUser
-        {
-            get
-            {
-                if (mCurrentuser == null)
-                {
-                    using (var unitOfWork = mUOWFactory.Create())
-                    {
-                        var repository = unitOfWork.GetRepository<User>();
+		public User CurrentUser
+		{
+			get
+			{
+				if (mCurrentuser == null)
+				{
+					using (var unitOfWork = mUOWFactory.Create())
+					{
+						var repository = unitOfWork.GetRepository<User>();
 
-                        mCurrentuser = repository.SingleOrDefault(u => u.Key == 1);
-                    }
-                }
+						mCurrentuser = repository.SingleOrDefault(u => u.Key == 1);
+					}
+				}
 
-                return mCurrentuser;
-            }
+				return mCurrentuser;
+			}
 
-            set => throw new NotImplementedException();
-        }
-    }
+			set => throw new NotImplementedException();
+		}
+	}
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using AutoMapper;
+﻿using AutoMapper;
 using BookKeeping.Client.Models;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
@@ -10,6 +8,8 @@ using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {

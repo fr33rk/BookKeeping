@@ -8,12 +8,12 @@ using PL.Logger;
 using Prism.Commands;
 using Prism.Regions;
 using Stateless;
+using Stateless.Graph;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
-using Stateless.Graph;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -94,11 +94,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand AddRuleCommand => mAddRuleCommand
-		                                         // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                         // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                         // main thread. Prevent this by checking on the SynchronizationContext.
-		                                         ?? (mAddRuleCommand = System.Threading.SynchronizationContext.Current == null
-			                                         ? null : new DelegateCommand(AddRule, CanAddRule));
+												 // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												 // is not yet bound to the View, the command is instantiated in a different thread than the
+												 // main thread. Prevent this by checking on the SynchronizationContext.
+												 ?? (mAddRuleCommand = System.Threading.SynchronizationContext.Current == null
+													 ? null : new DelegateCommand(AddRule, CanAddRule));
 
 		/// <summary>
 		/// </summary>
@@ -126,11 +126,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand DeleteRuleCommand => mDeleteRuleCommand
-		                                            // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                            // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                            // main thread. Prevent this by checking on the SynchronizationContext.
-		                                            ?? (mDeleteRuleCommand = System.Threading.SynchronizationContext.Current == null
-			                                            ? null : new DelegateCommand(DeleteRule, CanDeleteRule));
+													// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													// is not yet bound to the View, the command is instantiated in a different thread than the
+													// main thread. Prevent this by checking on the SynchronizationContext.
+													?? (mDeleteRuleCommand = System.Threading.SynchronizationContext.Current == null
+														? null : new DelegateCommand(DeleteRule, CanDeleteRule));
 
 		/// <summary>
 		/// </summary>
@@ -158,11 +158,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand EditRuleCommand => mEditRuleCommand
-		                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                          // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                          // main thread. Prevent this by checking on the SynchronizationContext.
-		                                          ?? (mEditRuleCommand = System.Threading.SynchronizationContext.Current == null
-			                                          ? null : new DelegateCommand(EditRule, CanEditRule));
+												  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												  // is not yet bound to the View, the command is instantiated in a different thread than the
+												  // main thread. Prevent this by checking on the SynchronizationContext.
+												  ?? (mEditRuleCommand = System.Threading.SynchronizationContext.Current == null
+													  ? null : new DelegateCommand(EditRule, CanEditRule));
 
 		/// <summary>
 		/// </summary>
@@ -190,11 +190,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand NavigateBackCommand => mNavigateBackCommand
-		                                              // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                              // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                              // main thread. Prevent this by checking on the SynchronizationContext.
-		                                              ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
-			                                              ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
+													  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													  // is not yet bound to the View, the command is instantiated in a different thread than the
+													  // main thread. Prevent this by checking on the SynchronizationContext.
+													  ?? (mNavigateBackCommand = System.Threading.SynchronizationContext.Current == null
+														  ? null : new DelegateCommand(NavigateBack, CanNavigateBack));
 
 		/// <summary>
 		/// </summary>
@@ -225,11 +225,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand ShowPreviewCommand => mShowPreviewCommand
-		                                             // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                             // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                             // main thread. Prevent this by checking on the SynchronizationContext.
-		                                             ?? (mShowPreviewCommand = System.Threading.SynchronizationContext.Current == null
-			                                             ? null : new DelegateCommand(ShowPreview, CanShowPreview));
+													 // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													 // is not yet bound to the View, the command is instantiated in a different thread than the
+													 // main thread. Prevent this by checking on the SynchronizationContext.
+													 ?? (mShowPreviewCommand = System.Threading.SynchronizationContext.Current == null
+														 ? null : new DelegateCommand(ShowPreview, CanShowPreview));
 
 		/// <summary>
 		/// </summary>
@@ -265,11 +265,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand MoveUpCommand => mMoveUpCommand
-		                                        // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                        // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                        // main thread. Prevent this by checking on the SynchronizationContext.
-		                                        ?? (mMoveUpCommand = System.Threading.SynchronizationContext.Current == null
-			                                        ? null : new DelegateCommand(MoveUp, CanMoveUp));
+												// Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												// is not yet bound to the View, the command is instantiated in a different thread than the
+												// main thread. Prevent this by checking on the SynchronizationContext.
+												?? (mMoveUpCommand = System.Threading.SynchronizationContext.Current == null
+													? null : new DelegateCommand(MoveUp, CanMoveUp));
 
 		/// <summary>
 		/// </summary>
@@ -302,11 +302,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand MoveDownCommand => mMoveDownCommand
-		                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                          // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                          // main thread. Prevent this by checking on the SynchronizationContext.
-		                                          ?? (mMoveDownCommand = System.Threading.SynchronizationContext.Current == null
-			                                          ? null : new DelegateCommand(MoveDown, CanMoveDown));
+												  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												  // is not yet bound to the View, the command is instantiated in a different thread than the
+												  // main thread. Prevent this by checking on the SynchronizationContext.
+												  ?? (mMoveDownCommand = System.Threading.SynchronizationContext.Current == null
+													  ? null : new DelegateCommand(MoveDown, CanMoveDown));
 
 		/// <summary>
 		/// </summary>
@@ -338,11 +338,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand CancelAddEditCommand => mCancelAddEditCommand
-		                                               // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                               // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                               // main thread. Prevent this by checking on the SynchronizationContext.
-		                                               ?? (mCancelAddEditCommand = System.Threading.SynchronizationContext.Current == null
-			                                               ? null : new DelegateCommand(CancelAddEdit, CanCancelAddEdit));
+													   // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+													   // is not yet bound to the View, the command is instantiated in a different thread than the
+													   // main thread. Prevent this by checking on the SynchronizationContext.
+													   ?? (mCancelAddEditCommand = System.Threading.SynchronizationContext.Current == null
+														   ? null : new DelegateCommand(CancelAddEdit, CanCancelAddEdit));
 
 		/// <summary>
 		/// </summary>
@@ -370,11 +370,11 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		[System.ComponentModel.Browsable(false)]
 		public DelegateCommand SaveRuleCommand => mSaveRuleCommand
-		                                          // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
-		                                          // is not yet bound to the View, the command is instantiated in a different thread than the
-		                                          // main thread. Prevent this by checking on the SynchronizationContext.
-		                                          ?? (mSaveRuleCommand = System.Threading.SynchronizationContext.Current == null
-			                                          ? null : new DelegateCommand(SaveRule, CanSaveRule));
+												  // Reflection is used to call ChangeCanExecute on the command. Therefore, when the command
+												  // is not yet bound to the View, the command is instantiated in a different thread than the
+												  // main thread. Prevent this by checking on the SynchronizationContext.
+												  ?? (mSaveRuleCommand = System.Threading.SynchronizationContext.Current == null
+													  ? null : new DelegateCommand(SaveRule, CanSaveRule));
 
 		/// <summary>
 		/// </summary>
@@ -597,7 +597,7 @@ namespace BookKeeping.Client.ViewModels
 				if (saved)
 				{
 					ruleToReplace = SelectedRule;
-				}				
+				}
 			}
 			else
 			{
