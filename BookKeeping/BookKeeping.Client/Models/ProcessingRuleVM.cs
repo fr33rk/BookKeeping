@@ -1,4 +1,5 @@
-﻿using PL.BookKeeping.Entities;
+﻿using System;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Entities.Misc;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,10 @@ namespace BookKeeping.Client.Models
 		public Entry Entry { get; set; }
 
 		public int Priority { get; set; }
+
+		public DateTime? DateBeforeRule { get; set; }
+
+		public DateTime? DateAfterRule { get; set; }
 
 		public string NameRule { get; set; }
 
@@ -110,42 +115,42 @@ namespace BookKeeping.Client.Models
 				: string.Join("; ", rules);
 		}
 
-		internal IList<Transaction> FilterList(ref IList<Transaction> transactions, int? year)
-		{
-			var rule = ToEntity();
+		//internal IList<Transaction> FilterList(ref IList<Transaction> transactions, int? year)
+		//{
+		//	var rule = ToEntity();
 
-			var retValue = transactions.Where(t =>
-			{
-				var isMatch = true;
+		//	var retValue = transactions.Where(t =>
+		//	{
+		//		var isMatch = true;
 
-				if (year.HasValue)
-				{
-					isMatch = t.Date.Year == year;
-				}
+		//		if (year.HasValue)
+		//		{
+		//			isMatch = t.Date.Year == year;
+		//		}
 
-				isMatch &= !string.IsNullOrEmpty(NameRule) ? Regex.IsMatch(t.Name, NameRule) : true;
+		//		isMatch &= !string.IsNullOrEmpty(NameRule) ? Regex.IsMatch(t.Name, NameRule) : true;
 
-				if (isMatch)
-				{
-					isMatch &= !string.IsNullOrEmpty(AccountRule) ? Regex.IsMatch(t.Account, AccountRule) : true;
-					isMatch &= !string.IsNullOrEmpty(CounterAccountRule) ? Regex.IsMatch(t.CounterAccount, CounterAccountRule) : true;
-					isMatch &= !string.IsNullOrEmpty(CodeRule) ? Regex.IsMatch(t.Code, CodeRule) : true;
-					isMatch &= MutationTypeRule != null ? t.MutationType == MutationTypeRule : true;
-					isMatch &= !string.IsNullOrEmpty(MutationKindRule) ? Regex.IsMatch(t.MutationKind, MutationKindRule) : true;
-					isMatch &= !string.IsNullOrEmpty(RemarksRule) ? Regex.IsMatch(t.Remarks, RemarksRule) : true;
-					isMatch &= ((AmountRule != null) && (!string.IsNullOrEmpty(AmountRule.ToString()))) ? rule.AmountRuleAppliesTo(t.Amount) : true;
-				}
-				return isMatch;
-			})
-			.ToList();
+		//		if (isMatch)
+		//		{
+		//			isMatch &= !string.IsNullOrEmpty(AccountRule) ? Regex.IsMatch(t.Account, AccountRule) : true;
+		//			isMatch &= !string.IsNullOrEmpty(CounterAccountRule) ? Regex.IsMatch(t.CounterAccount, CounterAccountRule) : true;
+		//			isMatch &= !string.IsNullOrEmpty(CodeRule) ? Regex.IsMatch(t.Code, CodeRule) : true;
+		//			isMatch &= MutationTypeRule != null ? t.MutationType == MutationTypeRule : true;
+		//			isMatch &= !string.IsNullOrEmpty(MutationKindRule) ? Regex.IsMatch(t.MutationKind, MutationKindRule) : true;
+		//			isMatch &= !string.IsNullOrEmpty(RemarksRule) ? Regex.IsMatch(t.Remarks, RemarksRule) : true;
+		//			isMatch &= ((AmountRule != null) && (!string.IsNullOrEmpty(AmountRule.ToString()))) ? rule.AmountRuleAppliesTo(t.Amount) : true;
+		//		}
+		//		return isMatch;
+		//	})
+		//	.ToList();
 
-			foreach (var transaction in retValue)
-			{
-				transactions.Remove(transaction);
-			}
+		//	foreach (var transaction in retValue)
+		//	{
+		//		transactions.Remove(transaction);
+		//	}
 
-			return retValue;
-		}
+		//	return retValue;
+		//}
 
 		#endregion ToString
 

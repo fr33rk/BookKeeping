@@ -14,7 +14,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -69,7 +69,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
+                <RowDefinition Height="24*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -78,49 +81,59 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="24*" />
+                <RowDefinition Height="12*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="11*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="Post:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Post:" Style="{StaticResource RightAlignedCentralTextBlock}" />
             <ComboBox Grid.Row="1" Grid.Column="2" Margin="4"
                       ItemsSource="{Binding AvailableEntries}" DisplayMemberPath="RouteString" SelectedValuePath="RouteString"
                       SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
                       IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="Naamregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="2" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="Geldig vanaf:" 
+                       Style="{StaticResource RightAlignedCentralTextBlock}"/>
+            <DatePicker Grid.Row="2" Grid.Column="2" 
+                        Style="{StaticResource GeneralDatePicker}"
+                        SelectedDate="{Binding SelectedRule.DateAfterRule}"
+                        IsEnabled="{Binding IsEditing}"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Geldig tot:" Style="{StaticResource RightAlignedCentralTextBlock}"/>
+            <DatePicker Grid.Row="3" Grid.Column="2" 
+                        Style="{StaticResource GeneralDatePicker}"
+                        SelectedDate="{Binding SelectedRule.DateBeforeRule}"
+                        IsEnabled="{Binding IsEditing}"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Naamregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="4" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.NameRule}"
                      IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="Rekeningregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="3" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="Rekeningregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="5" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.AccountRule}"
                      IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="Tegenrekeningregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="4" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="Tegenrekeningregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="6" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.CounterAccountRule}"
                      IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="Code-regel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="5" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="Code-regel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="7" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.CodeRule}"
                      IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="Bedragregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="6" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="Bedragregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="8" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.AmountRule, Mode=TwoWay}"
                      IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="Mutatiesoortregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="7" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="Mutatiesoortregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="9" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.MutationKindRule}"
                      IsEnabled="{Binding IsEditing}" />
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="Opmerkingregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="8" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="Opmerkingregel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="10" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.RemarksRule}"
                      IsEnabled="{Binding IsEditing}" />
 
-            <StackPanel Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal">
+            <StackPanel Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Style="{StaticResource MediumSquareButtonStyle}"
                         Command="{Binding CancelAddEditCommand}">
                     <Image Source="{StaticResource imgCancel}" />
@@ -132,17 +145,17 @@
                 </Button>
             </StackPanel>
 
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="Mutatietyperegel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox Grid.Row="9" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="11" Grid.Column="1" Text="Mutatietyperegel:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBox Grid.Row="11" Grid.Column="2" Margin="4"
                      Text="{Binding SelectedRule.MutationTypeRule}" />
-            <TextBlock Grid.Row="12" Grid.Column="1" Text="Toepassen op:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <ComboBox Grid.Row="12" Grid.Column="2" Margin="4"
+            <TextBlock Grid.Row="14" Grid.Column="1" Text="Toepassen op:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <ComboBox Grid.Row="14" Grid.Column="2" Margin="4"
                       ItemsSource="{Binding AvailablePeriods}" DisplayMemberPath="Description" SelectedValuePath="Description"
                       SelectedItem="{Binding SelectedPeriod, Mode=TwoWay}" />
-            <Label Grid.Row="13" Grid.Column="1" Content="Regelvolgorde toepassen:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <CheckBox Grid.Row="13" Grid.Column="2" VerticalAlignment="Center" />
+            <Label Grid.Row="15" Grid.Column="1" Content="Regelvolgorde toepassen:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <CheckBox Grid.Row="15" Grid.Column="2" VerticalAlignment="Center" />
 
-            <StackPanel Grid.Row="12" Grid.Column="3" Grid.RowSpan="2" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="14" Grid.Column="3" Grid.RowSpan="2" HorizontalAlignment="Right">
                 <Button Style="{StaticResource MediumSquareButtonStyle}"
                         Command="{Binding ShowPreviewCommand}">
                     <Image Source="{StaticResource imgPlay}" />

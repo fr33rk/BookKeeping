@@ -5,6 +5,7 @@ using PL.Common.Prism;
 using Prism.Commands;
 using Prism.Regions;
 using System.Collections.ObjectModel;
+using AutoMapper;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -160,14 +161,18 @@ namespace BookKeeping.Client.ViewModels
 		private void Search()
 		{
 			MatchingTransactions.Clear();
+			if (mSelectedRule == null)
+				return;
 
-			if (mSelectedRule != null)
+			var previewedRule = Mapper.Map<ProcessingRule>(mSelectedRule);
+			var transactions = mTransactionDataService.GetAll();
+
+			foreach (var transaction in transactions)
 			{
-				var transactions = mTransactionDataService.GetAll();
-
-				var result = mSelectedRule.FilterList(ref transactions, null);
-
-				MatchingTransactions.AddRange(result);
+				if (previewedRule.AppliesTo(transaction))
+				{
+					MatchingTransactions.Add(transaction);
+				}
 			}
 		}
 

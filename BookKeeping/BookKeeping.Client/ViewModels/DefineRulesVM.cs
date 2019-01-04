@@ -236,13 +236,20 @@ namespace BookKeeping.Client.ViewModels
 		private void ShowPreview()
 		{
 			MatchingTransactions.Clear();
-
-			if (mSelectedRule != null)
+			if (mSelectedRule == null)
 			{
-				var transactions = mTransactionDataService.GetAll();
+				return;
+			}
 
-				var result = mSelectedRule.FilterList(ref transactions, SelectedPeriod.Year);
-				MatchingTransactions.AddRange(result);
+			var previewedRule = Mapper.Map<ProcessingRule>(mSelectedRule);
+			var transactions = mTransactionDataService.GetAll();
+
+			foreach (var transaction in transactions)
+			{
+				if (previewedRule.AppliesTo(transaction))
+				{
+					MatchingTransactions.Add(transaction);
+				}
 			}
 		}
 

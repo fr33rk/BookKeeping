@@ -78,6 +78,10 @@
     <Compile Include="Migrations\201812091929164_EntryActivePeriod.Designer.cs">
       <DependentUpon>201812091929164_EntryActivePeriod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812132017467_AddDateRules.cs" />
+    <Compile Include="Migrations\201812132017467_AddDateRules.Designer.cs">
+      <DependentUpon>201812132017467_AddDateRules.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MySqlConnectionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812091929164_EntryActivePeriod.resx">
       <DependentUpon>201812091929164_EntryActivePeriod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812132017467_AddDateRules.resx">
+      <DependentUpon>201812132017467_AddDateRules.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

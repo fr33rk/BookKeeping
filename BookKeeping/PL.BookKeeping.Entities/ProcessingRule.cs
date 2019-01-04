@@ -14,6 +14,10 @@ namespace PL.BookKeeping.Entities
 
 		public int Priority { get; set; }
 
+		public DateTime? DateBeforeRule { get; set; }
+
+		public DateTime? DateAfterRule { get; set; } = new DateTime(1978,09,21);
+
 		public string NameRule { get; set; }
 
 		public string AccountRule { get; set; }
@@ -61,7 +65,17 @@ namespace PL.BookKeeping.Entities
 		{
 			var retValue = true;
 
-			if (NameRule != null)
+			if (DateBeforeRule != null)
+			{
+				retValue &= transaction.Date <= DateBeforeRule.Value;
+			}
+
+			if (retValue && DateAfterRule != null)
+			{
+				retValue &= transaction.Date > DateAfterRule.Value;
+			}
+
+			if (retValue && NameRule != null)
 			{
 				retValue &= Regex.IsMatch(transaction.Name, NameRule);
 			}

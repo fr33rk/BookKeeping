@@ -8,7 +8,7 @@ namespace PL.BookKeeping.Data.Migrations
 		{
 			AddColumn("dbo.Entry", "ActiveFrom", c => c.DateTime(nullable: false, precision: 0));
 			AddColumn("dbo.Entry", "ActiveUntil", c => c.DateTime(precision: 0));
-			Sql(@"UPDATE entry SET activeFrom = ""2000/01/01""");
+			Sql(@"UPDATE Entry SET activeFrom = ""2000/01/01""");
 		}
 
 		public override void Down()
