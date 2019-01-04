@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace BookKeeping.Client.ViewModels
 {
-	public class ImportDataVM : ViewModelBase, INavigationAware, IDisposable
+	public class ImportDataVm : ViewModelBase, INavigationAware, IDisposable
 	{
 		#region Fields
 
@@ -29,13 +29,12 @@ namespace BookKeeping.Client.ViewModels
 
 		#region Constructor(s)
 
-		/// <summary>Initializes a new instance of the <see cref="ImportDataVM"/> class.
+		/// <summary>Initializes a new instance of the <see cref="ImportDataVm"/> class.
 		/// </summary>
-		/// <param name="regionManager">The region manager.</param>
 		/// <param name="dataImportService">The data import service.</param>
 		/// <param name="dataProcessorService">The data processor service.</param>
 		/// <param name="logFile">The log file.</param>
-		public ImportDataVM(IRegionManager regionManager, IDataImporterService dataImportService, IDataProcessorService dataProcessorService, ILogFile logFile)
+		public ImportDataVm(IDataImporterService dataImportService, IDataProcessorService dataProcessorService, ILogFile logFile)
 		{
 			InitializeStateMachine();
 
@@ -54,6 +53,8 @@ namespace BookKeeping.Client.ViewModels
 			mProcessorWorker = new BackgroundWorker();
 			mProcessorWorker.DoWork += ProcessorWorker_DoWork;
 			mProcessorWorker.RunWorkerCompleted += ProcessorWorker_RunWorkerCompleted;
+
+			mVmStateMachine.Fire(VmTrigger.Start);
 		}
 
 		#endregion Constructor(s)
@@ -62,7 +63,7 @@ namespace BookKeeping.Client.ViewModels
 
 		private void ProcessorWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			mVMStateMachine.Fire(VMTrigger.ProcessingDone);
+			mVmStateMachine.Fire(VmTrigger.ProcessingDone);
 		}
 
 		private void ProcessorWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -85,7 +86,7 @@ namespace BookKeeping.Client.ViewModels
 
 		private void ImportWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			mVMStateMachine.Fire(VMTrigger.ImportDone);
+			mVmStateMachine.Fire(VmTrigger.ImportDone);
 		}
 
 		private void ImportWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -174,6 +175,12 @@ namespace BookKeeping.Client.ViewModels
 
 		#endregion property SelectedFiles
 
+		#region Property ShowWarning
+
+		public Visibility ShowWarning { get; private set; } = Visibility.Collapsed;
+
+		#endregion Property ShowWarning
+
 		#region Command SelectFilesCommand
 
 		/// <summary>Field for the StartMeasurement command.
@@ -208,7 +215,7 @@ namespace BookKeeping.Client.ViewModels
 					SelectedFiles.Add(fileName);
 					mLogFile.Info($"Selected file for import: {fileName}");
 				}
-				mVMStateMachine.Fire(VMTrigger.FilesSelected);
+				mVmStateMachine.Fire(VmTrigger.FilesSelected);
 			}
 		}
 
@@ -216,8 +223,8 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		private bool CanSelectFiles()
 		{
-			return mVMStateMachine.IsInState(VMState.SelectingFiles) ||
-				mVMStateMachine.IsInState(VMState.WaitingOnImport);
+			return mVmStateMachine.IsInState(VmState.SelectingFiles) ||
+				mVmStateMachine.IsInState(VmState.WaitingOnImport);
 		}
 
 		#endregion Command SelectFilesCommand
@@ -242,7 +249,7 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		private void ImportFiles()
 		{
-			mVMStateMachine.Fire(VMTrigger.StartImport);
+			mVmStateMachine.Fire(VmTrigger.StartImport);
 
 			mImportWorker.RunWorkerAsync();
 		}
@@ -251,67 +258,90 @@ namespace BookKeeping.Client.ViewModels
 		/// </summary>
 		private bool CanImportFiles()
 		{
-			return mVMStateMachine.IsInState(VMState.WaitingOnImport);
+			return mVmStateMachine.IsInState(VmState.WaitingOnImport);
 		}
 
 		#endregion Command ImportFilesCommand
 
 		#region State machine
 
-		private enum VMState
+		private enum VmState
 		{
+			Idle,
+			CheckIfImportIsAllowed,
 			SelectingFiles,
 			WaitingOnImport,
-			Imporing,
+			Importing,
 			Processing,
 		};
 
-		private enum VMTrigger
+		private enum VmTrigger
 		{
+			Start,
+			CheckPassed,
 			FilesSelected,
 			StartImport,
 			ImportDone,
 			ProcessingDone,
 		}
 
-		private StateMachine<VMState, VMTrigger> mVMStateMachine;
+		private StateMachine<VmState, VmTrigger> mVmStateMachine;
 
 		private void InitializeStateMachine()
 		{
-			mVMStateMachine = new StateMachine<VMState, VMTrigger>(VMState.SelectingFiles);
+			mVmStateMachine = new StateMachine<VmState, VmTrigger>(VmState.Idle);
 
-			mVMStateMachine.OnTransitioned((t) =>
+			mVmStateMachine.OnTransitioned((t) =>
 			{
 				mLogFile.Debug($"ImportDataVM - VMStateMachine, changed state to {t.Destination}");
 				SelectFilesCommand.RaiseCanExecuteChanged();
 				ImportFilesCommand.RaiseCanExecuteChanged();
 			});
 
-			mVMStateMachine.Configure(VMState.SelectingFiles)
-				.Permit(VMTrigger.FilesSelected, VMState.WaitingOnImport);
+			mVmStateMachine.Configure(VmState.Idle)
+				.Permit(VmTrigger.Start, VmState.CheckIfImportIsAllowed);
 
-			mVMStateMachine.Configure(VMState.WaitingOnImport)
-				.PermitReentry(VMTrigger.FilesSelected)
-				.Permit(VMTrigger.StartImport, VMState.Imporing);
+			mVmStateMachine.Configure(VmState.CheckIfImportIsAllowed)
+				.OnEntry(CheckIfImportIsAllowed)
+				.Permit(VmTrigger.CheckPassed, VmState.SelectingFiles);
 
-			mVMStateMachine.Configure(VMState.Imporing)
+			mVmStateMachine.Configure(VmState.SelectingFiles)
+				.Permit(VmTrigger.FilesSelected, VmState.WaitingOnImport);
+
+			mVmStateMachine.Configure(VmState.WaitingOnImport)
+				.PermitReentry(VmTrigger.FilesSelected)
+				.Permit(VmTrigger.StartImport, VmState.Importing);
+
+			mVmStateMachine.Configure(VmState.Importing)
 				.OnEntry(() =>
 				{
 					mLogFile.Info("Started importing selected files");
 				})
-				.Permit(VMTrigger.ImportDone, VMState.Processing);
+				.Permit(VmTrigger.ImportDone, VmState.Processing);
 
-			mVMStateMachine.Configure(VMState.Processing)
+			mVmStateMachine.Configure(VmState.Processing)
 				.OnEntry(() =>
 				{
 					mProcessorWorker.RunWorkerAsync();
 					mLogFile.Info("Started processing imported transactions.");
 				})
-				.Permit(VMTrigger.ProcessingDone, VMState.SelectingFiles)
+				.Permit(VmTrigger.ProcessingDone, VmState.SelectingFiles)
 				.OnExit(() =>
 				{
 					SelectedFiles.Clear();
 				});
+		}
+
+		private void CheckIfImportIsAllowed()
+		{
+			if (mDataImportService.IsReadyForImport)
+			{
+				mVmStateMachine.Fire(VmTrigger.CheckPassed);
+			}
+			else
+			{
+				ShowWarning = Visibility.Visible;
+			}
 		}
 
 		#endregion State machine
@@ -382,9 +412,9 @@ namespace BookKeeping.Client.ViewModels
 			GC.SuppressFinalize(this);
 		}
 
-		/// <summary>Finalizes an instance of the <see cref="ImportDataVM"/> class.
+		/// <summary>Finalizes an instance of the <see cref="ImportDataVm"/> class.
 		/// </summary>
-		~ImportDataVM()
+		~ImportDataVm()
 		{
 			Dispose(false);
 		}

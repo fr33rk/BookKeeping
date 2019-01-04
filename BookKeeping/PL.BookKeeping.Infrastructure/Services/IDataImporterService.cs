@@ -8,6 +8,8 @@ namespace PL.BookKeeping.Infrastructure.Services
 	{
 		event EventHandler<DataImportedEventArgs> OnDataProcessed;
 
+		bool IsReadyForImport { get; }
+
 		IList<Transaction> ImportFiles(IEnumerable<string> files);
 	}
 }

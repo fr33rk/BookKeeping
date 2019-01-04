@@ -19,6 +19,7 @@ namespace PL.BookKeeping.Business.Services
 
 		private readonly ITransactionDataService mTransactionDataService;
 		private readonly ILogFile mLogFile;
+		private readonly ISettingsService<Settings> mSettingsService;
 
 		private int mImported;
 		private int mDuplicate;
@@ -32,8 +33,11 @@ namespace PL.BookKeeping.Business.Services
 		/// </summary>
 		/// <param name="transactionDataService">The transaction data service.</param>
 		/// <param name="logFile"></param>
-		public DataImporterService(ITransactionDataService transactionDataService, ILogFile logFile)
+		/// <param name="settingsService"></param>
+		public DataImporterService(ITransactionDataService transactionDataService, ILogFile logFile,
+			ISettingsService<Settings> settingsService)
 		{
+			mSettingsService = settingsService;
 			mTransactionDataService = transactionDataService;
 			mLogFile = logFile;
 		}
@@ -46,6 +50,12 @@ namespace PL.BookKeeping.Business.Services
 		}
 
 		#endregion Constructor(s)
+
+		#region Property IsReadyForImport
+
+		public bool IsReadyForImport => mSettingsService.Settings.AdministeredAccounts.Any();
+
+		#endregion Property IsReadyForImport
 
 		#region ImportFiles
 
@@ -105,7 +115,7 @@ namespace PL.BookKeeping.Business.Services
 		private IEnumerable<Transaction> Import(string fileName)
 		{
 			var retValue = new List<Transaction>();
-			var sepparators = new[] { "\",\"" };
+			var separators = new[] { "\",\"" };
 
 			try
 			{
@@ -116,8 +126,14 @@ namespace PL.BookKeeping.Business.Services
 
 				while (!IsAtEndOfStream())
 				{
-					var values = ReadLine().ToUpper().Split(sepparators, 9, StringSplitOptions.None);
+					var values = ReadLine().ToUpper().Split(separators, 9, StringSplitOptions.None);
 					var transaction = ProcessLine(values);
+
+					if (!mSettingsService.Settings.AdministeredAccounts.Contains(transaction.Account))
+					{
+						continue;
+					}
+
 					if (mTransactionDataService.Add(transaction))
 					{
 						mImported++;
@@ -153,7 +169,7 @@ namespace PL.BookKeeping.Business.Services
 			retValue.CounterAccount = values[3];
 			retValue.Code = values[4];
 			retValue.MutationType = values[5].ToUpper() == "AF" ? MutationType.Debit : MutationType.Credit;
-			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.GetCultureInfo("nl-NL")); // ING exports using a comma as decimal sepparator.
+			retValue.Amount = Convert.ToDecimal(values[6], CultureInfo.GetCultureInfo("nl-NL")); // ING exports using a comma as decimal separator.
 			retValue.MutationKind = values[7];
 			retValue.Remarks = values[8];
 

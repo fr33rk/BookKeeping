@@ -8,7 +8,7 @@ namespace BookKeeping.Client.Views
 	/// </summary>
 	public partial class ImportDataView : UserControl
 	{
-		public ImportDataView(ImportDataVM vm)
+		public ImportDataView(ImportDataVm vm)
 		{
 			InitializeComponent();
 
