@@ -8,6 +8,7 @@ using Prism.Modularity;
 using Prism.Unity;
 using System;
 using System.Windows;
+using PL.Common.Logger;
 
 namespace BookKeeping.Client
 {

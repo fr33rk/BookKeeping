@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PL.BookKeeping.Data</RootNamespace>
     <AssemblyName>PL.BookKeeping.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,9 @@
     </Reference>
     <Reference Include="MySql.Data.Entity.EF6, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.Entity.6.10.8\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="PL.Common.Logger, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PL.Common.Logger.2.0.0\lib\netstandard2.0\PL.Common.Logger.dll</HintPath>
     </Reference>
     <Reference Include="RefactorThis.GraphDiff, Version=3.0.2.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <HintPath>..\packages\RefactorThis.GraphDiff.3.0.2\lib\net40\RefactorThis.GraphDiff.dll</HintPath>
@@ -96,10 +100,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
-      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
-      <Name>PL.Logger</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Entities\PL.BookKeeping.Entities.csproj">
       <Project>{E3EB20CA-C2F3-4113-999E-679ECCE660F1}</Project>
       <Name>PL.BookKeeping.Entities</Name>

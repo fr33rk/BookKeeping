@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BookKeeping.Client</RootNamespace>
     <AssemblyName>BookKeeping</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -18,6 +18,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,6 +68,9 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="PL.Common.Logger, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PL.Common.Logger.2.0.0\lib\netstandard2.0\PL.Common.Logger.dll</HintPath>
     </Reference>
     <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.6.1.0\lib\net45\Prism.dll</HintPath>
@@ -235,10 +239,6 @@
     <Resource Include="money.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
-      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
-      <Name>PL.Logger</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Business\PL.BookKeeping.Business.csproj">
       <Project>{9905A1EA-A6B2-4FEA-B03D-B7DB011D4A95}</Project>
       <Name>PL.BookKeeping.Business</Name>

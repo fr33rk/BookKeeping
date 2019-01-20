@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PL.BookKeeping.Business.Tests</RootNamespace>
     <AssemblyName>PL.BookKeeping.Business.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -53,6 +53,9 @@
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="PL.Common.Logger, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PL.Common.Logger.2.0.0\lib\netstandard2.0\PL.Common.Logger.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -79,10 +82,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
-      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
-      <Name>PL.Logger</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Business\PL.BookKeeping.Business.csproj">
       <Project>{9905A1EA-A6B2-4FEA-B03D-B7DB011D4A95}</Project>
       <Name>PL.BookKeeping.Business</Name>

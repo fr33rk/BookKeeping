@@ -3,6 +3,7 @@ using NUnit.Framework;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using PL.Logger;
 using System;
@@ -28,8 +29,9 @@ namespace PL.BookKeeping.Business.Tests.Services
 			/// </summary>
 			/// <param name="transactionDataService">The transaction data service.</param>
 			/// <param name="logFile">The log file.</param>
-			public DataImporterServiceImportFileTest(ITransactionDataService transactionDataService, ILogFile logFile)
-				: base(transactionDataService, logFile)
+			/// <param name="settingsService"></param>
+			public DataImporterServiceImportFileTest(ITransactionDataService transactionDataService, ILogFile logFile, ISettingsService<Settings> settingsService)
+				: base(transactionDataService, logFile, settingsService)
 			{
 			}
 
@@ -197,9 +199,9 @@ namespace PL.BookKeeping.Business.Tests.Services
 			mFileWithInvalidRecords.AddRecord("\"19780921\",\"Djuke\",\"2345678901\",\"9876543210\",\"B\",\"WITH\",\"19797,13\",\"ACC\",\"\"", null);
 		}
 
-		private DataImporterServiceImportFileTest CreateUnitUnderTest(ITransactionDataService transactionDataService, ILogFile logFile)
+		private DataImporterServiceImportFileTest CreateUnitUnderTest(ITransactionDataService transactionDataService, ILogFile logFile, ISettingsService<Settings> settingsService)
 		{
-			var retValue = new DataImporterServiceImportFileTest(transactionDataService, logFile);
+			var retValue = new DataImporterServiceImportFileTest(transactionDataService, logFile, settingsService);
 
 			retValue.AddTestFile(mFileWithOnlyHeader);
 			retValue.AddTestFile(mFileWithOneRecord);
@@ -216,8 +218,9 @@ namespace PL.BookKeeping.Business.Tests.Services
 		{
 			var mockLogFile = Substitute.For<ILogFile>();
 			var transactionDataService = Substitute.For<ITransactionDataService>();
+			var stubSettingService = Substitute.For<ISettingsService<Settings>>();
 
-			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile);
+			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile, stubSettingService);
 			unitUnderTest.ImportFiles(new List<string>() { "InvalidFileName" });
 
 			mockLogFile.Received(1).Error(Arg.Is<string>(x => x.Contains("Unable to import")));
@@ -231,8 +234,9 @@ namespace PL.BookKeeping.Business.Tests.Services
 		{
 			var mockLogFile = Substitute.For<ILogFile>();
 			var transactionDataService = Substitute.For<ITransactionDataService>();
+			var stubSettingService = Substitute.For<ISettingsService<Settings>>();
 
-			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile);
+			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile, stubSettingService);
 
 			unitUnderTest.ImportFiles(new List<string>() { mFileWithOnlyHeader.Name });
 
@@ -246,10 +250,11 @@ namespace PL.BookKeeping.Business.Tests.Services
 			// Creation and initialization.
 			var mockLogFile = Substitute.For<ILogFile>();
 			var transactionDataService = Substitute.For<ITransactionDataService>();
+			var stubSettingService = Substitute.For<ISettingsService<Settings>>();
 
 			transactionDataService.Add(Arg.Any<Transaction>()).Returns(true);
 
-			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile);
+			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile, stubSettingService);
 			// Start test
 			unitUnderTest.ImportFiles(new List<string>() { mFileWithOneRecord.Name });
 
@@ -265,10 +270,11 @@ namespace PL.BookKeeping.Business.Tests.Services
 			// Given
 			var mockLogFile = Substitute.For<ILogFile>();
 			var transactionDataService = Substitute.For<ITransactionDataService>();
+			var stubSettingService = Substitute.For<ISettingsService<Settings>>();
 
 			transactionDataService.Add(Arg.Any<Transaction>()).Returns(true);
 
-			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile);
+			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile, stubSettingService);
 
 			// When
 			unitUnderTest.ImportFiles(new List<string>() { mFileWithMultipleRecords.Name });
@@ -297,11 +303,12 @@ namespace PL.BookKeeping.Business.Tests.Services
 			var stubLogFile = Substitute.For<ILogFile>();
 			var transactionDataService = Substitute.For<ITransactionDataService>();
 			var mockSubscriber = Substitute.For<IDataProcessedSubscriber>();
+			var stubSettingService = Substitute.For<ISettingsService<Settings>>();
 
 			transactionDataService.Add(Arg.Is<Transaction>(t => t.Remarks == "DUPLICATE")).Returns(false);
 			transactionDataService.Add(Arg.Is<Transaction>(t => t.Remarks != "DUPLICATE")).Returns(true);
 
-			var unitUnderTest = CreateUnitUnderTest(transactionDataService, stubLogFile);
+			var unitUnderTest = CreateUnitUnderTest(transactionDataService, stubLogFile, stubSettingService);
 			unitUnderTest.OnDataProcessed += mockSubscriber.React;
 
 			// When
@@ -322,10 +329,11 @@ namespace PL.BookKeeping.Business.Tests.Services
 			// Given
 			var mockLogFile = Substitute.For<ILogFile>();
 			var transactionDataService = Substitute.For<ITransactionDataService>();
+			var stubSettingService = Substitute.For<ISettingsService<Settings>>();
 
 			transactionDataService.Add(Arg.Any<Transaction>()).Returns(true);
 
-			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile);
+			var unitUnderTest = CreateUnitUnderTest(transactionDataService, mockLogFile, stubSettingService);
 
 			// When
 			unitUnderTest.ImportFiles(new List<string>() { mFileWithInvalidRecords.Name });

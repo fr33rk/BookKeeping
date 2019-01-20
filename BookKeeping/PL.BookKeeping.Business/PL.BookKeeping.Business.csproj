@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PL.BookKeeping.Business</RootNamespace>
     <AssemblyName>PL.BookKeeping.Business</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +61,9 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PL.Common.Logger, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PL.Common.Logger.2.0.0\lib\netstandard2.0\PL.Common.Logger.dll</HintPath>
+    </Reference>
     <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.6.1.0\lib\net45\Prism.dll</HintPath>
       <Private>True</Private>
@@ -94,10 +98,6 @@
     <Compile Include="Services\SettingsService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PL.Common\Logger\PL.Logger.csproj">
-      <Project>{ec4d9e5b-b1a1-49eb-a7db-49fe70e12906}</Project>
-      <Name>PL.Logger</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PL.BookKeeping.Data\PL.BookKeeping.Data.csproj">
       <Project>{3FBE891B-065F-4DEA-989A-F85BD1EC9D9A}</Project>
       <Name>PL.BookKeeping.Data</Name>
