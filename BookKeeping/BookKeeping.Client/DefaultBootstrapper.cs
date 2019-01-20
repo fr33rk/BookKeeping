@@ -1,5 +1,4 @@
-﻿using Microsoft.Practices.Unity;
-using PL.BookKeeping.Infrastructure;
+﻿using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.Logger;
 using Prism.Events;

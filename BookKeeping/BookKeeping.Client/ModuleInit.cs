@@ -2,11 +2,11 @@
 using BookKeeping.Client.Models;
 using BookKeeping.Client.ViewModels;
 using BookKeeping.Client.Views;
-using Microsoft.Practices.Unity;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
 using Prism.Modularity;
 using Prism.Regions;
+using Unity;
 
 namespace BookKeeping.Client
 {

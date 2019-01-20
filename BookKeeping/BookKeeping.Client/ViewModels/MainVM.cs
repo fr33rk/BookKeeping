@@ -1,5 +1,4 @@
 ﻿using BookKeeping.Client.Views;
-using Microsoft.Practices.Unity;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.EventAggregatorEvents;
 using PL.BookKeeping.Infrastructure.Services;
@@ -10,6 +9,8 @@ using Prism.Events;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Unity;
+using Unity.Resolution;
 
 namespace BookKeeping.Client.ViewModels
 {

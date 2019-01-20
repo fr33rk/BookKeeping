@@ -10,6 +10,8 @@ using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using Prism.Modularity;
 using System.Data.Entity;
+using Unity;
+using Unity.Lifetime;
 
 namespace PL.BookKeeping.Business
 {
