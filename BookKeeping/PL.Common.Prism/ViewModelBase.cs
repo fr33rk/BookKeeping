@@ -17,7 +17,7 @@ namespace PL.Common.Prism
 		/// <param name="propertyName">Name of a property.</param>
 		protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
-			base.OnPropertyChanged(propertyName);
+			RaisePropertyChanged(propertyName);
 			this.InvokeChangeCanExecute();
 			UpdateCommandCanExecute();
 		}
