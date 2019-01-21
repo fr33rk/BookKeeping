@@ -17,13 +17,10 @@ namespace PL.BookKeeping.Business
 {
 	public class ModuleInit : IModule
 	{
-		//private readonly IRegionManager mRegionManager;
-
 		private readonly IUnityContainer mContainer;
 
 		/// <summary>Initializes a new instance of the <see cref="ModuleInit"/> class.</summary>
 		/// <param name="container">The container.</param>
-		/// <param name="regionManager">The region manager.</param>
 		public ModuleInit(IUnityContainer container)
 		{
 			mContainer = container;
