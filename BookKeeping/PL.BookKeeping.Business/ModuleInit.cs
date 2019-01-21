@@ -1,5 +1,4 @@
-﻿using Microsoft.Practices.Unity;
-using PL.BookKeeping.Business.Services;
+﻿using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
 using PL.BookKeeping.Data.Migrations;
@@ -8,6 +7,7 @@ using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
+using Prism.Ioc;
 using Prism.Modularity;
 using System.Data.Entity;
 using Unity;
@@ -29,7 +29,7 @@ namespace PL.BookKeeping.Business
 			mContainer = container;
 		}
 
-		public void Initialize()
+		public void RegisterTypes(IContainerRegistry containerRegistry)
 		{
 			mContainer.RegisterType<ISettingsService<Settings>, SettingsService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDbConnectionFactory, MySqlConnectionFactory>(new ContainerControlledLifetimeManager());
@@ -45,7 +45,10 @@ namespace PL.BookKeeping.Business
 			mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataExporterService, DataExporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
+		}
 
+		public void OnInitialized(IContainerProvider containerProvider)
+		{
 			Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>(true));
 
 			LoadSettings();

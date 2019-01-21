@@ -4,6 +4,7 @@ using BookKeeping.Client.ViewModels;
 using BookKeeping.Client.Views;
 using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure;
+using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Unity;
@@ -25,7 +26,7 @@ namespace BookKeeping.Client
 			mRegionManager = regionManager;
 		}
 
-		public void Initialize()
+		public void RegisterTypes(IContainerRegistry containerRegistry)
 		{
 			mContainer.RegisterType<object, MainView>(typeof(MainView).FullName);
 			mContainer.RegisterType<object, ImportDataView>(typeof(ImportDataView).FullName);
@@ -34,7 +35,10 @@ namespace BookKeeping.Client
 			mContainer.RegisterType<object, ReApplyRulesView>(typeof(ReApplyRulesView).FullName);
 			mContainer.RegisterType<object, GlobalSearchView>(typeof(GlobalSearchView).FullName);
 			mContainer.RegisterType<object, EditOptionsView>(typeof(EditOptionsView).FullName);
+		}
 
+		public void OnInitialized(IContainerProvider containerProvider)
+		{
 			mRegionManager.RequestNavigate(RegionNames.MainRegion, typeof(MainView).FullName);
 
 			Mapper.Initialize(config =>

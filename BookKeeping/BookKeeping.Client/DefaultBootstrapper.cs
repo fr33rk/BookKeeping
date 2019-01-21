@@ -8,6 +8,7 @@ using Prism.Unity;
 using System;
 using System.Windows;
 using PL.Common.Logger;
+using Unity.Lifetime;
 
 namespace BookKeeping.Client
 {
@@ -30,7 +31,7 @@ namespace BookKeeping.Client
 		protected override void ConfigureContainer()
 		{
 			base.ConfigureContainer();
-			Container.RegisterInstance(mLogFile);
+			Container.RegisterInstance(typeof(ILogFile), "", mLogFile, new ContainerControlledLifetimeManager());
 		}
 
 		protected override void ConfigureModuleCatalog()
