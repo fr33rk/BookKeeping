@@ -1,11 +1,9 @@
-﻿using PL.BookKeeping.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.Logger;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
 
 namespace PL.BookKeeping.Data.Repositories
 {
@@ -53,26 +51,6 @@ namespace PL.BookKeeping.Data.Repositories
 			{
 				_dbContext.SaveChanges();
 				return true;
-			}
-			catch (DbEntityValidationException e)
-			{
-				string message, validationError;
-
-				foreach (var eve in e.EntityValidationErrors)
-				{
-					message =
-						$"Entity of type \"{eve.Entry.Entity.GetType().Name}\" in state \"{eve.Entry.State}\" has the following validation errors:";
-					mLogFile.Error(message);
-					Console.WriteLine(message);
-
-					foreach (var ve in eve.ValidationErrors)
-					{
-						validationError = $"- Property: \"{ve.PropertyName}\", Error: \"{ve.ErrorMessage}\"";
-						mLogFile.Error(validationError);
-						Console.WriteLine(validationError);
-					}
-				}
-				throw;
 			}
 			catch (DbUpdateException e)
 			{

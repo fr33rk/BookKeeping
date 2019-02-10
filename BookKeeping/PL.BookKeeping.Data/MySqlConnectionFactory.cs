@@ -1,8 +1,7 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.EntityFrameworkCore;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
-using System.Data.Common;
 
 namespace PL.BookKeeping.Data
 {
@@ -15,10 +14,14 @@ namespace PL.BookKeeping.Data
 			mSettingsService = settingsService;
 		}
 
-		public DbConnection Create()
+		public DbContextOptions Create()
 		{
+			var builder = new DbContextOptionsBuilder();
 			var settings = mSettingsService.Settings;
-			return new MySqlConnection($@"Server={settings.ServerName};Database={settings.DatabaseName};Uid={settings.UserId};Password={settings.Password}");
+
+			builder.UseMySQL($@"Server={settings.ServerName};Database={settings.DatabaseName};Uid={settings.UserId};Password={settings.Password}");
+
+			return builder.Options;
 		}
 	}
 }

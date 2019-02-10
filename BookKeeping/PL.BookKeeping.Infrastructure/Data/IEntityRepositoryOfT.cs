@@ -1,5 +1,4 @@
-﻿using RefactorThis.GraphDiff;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -68,12 +67,6 @@ namespace PL.BookKeeping.Infrastructure.Data
 		/// <param name="getKey">Function to get the key from given entity.</param>
 		/// <returns></returns>
 		void Update(TEntity updated, Func<TEntity, int> getKey);
-
-		/// <summary>Updates the specified updated.</summary>
-		/// <param name="updated">The updated.</param>
-		/// <param name="getKey">The get key.</param>
-		/// <param name="mapping">The mapping.</param>
-		void Update(TEntity updated, Func<TEntity, int> getKey, Expression<Func<IUpdateConfiguration<TEntity>, object>> mapping);
 
 		/// <summary>
 		/// Finds entities based on provided criteria.

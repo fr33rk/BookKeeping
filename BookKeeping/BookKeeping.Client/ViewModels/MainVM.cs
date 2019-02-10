@@ -75,9 +75,8 @@ namespace BookKeeping.Client.ViewModels
 
 		private void SelectLatestYear()
 		{
-			SelectedYear = mAvailableYears.Last();
+			SelectedYear = mAvailableYears.LastOrDefault();
 		}
-
 		#endregion Helper methods
 
 		#region Property AvailableYears

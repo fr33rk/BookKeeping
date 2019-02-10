@@ -1,11 +1,49 @@
-﻿using MySql.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PL.BookKeeping.Entities;
-using System.Data.Common;
-using System.Data.Entity;
+using System;
+using System.Diagnostics;
 
 namespace PL.BookKeeping.Data
 {
-	[DbConfigurationType(typeof(MySqlEFConfiguration))]
+	// Todo Fdl: Fix logging
+	public class MyLogger : ILogger
+	{
+		public IDisposable BeginScope<TState>(TState state)
+		{
+			return null;
+		}
+
+		public bool IsEnabled(LogLevel logLevel)
+		{
+			return true;
+		}
+
+		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+		{
+			if (exception == null)
+			{
+				Debug.WriteLine($"{logLevel} - {eventId}:{state}.");
+			}
+			else
+			{
+				Debug.WriteLine($"{logLevel} - {eventId}:{state}. Exception: {exception}");
+			}
+		}
+	}
+
+	public class MyLoggerProvider : ILoggerProvider
+	{
+		public ILogger CreateLogger(string categoryName)
+		{
+			return new MyLogger();
+		}
+
+		public void Dispose()
+		{
+		}
+	}
+
 	public class DataContext : DbContext
 	{
 		/// <summary>Gets or sets the current user.</summary>
@@ -21,10 +59,9 @@ namespace PL.BookKeeping.Data
 		}
 
 		/// <inheritdoc />
-		public DataContext(DbConnection connection)
-			: base(connection, true)
+		public DataContext(DbContextOptions connectionOptions)
+			: base(connectionOptions)
 		{
-			Configuration.LazyLoadingEnabled = false;
 		}
 
 		public DbSet<User> Users { get; set; }
@@ -38,5 +75,50 @@ namespace PL.BookKeeping.Data
 		public DbSet<EntryPeriod> EntryPeriods { get; set; }
 
 		public DbSet<ProcessingRule> ProcessingRules { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			var systemUser = new User()
+			{
+				Key = 1,
+				CreationDT = DateTime.Now,
+				Name = "System user"
+			};
+
+			modelBuilder.Entity<User>().HasData(
+					systemUser
+				);
+
+			modelBuilder.Entity<Entry>()
+				.HasData(
+					new Entry()
+					{
+						Key = 1,
+						CreationDT = DateTime.Now,
+						CreatorKey = systemUser.Key,
+						Description = "Uitgaven"
+					},
+					new Entry()
+					{
+						Key = 2,
+						CreationDT = DateTime.Now,
+						CreatorKey = systemUser.Key,
+						Description = "Inkomsten"
+					}
+				);
+
+			modelBuilder.FinalizeModel();
+		}
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseLoggerFactory(new LoggerFactory(new[] { new MyLoggerProvider() }));
+
+			if (!optionsBuilder.IsConfigured)
+			{
+				// For migration only.
+				optionsBuilder.UseMySQL($@"Server=localhost;Database=bookkeeping;Uid=bookkeeper;Password=books");
+			}
+		}
 	}
 }

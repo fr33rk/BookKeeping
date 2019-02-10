@@ -1,8 +1,7 @@
-﻿using PL.BookKeeping.Infrastructure.Data;
-using RefactorThis.GraphDiff;
+﻿using Microsoft.EntityFrameworkCore;
+using PL.BookKeeping.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -18,7 +17,7 @@ namespace PL.BookKeeping.Data.Repositories
 		private readonly DbSet<TEntity> mDbSet;
 		private readonly DbContext mContext;
 
-		/// <summary>Initializes a new instance of the <see cref="EntityRepository{TEntity}"/> class.</summary>
+		/// <summary>Initializes a new instance of the <see cref="EntityRepositoryOfT{TEntity}"/> class.</summary>
 		/// <param name="context">The context.</param>
 		/// <exception cref="System.ArgumentNullException">context</exception>
 		/// <exception cref="System.NotSupportedException"></exception>
@@ -26,7 +25,7 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (context == null)
 			{
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException(nameof(context));
 			}
 
 			mDbSet = context.Set<TEntity>();
@@ -103,7 +102,7 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (entity == null)
 			{
-				throw new ArgumentNullException("entity");
+				throw new ArgumentNullException(nameof(entity));
 			}
 
 			mDbSet.Add(entity);
@@ -118,7 +117,7 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (entity == null)
 			{
-				throw new ArgumentNullException("entity");
+				throw new ArgumentNullException(nameof(entity));
 			}
 
 			mDbSet.Attach(entity);
@@ -133,7 +132,7 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (entity == null)
 			{
-				throw new ArgumentNullException("entity");
+				throw new ArgumentNullException(nameof(entity));
 			}
 
 			mDbSet.Attach(entity);
@@ -151,7 +150,7 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (predicate == null)
 			{
-				throw new ArgumentNullException("predicate");
+				throw new ArgumentNullException(nameof(predicate));
 			}
 
 			var entities = mDbSet.Where(predicate);
@@ -170,10 +169,10 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (updated == null)
 			{
-				throw new ArgumentNullException("entity");
+				throw new ArgumentNullException(nameof(updated));
 			}
 
-			var entry = mContext.Entry<TEntity>(updated);
+			var entry = mContext.Entry(updated);
 
 			if (entry.State == EntityState.Detached)
 			{
@@ -194,40 +193,6 @@ namespace PL.BookKeeping.Data.Repositories
 			}
 		}
 
-		/// <summary>Updates the specified updated.</summary>
-		/// <param name="updated">The updated.</param>
-		/// <param name="getKey">The get key.</param>
-		/// <param name="mapping">The mapping.</param>
-		/// <exception cref="System.ArgumentNullException">entity</exception>
-		public virtual void Update(TEntity updated, Func<TEntity, int> getKey, Expression<Func<IUpdateConfiguration<TEntity>, object>> mapping)
-		{
-			if (updated == null)
-			{
-				throw new ArgumentNullException("entity");
-			}
-
-			var entry = mContext.Entry<TEntity>(updated);
-
-			if (entry.State == EntityState.Detached)
-			{
-				// Need the key to find the entity when detached.
-				var attachedEntity = mDbSet.Find(getKey(updated));
-
-				if (attachedEntity != null)
-				{
-					var attachedEntry = mContext.Entry(attachedEntity);
-					// Copy values from updated entry to existing entity.
-					//attachedEntry.CurrentValues.SetValues(updated);
-					mContext.UpdateGraph(updated, mapping);
-				}
-				else
-				{
-					// This should attach the updated entity.
-					entry.State = EntityState.Modified;
-				}
-			}
-		}
-
 		/// <summary>
 		/// Finds entities based on the provided criteria.
 		/// </summary>
@@ -238,7 +203,7 @@ namespace PL.BookKeeping.Data.Repositories
 		{
 			if (predicate == null)
 			{
-				throw new ArgumentNullException("predicate");
+				throw new ArgumentNullException(nameof(predicate));
 			}
 
 			return GetQuery().Where(predicate);
@@ -291,9 +256,7 @@ namespace PL.BookKeeping.Data.Repositories
 				paramList.Add($"@P{i}");
 			}
 
-			string command;
-
-			command = parameters.Length > 0
+			var command = parameters.Length > 0
 				? $"CALL {procedureName} ({string.Join(",", paramList)})"
 				: $"CALL {procedureName}";
 
@@ -312,14 +275,14 @@ namespace PL.BookKeeping.Data.Repositories
 			var paramList = new List<string>();
 
 			// Create a list of @px values
-			for (var i = 0; i < parameters.Count(); i++)
+			for (var i = 0; i < parameters.Length; i++)
 			{
 				paramList.Add($"@P{i}");
 			}
 
 			var command = $"EXECUTE PROCEDURE {procedureName} ({string.Join(",", paramList)})";
-
-			return mContext.Database.SqlQuery<TEntity>(command, parameters);
+			
+			return mDbSet.FromSql(command, parameters);
 		}
 	}
 }

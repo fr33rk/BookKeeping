@@ -18,36 +18,17 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.2.0" />
-    <PackageReference Include="MySql.Data" Version="6.10.8" />
-    <PackageReference Include="MySql.Data.Entity" Version="6.10.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.14" />
     <PackageReference Include="PL.Common.Logger" Version="2.0.0" />
-    <PackageReference Include="RefactorThis.GraphDiff" Version="3.0.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Migrations\201704031849094_InitialCreate.Designer.cs">
-      <DependentUpon>201704031849094_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\201812091929164_EntryActivePeriod.Designer.cs">
-      <DependentUpon>201812091929164_EntryActivePeriod.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\201812132017467_AddDateRules.Designer.cs">
-      <DependentUpon>201812132017467_AddDateRules.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PL.BookKeeping.Entities\PL.BookKeeping.Entities.csproj" />
     <ProjectReference Include="..\PL.BookKeeping.Infrastructure\PL.BookKeeping.Infrastructure.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Migrations\201704031849094_InitialCreate.resx">
-      <DependentUpon>201704031849094_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Migrations\201812091929164_EntryActivePeriod.resx">
-      <DependentUpon>201812091929164_EntryActivePeriod.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Migrations\201812132017467_AddDateRules.resx">
-      <DependentUpon>201812132017467_AddDateRules.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>

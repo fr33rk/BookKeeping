@@ -1,9 +1,9 @@
-﻿using PL.BookKeeping.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using PL.BookKeeping.Entities;
 using PL.BookKeeping.Infrastructure.Data;
 using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace PL.BookKeeping.Business.Services.DataServices

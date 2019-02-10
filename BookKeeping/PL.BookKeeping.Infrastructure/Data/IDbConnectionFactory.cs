@@ -1,9 +1,9 @@
-﻿using System.Data.Common;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace PL.BookKeeping.Infrastructure.Data
 {
 	public interface IDbConnectionFactory
 	{
-		DbConnection Create();
+		DbContextOptions Create();
 	}
 }

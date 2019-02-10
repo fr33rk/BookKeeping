@@ -1,7 +1,7 @@
-﻿using PL.BookKeeping.Business.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
-using PL.BookKeeping.Data.Migrations;
 using PL.BookKeeping.Data.Repositories;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
@@ -9,7 +9,6 @@ using PL.BookKeeping.Infrastructure.Services;
 using PL.BookKeeping.Infrastructure.Services.DataServices;
 using Prism.Ioc;
 using Prism.Modularity;
-using System.Data.Entity;
 using Unity;
 using Unity.Lifetime;
 
@@ -46,9 +45,12 @@ namespace PL.BookKeeping.Business
 
 		public void OnInitialized(IContainerProvider containerProvider)
 		{
-			Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>(true));
-
 			LoadSettings();
+
+			// Migrate the database to the last version.
+			var connectionFactory = mContainer.Resolve<MySqlConnectionFactory>();
+			var context = (DataContext)System.Activator.CreateInstance(typeof(DataContext), connectionFactory.Create());
+			context.Database.Migrate();
 		}
 
 		private void LoadSettings()
