@@ -2,6 +2,9 @@
 using PL.BookKeeping.Infrastructure.Data;
 using PL.Logger;
 using System;
+using Microsoft.Extensions.Logging;
+using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.Services;
 
 namespace PL.BookKeeping.Data.Repositories
 {
@@ -13,11 +16,16 @@ namespace PL.BookKeeping.Data.Repositories
 	{
 		private readonly ILogFile mLogFile;
 		private readonly IDbConnectionFactory mDbConnectionFactory;
+		private readonly ILoggerFactory mLoggerFactory;
+		private readonly ISettingsService<Settings> mSettingsService;
 
-		public UnitOfWorkFactoryOfT(ILogFile logFile, IDbConnectionFactory dbConnectionFactory)
+		public UnitOfWorkFactoryOfT(ILogFile logFile, IDbConnectionFactory dbConnectionFactory,
+			ILoggerFactory loggerFactory, ISettingsService<Settings> settingsService)
 		{
 			mLogFile = logFile;
 			mDbConnectionFactory = dbConnectionFactory;
+			mSettingsService = settingsService;
+			mLoggerFactory = loggerFactory;
 		}
 
 		/// <summary>
@@ -33,7 +41,8 @@ namespace PL.BookKeeping.Data.Repositories
 		/// <returns>The unit of work.</returns>
 		public virtual IUnitOfWork Create()
 		{
-			var context = (TContext)Activator.CreateInstance(typeof(TContext), mDbConnectionFactory.Create());
+			var context = (TContext)Activator.CreateInstance(typeof(TContext), 
+				mDbConnectionFactory.Create(), mLoggerFactory, mSettingsService);
 			var uow = new UnitOfWork(context, mLogFile);
 
 			//Set the current user.

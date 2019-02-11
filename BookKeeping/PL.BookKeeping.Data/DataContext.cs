@@ -1,51 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PL.BookKeeping.Entities;
+using PL.BookKeeping.Infrastructure;
+using PL.BookKeeping.Infrastructure.Services;
 using System;
-using System.Diagnostics;
 
 namespace PL.BookKeeping.Data
 {
-	// Todo Fdl: Fix logging
-	public class MyLogger : ILogger
-	{
-		public IDisposable BeginScope<TState>(TState state)
-		{
-			return null;
-		}
-
-		public bool IsEnabled(LogLevel logLevel)
-		{
-			return true;
-		}
-
-		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-		{
-			if (exception == null)
-			{
-				Debug.WriteLine($"{logLevel} - {eventId}:{state}.");
-			}
-			else
-			{
-				Debug.WriteLine($"{logLevel} - {eventId}:{state}. Exception: {exception}");
-			}
-		}
-	}
-
-	public class MyLoggerProvider : ILoggerProvider
-	{
-		public ILogger CreateLogger(string categoryName)
-		{
-			return new MyLogger();
-		}
-
-		public void Dispose()
-		{
-		}
-	}
-
 	public class DataContext : DbContext
 	{
+		private readonly ILoggerFactory mLoggerFactory;
+		private readonly ISettingsService<Settings> mSettingsService;
+
 		/// <summary>Gets or sets the current user.</summary>
 		/// <value>The current user.</value>
 		public User CurrentUser { get; set; }
@@ -59,9 +25,12 @@ namespace PL.BookKeeping.Data
 		}
 
 		/// <inheritdoc />
-		public DataContext(DbContextOptions connectionOptions)
+		public DataContext(DbContextOptions connectionOptions,
+			ILoggerFactory loggerFactory, ISettingsService<Settings> settingsService)
 			: base(connectionOptions)
 		{
+			mLoggerFactory = loggerFactory;
+			mSettingsService = settingsService;
 		}
 
 		public DbSet<User> Users { get; set; }
@@ -112,7 +81,10 @@ namespace PL.BookKeeping.Data
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseLoggerFactory(new LoggerFactory(new[] { new MyLoggerProvider() }));
+			if (mSettingsService != null && mSettingsService.Settings.EnableEntityFrameworkLogging)
+			{
+				optionsBuilder.UseLoggerFactory(mLoggerFactory);
+			}
 
 			if (!optionsBuilder.IsConfigured)
 			{

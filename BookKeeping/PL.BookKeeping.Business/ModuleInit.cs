@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PL.BookKeeping.Business.Services;
 using PL.BookKeeping.Business.Services.DataServices;
 using PL.BookKeeping.Data;
+using PL.BookKeeping.Data.Logging;
 using PL.BookKeeping.Data.Repositories;
 using PL.BookKeeping.Infrastructure;
 using PL.BookKeeping.Infrastructure.Data;
@@ -10,6 +12,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using Prism.Ioc;
 using Prism.Modularity;
 using Unity;
+using Unity.Injection;
 using Unity.Lifetime;
 
 namespace PL.BookKeeping.Business
@@ -41,6 +44,8 @@ namespace PL.BookKeeping.Business
 			mContainer.RegisterType<IDataImporterService, DataImporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataExporterService, DataExporterService>(new ContainerControlledLifetimeManager());
 			mContainer.RegisterType<IDataProcessorService, DataProcessorService>(new ContainerControlledLifetimeManager());
+			mContainer.RegisterType<ILoggerProvider, LoggerWrapperProvider>(new ContainerControlledLifetimeManager());
+			mContainer.RegisterType<ILoggerFactory, LoggerFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor());
 		}
 
 		public void OnInitialized(IContainerProvider containerProvider)
@@ -49,7 +54,13 @@ namespace PL.BookKeeping.Business
 
 			// Migrate the database to the last version.
 			var connectionFactory = mContainer.Resolve<MySqlConnectionFactory>();
-			var context = (DataContext)System.Activator.CreateInstance(typeof(DataContext), connectionFactory.Create());
+			var settingService = mContainer.Resolve<ISettingsService<Settings>>();
+			var loggingFactory = mContainer.Resolve<ILoggerFactory>();
+			var loggingProvider = mContainer.Resolve<ILoggerProvider>();
+			loggingFactory.AddProvider(loggingProvider);
+
+			var context = (DataContext)System.Activator.CreateInstance(typeof(DataContext), connectionFactory.Create(),
+				loggingFactory, settingService);
 			context.Database.Migrate();
 		}
 
