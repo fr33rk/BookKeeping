@@ -11,7 +11,6 @@ using Stateless;
 using Stateless.Graph;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Linq;
 using System.Windows;
 
@@ -574,9 +573,17 @@ namespace BookKeeping.Client.ViewModels
 			mSavedProcessingRuleVM = mSelectedRule;
 
 			var newRule = new ProcessingRuleVm();
-			var index = DefinedRules.IndexOf(SelectedRule);
-			newRule.Priority = index + 1;
-			DefinedRules.Insert(index, newRule);
+			if (SelectedRule == null)
+			{
+				DefinedRules.Add(newRule);
+			}
+			else
+			{
+				var index = DefinedRules.IndexOf(SelectedRule);
+				newRule.Priority = index + 1;
+				DefinedRules.Insert(index, newRule);
+			}
+
 			SelectedRule = newRule;
 		}
 
