@@ -61,7 +61,9 @@ namespace BookKeeping.Client.ViewModels
 		}
 
 		private void LoadData()
-		{
+        {
+            return;
+
 			AvailableYears = new ObservableCollection<YearOverviewVm>();
 
 			var availableYears = mPeriodDataService.GetAvailableYears();

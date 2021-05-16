@@ -19,7 +19,7 @@ namespace PL.BookKeeping.Data
 			var builder = new DbContextOptionsBuilder();
 			var settings = mSettingsService.Settings;
 
-			builder.UseMySQL($@"Server={settings.ServerName};Database={settings.DatabaseName};Uid={settings.UserId};Password={settings.Password}");
+			builder.UseMySql($@"Server={settings.ServerName};Database={settings.DatabaseName};Uid={settings.UserId};Password={settings.Password}");
 
 			return builder.Options;
 		}

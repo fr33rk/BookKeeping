@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{9905A1EA-A6B2-4FEA-B03D-B7DB011D4A95}</ProjectGuid>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -21,9 +21,9 @@
     <PackageReference Include="CommonServiceLocator" Version="2.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.1" />
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.14" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="PL.Common.Logger" Version="2.0.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
     <PackageReference Include="Prism.Core" Version="7.1.0.431" />
     <PackageReference Include="Prism.Wpf" Version="7.1.0.431" />
     <PackageReference Include="Unity" Version="5.8.13" />

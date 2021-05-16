@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using PL.BookKeeping.Entities.Traceability;
 
 namespace PL.BookKeeping.Entities
 {

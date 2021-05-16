@@ -10,7 +10,7 @@ namespace BookKeeping.Client.Models
 	/// <inheritdoc />
 	///  <summary>Wrapper class around  the ProcessingRule entity.
 	///  </summary>
-	public class ProcessingRuleVm : BaseTracableObjectVMOfT<ProcessingRule, ProcessingRuleVm>
+	public class ProcessingRuleVm : BaseTraceableObjectVMOfT<ProcessingRule, ProcessingRuleVm>
 	{
 		#region Fields
 

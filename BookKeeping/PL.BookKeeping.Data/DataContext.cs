@@ -89,7 +89,7 @@ namespace PL.BookKeeping.Data
 			if (!optionsBuilder.IsConfigured)
 			{
 				// For migration only.
-				optionsBuilder.UseMySQL($@"Server=localhost;Database=bookkeeping;Uid=bookkeeper;Password=books");
+				optionsBuilder.UseMySql($@"Server=localhost;Database=bookkeeping;Uid=bookkeeper;Password=books");
 			}
 		}
 	}

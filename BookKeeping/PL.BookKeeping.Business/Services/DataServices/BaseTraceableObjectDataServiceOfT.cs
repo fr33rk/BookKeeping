@@ -6,6 +6,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PL.BookKeeping.Entities.Traceability;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {

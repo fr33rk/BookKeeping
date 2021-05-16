@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BookKeeping.Client.Models
 {
-	public class EntryVm : BaseTracableObjectVMOfT<Entry, EntryVm>
+	public class EntryVm : BaseTraceableObjectVMOfT<Entry, EntryVm>
 	{
 		#region Entry
 

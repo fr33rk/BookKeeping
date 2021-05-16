@@ -1,4 +1,6 @@
-﻿namespace PL.BookKeeping.Entities
+﻿using PL.BookKeeping.Entities.Traceability;
+
+namespace PL.BookKeeping.Entities
 {
 	/// <summary>User definition.
 	/// </summary>

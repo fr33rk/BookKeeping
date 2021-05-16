@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using PL.BookKeeping.Entities.Traceability;
 
 namespace PL.BookKeeping.Entities
 {
