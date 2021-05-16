@@ -114,5 +114,33 @@ namespace PL.BookKeeping.Business.Services.DataServices
 				unitOfWork.SaveChanges();
 			}
 		}
-	}
+
+        public void CloneByEntry(Entry master, Entry clone)
+        {
+            using (var unitOfWork = mUOWFactory.Create())
+            {
+                foreach (var processingRule in GetByEntry(master))
+                {
+                    var cloneOfProcessingRule = new ProcessingRule
+                    {
+                        AccountRule = processingRule.AccountRule,
+                        AmountRule = processingRule.AmountRule,
+                        CodeRule = processingRule.CodeRule,
+                        CounterAccountRule = processingRule.CounterAccountRule,
+                        DateAfterRule = processingRule.DateAfterRule,
+                        DateBeforeRule = processingRule.DateBeforeRule,
+                        MutationKindRule = processingRule.MutationKindRule,
+                        MutationTypeRule = processingRule.MutationTypeRule,
+                        NameRule = processingRule.NameRule,
+                        RemarksRule = processingRule.RemarksRule,
+                        Priority = processingRule.Priority,
+                        Entry = clone
+                    };
+
+                    AttachEntities(unitOfWork, cloneOfProcessingRule);
+                    base.Add(cloneOfProcessingRule);
+                }
+            }
+        }
+    }
 }

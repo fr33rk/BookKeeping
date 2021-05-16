@@ -25,6 +25,10 @@
                     Command="{Binding DeleteEntryCommand}">
                 <Image Source="{StaticResource imgMinus}" />
             </Button>
+            <Button Style="{StaticResource SmallSquareButtonStyle}"
+                    Command="{Binding CloneEntryCommand}">
+                <Image Source="{StaticResource imgClone}"/>
+            </Button>
         </WrapPanel>
 
         <Grid Grid.Row="1" Margin="4">

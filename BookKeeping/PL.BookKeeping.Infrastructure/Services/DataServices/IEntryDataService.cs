@@ -10,5 +10,6 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
 		IList<Entry> Get3rdLevelEntries();
 
 		IList<Entry> GetRootEntriesOfYear(int year);
-	}
+        Entry Clone(Entry entity);
+    }
 }

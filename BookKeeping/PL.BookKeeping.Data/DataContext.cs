@@ -84,7 +84,8 @@ namespace PL.BookKeeping.Data
 			if (mSettingsService != null && mSettingsService.Settings.EnableEntityFrameworkLogging)
 			{
 				optionsBuilder.UseLoggerFactory(mLoggerFactory);
-			}
+                optionsBuilder.EnableSensitiveDataLogging();
+            }
 
 			if (!optionsBuilder.IsConfigured)
 			{

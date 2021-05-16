@@ -9,7 +9,9 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BookKeeping.Client.ViewModels
 {
@@ -200,6 +202,34 @@ namespace BookKeeping.Client.ViewModels
 
 		#endregion Command DeleteEntryCommand
 
+        #region CloneEntryCommand
+
+        private DelegateCommand mCloneEntryCommand;
+		
+		[System.ComponentModel.Browsable(false)]
+		public DelegateCommand CloneEntryCommand => mCloneEntryCommand 
+                                                    ?? (mCloneEntryCommand = System.Threading.SynchronizationContext.Current == null
+                                                        ? null : new DelegateCommand(CloneEntry, CanCloneEntry));
+
+        private void CloneEntry()
+        {
+            var parentEntryVm = GetEntryVm(SelectedEntry.ParentEntry);
+            if (parentEntryVm == null)
+                return;
+
+            var clone = mEntryDataService.Clone(SelectedEntry.ToEntity());
+            parentEntryVm.ChildEntryVms.Add(Mapper.Map<EntryVm>(clone));
+			mEntriesHaveChanged = true;
+		}
+
+        private bool CanCloneEntry()
+        {
+            return SelectedEntry != null && !EnumerableExtensions.Any(SelectedEntry.ChildEntries);
+        }
+
+
+        #endregion
+
 		#region Property Entries
 
 		public ObservableCollection<EntryVm> Entries { get; set; }
@@ -306,6 +336,13 @@ namespace BookKeeping.Client.ViewModels
 
 			return null;
 		}
+
+        private EntryVm GetEntryVm(Entry entry)
+        {
+            return Entries
+                .Select(entryVm => entryVm.FindEntryVm(entry))
+                .FirstOrDefault(result => result != null);
+        }
 
 		#endregion Helper methods
 	}

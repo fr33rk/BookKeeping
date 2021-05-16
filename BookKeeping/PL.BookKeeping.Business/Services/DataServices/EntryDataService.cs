@@ -5,6 +5,7 @@ using PL.BookKeeping.Infrastructure.Services.DataServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace PL.BookKeeping.Business.Services.DataServices
 {
@@ -36,23 +37,6 @@ namespace PL.BookKeeping.Business.Services.DataServices
 		{
 			using (var unitOfWork = mUOWFactory.Create())
 			{
-				//var allActiveInYear = unitOfWork.GetRepository<Entry>()
-				//	.GetQuery(true)
-				//	.Join(unitOfWork.GetRepository<EntryPeriod>().GetAll(),
-				//		e => e.Key,
-				//		ep => ep.EntryKey,
-				//		(e, ep) => new { entry = e, entryPeriod = ep })
-				//	.Join(unitOfWork.GetRepository<Period>().GetAll(),
-				//		ep => ep.entryPeriod.PeriodKey,
-				//		p => p.Key,
-				//		(ep, p) => new { period = p, EntryPeriod = ep.entryPeriod })
-				//	.Where(e => e.period.Year == year)
-				//	.Select(e => e.EntryPeriod.Entry)
-				//	.Distinct()
-				//	.ToList();
-
-				//var rootEntries = allActiveInYear.Where(e => e.ParentEntryKey == null);
-
 				var allActiveInYear = unitOfWork.GetRepository<Entry>()
 					.GetQuery()
 					.Where(e => (e.ActiveFrom.Year <= year) &&
@@ -79,13 +63,13 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 		public IList<Entry> GetRootEntries()
 		{
-			using (mUOWFactory.Create())
-			{
-				var root = GetAll()
-					.Where(e => e.ParentEntry == null);
+			using (var unitOfWork = mUOWFactory.Create())
+            {
+                var entries = unitOfWork.GetRepository<Entry>().GetQuery().AsQueryable()
+                    .Where(e => e.ActiveUntil == null).ToList();
 
-				return root.ToList();
-			}
+                return entries.Where(e => e.ParentEntry == null).ToList();
+            }
 		}
 
 		public IList<Entry> Get3rdLevelEntries()
@@ -151,6 +135,37 @@ namespace PL.BookKeeping.Business.Services.DataServices
 
 			return true;
 		}
+
+        public Entry Clone(Entry entity)
+        {
+            var description = "";
+            var index = 1;
+            var descriptions = GetAll()
+                .Where(e => e.Description.StartsWith(entity.Description))
+                .Select(e => e.Description)
+                .ToList();
+
+            while (string.IsNullOrEmpty(description))
+            {
+                description = $"{entity.Description}{index}";
+                if (descriptions.Contains(description))
+                    description = "";
+                index++;
+            }
+
+            var clone = new Entry
+            {
+                Description = description,
+                ParentEntry = entity.ParentEntry
+            };
+
+            if (!Add(clone))
+                return null;
+
+           mProcessingRuleDataService.CloneByEntry(entity, clone);
+
+            return clone;
+        }
 
 		private int? GetLastYearTheEntryWasUsed(Entry entity)
 		{

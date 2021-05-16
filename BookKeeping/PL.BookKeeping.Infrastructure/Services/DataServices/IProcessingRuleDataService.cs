@@ -12,5 +12,7 @@ namespace PL.BookKeeping.Infrastructure.Services.DataServices
 		void SwapByPriority(ProcessingRule swapThis, ProcessingRule swapWithThat);
 
 		void DeleteByEntry(Entry entity);
-	}
+
+        void CloneByEntry(Entry master, Entry clone);
+    }
 }

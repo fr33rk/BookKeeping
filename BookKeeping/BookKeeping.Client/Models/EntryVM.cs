@@ -149,5 +149,20 @@ namespace BookKeeping.Client.Models
 		}
 
 		#endregion Child mutations
+
+        public EntryVm FindEntryVm(Entry entry)
+        {
+            if (Key == entry.Key)
+                return this;
+
+            foreach (var childEntryVm in ChildEntryVms)
+            {
+                var result = childEntryVm.FindEntryVm(entry);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
+        }
 	}
 }
