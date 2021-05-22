@@ -19,6 +19,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -50,6 +51,12 @@
                        Style="{StaticResource RightAlignedCentralTextBlock}" />
             <TextBox Grid.Row="5" Grid.Column="2" Style="{StaticResource GeneralTextBox}"
                      Text="{Binding WrappedModel.Password}" />
+
+            <TextBlock Grid.Row="6" Grid.Column="1"  Text="Lijst deelteken"
+                       Style="{StaticResource RightAlignedCentralTextBlock}" />
+            <TextBox Grid.Row="6" Grid.Column="2" Style="{StaticResource GeneralTextBox}"
+                     Text="{Binding WrappedModel.Separator}" MaxLength="1" />
+
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource MediumSquareButtonStyle}"

@@ -9,6 +9,8 @@ namespace PL.BookKeeping.Infrastructure
 		public string UserId { get; set; } = "Bookkeeper";
 		public string Password { get; set; } = "books";
 		public IEnumerable<string> AdministeredAccounts { get; set; } = new List<string>();
+        public string Separator { get; set; } = ";";
 		public bool EnableEntityFrameworkLogging { get; set; }
-	}
+        
+    }
 }

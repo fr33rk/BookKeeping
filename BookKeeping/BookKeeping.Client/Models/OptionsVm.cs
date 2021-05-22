@@ -9,5 +9,6 @@ namespace BookKeeping.Client.Models
 		public string UserId { get; set; }
 		public string Password { get; set; }
 		public IEnumerable<string> AdministeredAccounts { get; set; } = new List<string>();
+		public string Separator { get; set; }
 	}
 }

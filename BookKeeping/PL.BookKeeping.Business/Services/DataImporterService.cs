@@ -115,7 +115,8 @@ namespace PL.BookKeeping.Business.Services
 		private IEnumerable<Transaction> Import(string fileName)
 		{
 			var retValue = new List<Transaction>();
-			var separators = new[] { "\",\"" };
+			//var separators = new[] { "\";\"" };
+			var separators = new[] { mSettingsService.Settings.Separator };
 
 			try
 			{

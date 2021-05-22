@@ -50,8 +50,11 @@ namespace BookKeeping.Client
 				config.CreateMap<ProcessingRuleVm, ProcessingRule>();
 				config.CreateMap<GlobalSearchView, GlobalSearchVm>();
 				config.CreateMap<GlobalSearchVm, GlobalSearchView>();
-				config.CreateMap<Settings, OptionsVm>();
-			});
+                config.CreateMap<Settings, OptionsVm>();
+                config.CreateMap<OptionsVm, Settings>()
+                    .ForMember(x => x.EnableEntityFrameworkLogging, opt => opt.Ignore());
+
+            });
 		}
 	}
 }
